@@ -19,7 +19,7 @@ const Login = (prop)=>{
                </div>
                 
             </form>
-            <div className="question">Don't have an account? Signup</div>
+            <div className="question">Don't have an account? <a href="/MainSignup">Signup</a> </div>
         </div>
     )
 

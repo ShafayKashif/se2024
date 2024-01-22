@@ -27,7 +27,6 @@ mongoose.connect(process.env.MONG_URI)
 app.post('/', async (request, response) => {
     console.log('Post request received: ', request.body);
 
-
     if (request.body.type === 'signup') {
         try {
           const { username, password } = request.body;

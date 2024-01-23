@@ -6,6 +6,7 @@ import MainSignup from './components/MainSignup';
 import CustomerSignup from './components/CustomerSignup';
 import CourierSignup from './components/CourierSignup';
 import VendorSignup from './components/VendorSignup';
+import StudentVendorSignup from './components/StudentVendorSignup';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
             <Route path="/CustomerSignup" element={<CustomerSignup/>}/>
             <Route path="/CourierSignup" element={<CourierSignup/>}/>
             <Route path="/VendorSignup" element={<VendorSignup/>}/>
+            <Route path="/StudentVendorSignup" element={<StudentVendorSignup/>}/>
 
 
                              

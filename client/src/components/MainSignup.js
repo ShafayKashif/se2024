@@ -14,7 +14,7 @@ const MainSignup = (prop)=>{
                 <button className="sub-button"><a href="/VendorSignup">Vendor</a></button>
                </div>
                <div>
-                <button className="sub-button">Student Vendor</button>
+                <button className="sub-button"><a href="/StudentVendorSignup">Student Vendor</a></button>
                </div>
                <div>
                 <button className="sub-button">Customer</button>

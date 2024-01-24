@@ -2,8 +2,9 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors'
-// import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import Users from './models/userModel.js';
+import studentVendors from './models/studentVendorModel.js';
 
 dotenv.config();
 
@@ -26,11 +27,18 @@ mongoose.connect(process.env.MONG_URI)
 app.post('/', async (request, response) => {
     console.log('Post request received: ', request.body);
 
-    if (request.body.type === 'signup') {
+    if (request.body.type === 'signup' && request.body.usertype === 'student_vendor') {
+      console.log('Post malone');
         try {
-          const { username, password } = request.body;
+          const {  email,
+            roll_Number,
+            room_Number,
+            hostel,
+            name,
+            phone_Number,
+            password, } = request.body;
     
-          const existingUser = await Users.findOne({ username });
+          const existingUser = await studentVendors.findOne({ name });
     
           if (existingUser) {
             console.log('username already exists. Cannot sign up.');
@@ -39,9 +47,15 @@ app.post('/', async (request, response) => {
   
             const hashedPassword = await bcrypt.hash(password, 10);
     
-            const newUser = new Users({
-              username,
-              password: hashedPassword, 
+            const newUser = new studentVendors({
+              email,
+              roll_Number,
+              room_Number,
+              hostel,
+              name,
+              phone_Number,
+              password: hashedPassword,
+
             });
     
             const savedUser = await newUser.save();

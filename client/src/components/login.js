@@ -5,7 +5,7 @@ const Login = (prop)=>{
 
     return (        
         <div className="login-page">
-            <div className="login-header"> Management <span class="lib-name">System</span></div>
+            <h1 className="login-header"> CampusCuisine </h1>
             <div className='partition'></div>
             <form className='form' >
                 <div >

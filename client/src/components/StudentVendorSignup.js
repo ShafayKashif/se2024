@@ -45,9 +45,9 @@ const Signup = (props) => {
 
   return (
     <div className="signup-page">
-      <div className="signup-header">
-        VENDOR <span className="lib-name">SIGNUP</span>
-      </div>
+      <h1 className="signup-header">
+        STUDENT VENDOR SIGNUP
+      </h1>
       <div className="partition"></div>
       <form className="form" onSubmit={handleSignup}>
         <div>

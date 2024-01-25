@@ -6,7 +6,7 @@ const MainSignup = (prop)=>{
 
     return (        
         <div className="MainSignup-page">
-            <div className="MainSignup-header"> Signup As: </div>
+            <h3 className="MainSignup-header"> Signup As: </h3>
             <div className='partition'></div>
             <form className='form' >
                 

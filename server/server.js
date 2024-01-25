@@ -24,50 +24,58 @@ mongoose.connect(process.env.MONG_URI)
   .catch((error) => {
     console.log(error)
   })
+  
+  async function signUpStudentVendor(request, response) {
+    console.log('Post Malone'); // Fix the console.log statement
+  
+    try {
+      const {
+        email,
+        roll_Number,
+        room_Number,
+        hostel,
+        name,
+        phone_Number,
+        password,
+      } = request.body;
+  
+      const existingUser = await studentVendors.findOne({ name });
+  
+      if (existingUser) {
+        console.log('Username already exists. Cannot sign up.');
+        return response.status(400).json({ isAuthenticated: false, error: 'Username already exists.' });
+      }
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      const newUser = new studentVendors({
+        email,
+        roll_Number,
+        room_Number,
+        hostel,
+        name,
+        phone_Number,
+        password: hashedPassword,
+      });
+  
+      const savedUser = await newUser.save();
+      console.log('User signed up:', savedUser);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error('Error signing up user:', error);
+      response.status(500).json({ isAuthenticated: false, error: 'Internal server error.' });
+    }
+  }
+  
+  
+
 
 //Make your API calls for every usecase here
 app.post('/', async (request, response) => {
   console.log('Post request received: ', request.body);
 
   if (request.body.type === 'signup' && request.body.usertype === 'student_vendor') {
-    console.log('Post malone');
-    try {
-      const { email,
-        roll_Number,
-        room_Number,
-        hostel,
-        name,
-        phone_Number,
-        password, } = request.body;
-
-      const existingUser = await studentVendors.findOne({ name });
-
-      if (existingUser) {
-        console.log('username already exists. Cannot sign up.');
-        response.send({ isAuthenticated: false });
-      } else {
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = new studentVendors({
-          email,
-          roll_Number,
-          room_Number,
-          hostel,
-          name,
-          phone_Number,
-          password: hashedPassword,
-
-        });
-
-        const savedUser = await newUser.save();
-        console.log('User signed up:', savedUser);
-        response.status(200).json({ isAuthenticated: true });
-      }
-    } catch (error) {
-      console.error('Error signing up user:', error);
-
-    }
+    signUpStudentVendor(request,response)
   }
 
   if (request.body.type === 'signup' && request.body.usertype === 'vendor') {

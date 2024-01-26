@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import Users from './models/userModel.js';
 import studentVendors from './models/studentVendorModel.js';
 import Vendors from './models/vendorModel.js';
+import Couriers from './models/courierModel.js';
 
 dotenv.config();
 
@@ -66,12 +67,46 @@ mongoose.connect(process.env.MONG_URI)
       response.status(500).json({ isAuthenticated: false, error: 'Internal server error.' });
     }
   }
+  async function signUpcourier(request, response) {  
+    try {
+      const {
+        email,
+        roll_Number,
+        name,
+        phone_Number,
+        password,
+      } = request.body;
   
+      const existingUser = await Couriers.findOne({ name });
+  
+      if (existingUser) {
+        console.log('Username already exists. Cannot sign up.');
+        return response.status(400).json({ isAuthenticated: false, error: 'Username already exists.' });
+      }
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      const newCourier = new Couriers({
+        email,
+        roll_Number,
+        name,
+        phone_Number,
+        password: hashedPassword,
+      });
+  
+      const savedUser = await newCourier.save();
+      console.log('User signed up:', savedUser);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error('Error signing up user:', error);
+      response.status(500).json({ isAuthenticated: false, error: 'Internal server error.' });
+    }
+  }
   
 
 
 //Make your API calls for every usecase here
-app.post('/', async (request, response) => {
+// app.post('/', async (request, response) => {
 
 // app.post('/', async (request, response) => {
 //   console.log('Post request ayi hay: ', request.body);

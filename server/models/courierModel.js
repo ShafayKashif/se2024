@@ -27,7 +27,7 @@ const couriersSchema = new Schema({
 UsersSchema.methods.comparePassword = function(candidatePassword) {
     // compare hash of the passwords
     return this.password === candidatePassword;
-  };
+};
 
 
 const Couriers = mongoose.model('Couriers', couriersSchema);

@@ -2,6 +2,35 @@ import "../styles/StudentVendorSignup.css";
 import { useState } from "react";
 import axios from 'axios';
 
+const isPasswordStrong = (password) => {
+  //at least 8 characters long
+  if (password.length < 8) {
+    return false;
+  }
+
+  //has an uppercase letter
+  if (!/[A-Z]/.test(password)) {
+    return false;
+  }
+
+  // has a lowercase letter
+  if (!/[a-z]/.test(password)) {
+    return false;
+  }
+
+  //has a special character
+  if (!/[@#$%^&*!()_+{}\[\]:;<>,.?~\\-]/.test(password)) {
+    return false;
+  }
+
+  return true;
+};
+
+
+
+
+
+
 const Signup = (props) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -11,6 +40,7 @@ const Signup = (props) => {
   const [roll_Number, setRollNumber] = useState("");
   const [hostel, setHostel] = useState("");
   const [room_Number, setRoomNumber] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const handleSignup = async (event) => {
     event.preventDefault();
@@ -20,18 +50,30 @@ const Signup = (props) => {
       return;
     }
 
+    if (password !== Confirmpassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+
+    if (!isPasswordStrong(password)) {
+      setPasswordError("Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, and a special character.");
+      return;
+    }
+
+
     try {
-      const response = await axios.post("http://localhost:3001/", {     
-      name,
-      email,
-      phone_Number,
-      password,
-      Confirmpassword,
-      roll_Number,
-      hostel,
-      room_Number,
-      type: "signup",
-      usertype: "student_vendor",});
+      const response = await axios.post("http://localhost:3001/", {
+        name,
+        email,
+        phone_Number,
+        password,
+        Confirmpassword,
+        roll_Number,
+        hostel,
+        room_Number,
+        type: "signup",
+        usertype: "student_vendor",
+      });
 
       if (response.ok) {
         console.log("Signup successful!");
@@ -50,7 +92,7 @@ const Signup = (props) => {
       </div>
       <div className="partition"></div>
       <form className="form" onSubmit={handleSignup}>
-        <div>
+      <div>
           <input
             className="user-inp"
             type="text"
@@ -110,7 +152,10 @@ const Signup = (props) => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setPasswordError("");
+            }}
           />
         </div>
         <div>
@@ -119,9 +164,13 @@ const Signup = (props) => {
             type="password"
             placeholder="Confirm Password"
             value={Confirmpassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              setPasswordError("");
+            }}
           />
         </div>
+        {passwordError && <div className="error-message">{passwordError}</div>}
         <div>
           <button className="sub-button" type="submit">
             Signup

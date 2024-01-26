@@ -10,7 +10,7 @@ const VendorsSchema = new Schema({
         type: String,
         required: true
     },
-    phone_number: {
+    phone_Number: {
         type: Number,
         required: true
     },
@@ -20,7 +20,7 @@ const VendorsSchema = new Schema({
     }
 },{timestamps: true})
 
-UsersSchema.methods.comparePassword = function(candidatePassword) {
+VendorsSchema.methods.comparePassword = function(candidatePassword) {
     // compare hash of the passwords
     return this.password === candidatePassword;
   };

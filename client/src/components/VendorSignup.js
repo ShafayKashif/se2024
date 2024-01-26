@@ -1,11 +1,12 @@
 import "../styles/VendorSignup.css";
 import { useState } from "react";
+import axios from 'axios';
 
 
 const Signup = (props) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [phonenumber, setPhonenumber] = useState("");
+    const [phone_Number, setPhonenumber] = useState("");
     const [password, setPassword] = useState("");
     const [Confirmpassword, setConfirmPassword] = useState("");
 
@@ -14,11 +15,30 @@ const Signup = (props) => {
     const handleSignup = async (event) => {
       event.preventDefault();
         // Validate user input including user role
-        if (!name || !email || !phonenumber || !password || !Confirmpassword) {
+        if (!name || !email || !phone_Number || !password || !Confirmpassword) {
           alert("Please fill in all required fields.");
           return;
         }
-    }
+
+        try {
+          const response = await axios.post("http://localhost:3001/", {     
+          name,
+          email,
+          phone_Number,
+          password,
+          Confirmpassword,
+          type: "signup",
+          usertype: "vendor",});
+    
+          if (response.ok) {
+            console.log("Signup successful!");
+          } else {
+            console.error("Signup failed:", await response.text());
+          }
+        } catch (error) {
+          console.error("Error during signup:", error.message);
+        }
+    };
   
     return (
       <div className="signup-page">
@@ -50,7 +70,7 @@ const Signup = (props) => {
               className="user-inp"
               type="text"
               placeholder="phonenumber"
-              value={phonenumber}
+              value={phone_Number}
               onChange={(e) => setPhonenumber(e.target.value)}
             />
           </div>
@@ -74,7 +94,7 @@ const Signup = (props) => {
             />
           </div>
           <div>
-            <button className="sub-button">Signup</button>
+            <button className="sub-button" type="submit">Signup</button>
           </div>
         </form>
         <div className="question">

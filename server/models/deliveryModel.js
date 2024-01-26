@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema
 
-const deliverymensSchema = new Schema({
+const couriersSchema = new Schema({
     email: {
         type: String,
         required: true 
@@ -29,6 +29,6 @@ UsersSchema.methods.comparePassword = function(candidatePassword) {
     return this.password === candidatePassword;
   };
 
-const deliverymen = mongoose.model('deliverymen', deliverymensSchema);
-export default deliverymen;
+const courier = mongoose.model('courier', couriersSchema);
+export default courier;
 

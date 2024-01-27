@@ -1,9 +1,13 @@
 import "../styles/VendorSignup.css";
 import { useState } from "react";
 import axios from 'axios';
+import React from 'react';
+import {useNavigate} from 'react-router-dom'
+
 
 
 const Signup = (props) => {
+  const navigate = useNavigate();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone_Number, setPhonenumber] = useState("");
@@ -29,9 +33,10 @@ const Signup = (props) => {
           Confirmpassword,
           type: "signup",
           usertype: "vendor",});
-    
-          if (response.ok) {
+
+          if (response.status === 200) {
             console.log("Signup successful!");
+            navigate('/');
           } else {
             console.error("Signup failed:", await response.text());
           }

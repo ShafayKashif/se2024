@@ -63,8 +63,19 @@ app.post('/', async (request, response) => {
         });
 
         const savedUser = await newUser.save();
-        console.log('User signed up:', savedUser);
+
+        //login table redirection code
+        let role = "Student_Vendor";
+        const newUser2 = new Users({
+          email,
+          password: hashedPassword,
+          role,
+        });
+        const savedUser2 =  await newUser2.save();
+        console.log('User signed up in studentvendor database:', savedUser);
+        console.log('User data stored in users database', savedUser2);
         response.status(200).json({ isAuthenticated: true });
+        
       }
     } catch (error) {
       console.error('Error signing up user:', error);
@@ -98,7 +109,18 @@ app.post('/', async (request, response) => {
         });
 
         const savedUser = await newUser.save();
-        console.log('User signed up:', savedUser);
+        
+          //login table redirection code
+          let role = "Vendor";
+          const newUser2 = new Users({
+            email,
+            password: hashedPassword,
+            role,
+          });
+          const savedUser2 =  await newUser2.save();
+          console.log('User signed up in studentvendor database:', savedUser);
+          console.log('User data stored in users database', savedUser2);
+
         response.status(200).json({ isAuthenticated: true });
       }
     } catch (error) {
@@ -134,7 +156,16 @@ app.post('/', async (request, response) => {
         });
 
         const savedUser = await newUser.save();
-        console.log('User signed up:', savedUser);
+          //login table redirection code
+          let role = "Courier";
+          const newUser2 = new Users({
+            email,
+            password: hashedPassword,
+            role,
+          });
+          const savedUser2 =  await newUser2.save();
+          console.log('User signed up in studentvendor database:', savedUser);
+          console.log('User data stored in users database', savedUser2);
         response.status(200).json({ isAuthenticated: true });
       }
     } catch (error) {
@@ -177,9 +208,55 @@ app.post('/', async (request, response) => {
         });
 
         const savedUser = await newUser.save();
-        console.log('User signed up:', savedUser);
+          //login table redirection code
+          let role = "Customer";
+          const newUser2 = new Users({
+            email,
+            password: hashedPassword,
+            role,
+          });
+          const savedUser2 =  await newUser2.save();
+          console.log('User signed up in studentvendor database:', savedUser);
+          console.log('User data stored in users database', savedUser2);
         response.status(200).json({ isAuthenticated: true });
       }
+    } catch (error) {
+      console.error('Error signing up user:', error);
+
+    }
+  }
+
+  
+  if (request.body.type === 'login') {
+    console.log('logging in');
+    try {
+      const { email,
+        password, } = request.body;
+
+      const existingUser = await Users.findOne({ email });
+      console.log(existingUser);
+
+      if(!existingUser) {
+        return response.status(404).json({ message: "User doesn't exist" });
+      }
+     
+      bcrypt.compare(password, existingUser.password, function(err,result){
+        if(err){
+          return response.status(402).json({ message: "Invalid credentials" });
+        }
+        if(result){
+          let role = existingUser.role;
+          response.status(200).json({ message: role });
+        }
+      })
+
+      // if (existingUser.password !== hashedPassword) {
+      //   return response.status(402).json({ message: "Invalid credentials" });
+      // }
+      // let role = existingUser.role;
+      // response.status(200).json({ message: role });
+      
+
     } catch (error) {
       console.error('Error signing up user:', error);
 

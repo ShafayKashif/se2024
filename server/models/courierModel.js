@@ -6,7 +6,7 @@ const couriersSchema = new Schema({
         type: String,
         required: true 
     },
-    roll_number: {
+    roll_Number: {
         type: Number,
         required: true
     },
@@ -14,7 +14,7 @@ const couriersSchema = new Schema({
         type: String,
         required: true
     },
-    phone_number: {
+    phone_Number: {
         type: Number,
         required: true
     },
@@ -24,7 +24,7 @@ const couriersSchema = new Schema({
     }
 },{timestamps: true})
 
-UsersSchema.methods.comparePassword = function(candidatePassword) {
+couriersSchema.methods.comparePassword = function(candidatePassword) {
     // compare hash of the passwords
     return this.password === candidatePassword;
   };

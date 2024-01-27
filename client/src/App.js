@@ -19,6 +19,8 @@ function App() {
             <Route path="/CourierSignup" element={<CourierSignup/>}/>
             <Route path="/VendorSignup" element={<VendorSignup/>}/>
             <Route path="/StudentVendorSignup" element={<StudentVendorSignup/>}/>
+            <Route path="/CourierSignup" element={<CourierSignup/>}/>
+            <Route path="/CustomerSignup" element={<CustomerSignup/>}/>
 
 
                              

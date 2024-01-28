@@ -46,7 +46,7 @@ app.post('/', async (request, response) => {
 
       if (existingUser) {
         console.log('email already exists. Cannot sign up.');
-        response.send({ isAuthenticated: false });
+        response.status(450).json({ isAuthenticated: false });
       } else {
 
         const hashedPassword = await bcrypt.hash(password, 10);

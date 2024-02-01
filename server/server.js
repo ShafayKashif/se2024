@@ -8,6 +8,7 @@ import studentVendors from './models/studentVendorModel.js';
 import Vendors from './models/vendorModel.js';
 import Customers from './models/customerModel.js'
 import Couriers from './models/courierModel.js'
+import CustomerReviews from './models/CustomerReviewModel.js'
 
 dotenv.config();
 
@@ -226,6 +227,8 @@ app.post('/', async (request, response) => {
     }
   }
 
+
+
   
   if (request.body.type === 'login') {
     console.log('logging in');
@@ -260,6 +263,28 @@ app.post('/', async (request, response) => {
     } catch (error) {
       console.error('Error signing up user:', error);
 
+    }
+  }
+
+
+  if (request.body.type === 'review' && request.body.usertype === 'customer') {
+    console.log('Review of customer received');
+    try {
+      const { 
+        vendor,
+        rating,
+        description, } = request.body;
+
+        const newReview = new CustomerReviews({
+          vendor,
+          rating,
+          description,
+        });
+        const savedReview = await newReview.save();
+          console.log('Review submitted:', savedReview);
+        response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error('Error submitting review:', error);
     }
   }
 

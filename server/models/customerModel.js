@@ -6,15 +6,15 @@ const CustomersSchema = new Schema({
         type: String,
         required: true 
     },
-    roll_number: {
+    roll_Number: {
         type: Number,
         required: true
     },
-    room_number: {
+    room_Number: {
         type: Number,
         required: true
     },
-    hostel_number: {
+    hostel: {
         type: String,
         required: true
     },
@@ -22,7 +22,7 @@ const CustomersSchema = new Schema({
         type: String,
         required: true
     },
-    phone_number: {
+    phone_Number: {
         type: Number,
         required: true
     },
@@ -32,7 +32,7 @@ const CustomersSchema = new Schema({
     }
 },{timestamps: true})
 
-UsersSchema.methods.comparePassword = function(candidatePassword) {
+CustomersSchema.methods.comparePassword = function(candidatePassword) {
     // compare hash of the passwords
     return this.password === candidatePassword;
   };

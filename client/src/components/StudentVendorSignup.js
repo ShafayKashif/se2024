@@ -1,6 +1,8 @@
 import "../styles/StudentVendorSignup.css";
 import { useState } from "react";
 import axios from 'axios';
+import React from 'react';
+import {useNavigate} from 'react-router-dom'
 
 const isPasswordStrong = (password) => {
   //at least 8 characters long
@@ -32,6 +34,7 @@ const isPasswordStrong = (password) => {
 
 
 const Signup = (props) => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone_Number, setPhonenumber] = useState("");
@@ -41,6 +44,7 @@ const Signup = (props) => {
   const [hostel, setHostel] = useState("");
   const [room_Number, setRoomNumber] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
 
   const handleSignup = async (event) => {
     event.preventDefault();
@@ -75,8 +79,9 @@ const Signup = (props) => {
         usertype: "student_vendor",
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log("Signup successful!");
+        navigate('/');
       } else {
         console.error("Signup failed:", await response.text());
       }
@@ -87,9 +92,9 @@ const Signup = (props) => {
 
   return (
     <div className="signup-page">
-      <div className="signup-header">
-        VENDOR <span className="lib-name">SIGNUP</span>
-      </div>
+      <h1 className="signup-header">
+        STUDENT VENDOR SIGNUP
+      </h1>
       <div className="partition"></div>
       <form className="form" onSubmit={handleSignup}>
       <div>

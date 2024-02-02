@@ -1,24 +1,91 @@
 import '../styles/login.css'
-
+import { useState } from "react";
+import axios from 'axios';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = (prop)=>{
+    const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLogin = async (event) => {
+      event.preventDefault();
+        // Validate user input including user role
+        if (!email || !password) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+
+        try {
+          const response = await axios.post("http://localhost:3001/", {     
+          email,
+          password,
+          type: "login",
+          usertype: "any",
+        });
+
+        console.log(response.message)
+
+          if (response.status === 200) {
+            console.log("login successful!");
+            console.log("response.data", response.data.message);
+            // console.log("response.message", response.message);
+            if (response.data.message === "Student_Vendor") {
+              navigate('/StudentVendorHome');
+            }
+            else if (response.data.message === "Vendor") {
+              navigate('/VendorHome');
+            }
+            else if (response.data.message === "Customer") {
+              navigate('/CustomerHome');
+            }
+            else if (response.data.message === "Courier") {
+              navigate('/CourierHome');
+            }
+            else if (response.data.message === "Admin") {
+              navigate('/AdminHome');
+            }
+            else {
+              console.log("Login failed:", await response.text());
+            }
+          } else {
+            console.error("Login failed:", await response.text());
+          }
+        } catch (error) {
+          console.error("Error during login:", error.message);
+        }
+    };
 
     return (        
         <div className="login-page">
-            <div className="login-header"> Management <span class="lib-name">System</span></div>
-            <div className='partition'></div>
-            <form className='form' >
-                <div >
-                    <input className="user-inp" type='username' placeholder='username'  />
-                </div>
-               <div>
-                    <input className="pass-inp" type='password' placeholder='password'  />
-               </div>
-               <div>
-                <button className="sub-button">Login</button>
-               </div>
-                
-            </form>
+        <h1 className="login-header">
+          CampusCousine
+        </h1>
+        <div className="partition"></div>
+        <form className="form" onSubmit={handleLogin}>
+          <div>
+            <input
+              className="user-inp"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <input
+              className="pass-inp"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div>
+            <button className="sub-button" type="submit">Login</button>
+          </div>
+        </form>
             <div className="question">Don't have an account? <a href="/MainSignup">Signup</a> </div>
         </div>
     )

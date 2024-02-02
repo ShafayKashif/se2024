@@ -8,12 +8,24 @@ const Login = (prop)=>{
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    
+    const validEmail = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+      return emailRegex.test(email);
+    }
 
     const handleLogin = async (event) => {
       event.preventDefault();
         // Validate user input including user role
         if (!email || !password) {
           alert("Please fill in all required fields.");
+          return;
+        }
+
+        if (!validEmail(email))
+        {
+          alert("Please enter a valid email!");
           return;
         }
 

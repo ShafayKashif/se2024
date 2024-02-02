@@ -119,7 +119,7 @@ app.post('/', async (request, response) => {
             role,
           });
           const savedUser2 =  await newUser2.save();
-          console.log('User signed up in studentvendor database:', savedUser);
+          console.log('User signed up in vendor database:', savedUser);
           console.log('User data stored in users database', savedUser2);
 
         response.status(200).json({ isAuthenticated: true });
@@ -165,7 +165,7 @@ app.post('/', async (request, response) => {
             role,
           });
           const savedUser2 =  await newUser2.save();
-          console.log('User signed up in studentvendor database:', savedUser);
+          console.log('User signed up in courier database:', savedUser);
           console.log('User data stored in users database', savedUser2);
         response.status(200).json({ isAuthenticated: true });
       }
@@ -217,7 +217,7 @@ app.post('/', async (request, response) => {
             role,
           });
           const savedUser2 =  await newUser2.save();
-          console.log('User signed up in studentvendor database:', savedUser);
+          console.log('User signed up in customer database:', savedUser);
           console.log('User data stored in users database', savedUser2);
         response.status(200).json({ isAuthenticated: true });
       }

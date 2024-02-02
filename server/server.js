@@ -9,6 +9,8 @@ import Vendors from './models/vendorModel.js';
 import Customers from './models/customerModel.js'
 import Couriers from './models/courierModel.js'
 import CustomerReviews from './models/CustomerReviewModel.js'
+import { Router } from 'express';
+
 
 dotenv.config();
 
@@ -130,7 +132,6 @@ app.post('/', async (request, response) => {
     }
   }
 
-  
   if (request.body.type === 'signup' && request.body.usertype === 'courier') {
     console.log('Signing up as courier man');
     try {
@@ -174,8 +175,6 @@ app.post('/', async (request, response) => {
 
     }
   }
-
-
   
   if (request.body.type === 'signup' && request.body.usertype === 'customer') {
     console.log('Signing up as customer');
@@ -226,9 +225,6 @@ app.post('/', async (request, response) => {
 
     }
   }
-
-
-
   
   if (request.body.type === 'login') {
     console.log('logging in');
@@ -266,7 +262,6 @@ app.post('/', async (request, response) => {
     }
   }
 
-
   if (request.body.type === 'review' && request.body.usertype === 'customer') {
     console.log('Review of customer received');
     try {
@@ -290,3 +285,26 @@ app.post('/', async (request, response) => {
 
 
 })
+
+// Create a new router instance
+const router = Router();
+
+// Define a route for food item search
+router.get('/food-search', async (request, response) => {
+  const { q } = request.query;
+
+  try {
+    // Perform a text search for food items
+    const results = await FoodItems.find({
+      $text: { $search: q }
+    });
+
+    response.status(200).json(results);
+  } catch (error) {
+    console.error('Error searching for food items:', error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Mount the router on the app
+app.use('/api', router);

@@ -12,6 +12,7 @@ import VendorHome from './components/VendorHome';
 import CourierHome from './components/CourierHome';
 import StudentVendorHome from './components/StudentVendorHome';
 import AdminHome from './components/AdminHome';
+import SeeOrders from './components/SeeOrders';
 
 function App() {
 
@@ -31,7 +32,7 @@ function App() {
             <Route path="/CourierHome" element={<CourierHome/>}/>
             <Route path="/StudentVendorHome" element={<StudentVendorHome/>}/>
             <Route path="/AdminHome" element={<AdminHome/>}/>
-            
+            <Route path="/SeeOrders" element={<SeeOrders/>}/>
 
 
 

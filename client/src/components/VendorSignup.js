@@ -14,13 +14,23 @@ const Signup = (props) => {
     const [password, setPassword] = useState("");
     const [Confirmpassword, setConfirmPassword] = useState("");
 
-
+    const validEmail = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+      return emailRegex.test(email);
+    }
 
     const handleSignup = async (event) => {
       event.preventDefault();
         // Validate user input including user role
         if (!name || !email || !phone_Number || !password || !Confirmpassword) {
           alert("Please fill in all required fields.");
+          return;
+        }
+
+        if (!validEmail(email))
+        {
+          alert("Please enter a valid email!");
           return;
         }
 

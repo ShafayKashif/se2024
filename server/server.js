@@ -8,6 +8,8 @@ import studentVendors from './models/studentVendorModel.js';
 import Vendors from './models/vendorModel.js';
 import Customers from './models/customerModel.js'
 import Couriers from './models/courierModel.js'
+import CustomerReviews from './models/CustomerReviewModel.js'
+import { Router } from 'express';
 import Order from './models/ordersModel.js';
 
 dotenv.config();
@@ -120,7 +122,7 @@ app.post('/', async (request, response) => {
             role,
           });
           const savedUser2 =  await newUser2.save();
-          console.log('User signed up in studentvendor database:', savedUser);
+          console.log('User signed up in vendor database:', savedUser);
           console.log('User data stored in users database', savedUser2);
 
         response.status(200).json({ isAuthenticated: true });
@@ -131,7 +133,6 @@ app.post('/', async (request, response) => {
     }
   }
 
-  
   if (request.body.type === 'signup' && request.body.usertype === 'courier') {
     console.log('Signing up as courier man');
     try {
@@ -166,7 +167,7 @@ app.post('/', async (request, response) => {
             role,
           });
           const savedUser2 =  await newUser2.save();
-          console.log('User signed up in studentvendor database:', savedUser);
+          console.log('User signed up in courier database:', savedUser);
           console.log('User data stored in users database', savedUser2);
         response.status(200).json({ isAuthenticated: true });
       }
@@ -175,8 +176,6 @@ app.post('/', async (request, response) => {
 
     }
   }
-
-
   
   if (request.body.type === 'signup' && request.body.usertype === 'customer') {
     console.log('Signing up as customer');
@@ -218,7 +217,7 @@ app.post('/', async (request, response) => {
             role,
           });
           const savedUser2 =  await newUser2.save();
-          console.log('User signed up in studentvendor database:', savedUser);
+          console.log('User signed up in customer database:', savedUser);
           console.log('User data stored in users database', savedUser2);
         response.status(200).json({ isAuthenticated: true });
       }
@@ -227,7 +226,6 @@ app.post('/', async (request, response) => {
 
     }
   }
-
   
   if (request.body.type === 'login') {
     console.log('logging in');
@@ -265,6 +263,52 @@ app.post('/', async (request, response) => {
     }
   }
 
+  if (request.body.type === 'review' && request.body.usertype === 'customer') {
+    console.log('Review of customer received');
+    try {
+      const { 
+        vendor,
+        rating,
+        description, } = request.body;
+
+        const newReview = new CustomerReviews({
+          vendor,
+          rating,
+          description,
+        });
+        const savedReview = await newReview.save();
+          console.log('Review submitted:', savedReview);
+        response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    }
+  }
+
+
+})
+
+// Create a new router instance
+const router = Router();
+
+// Define a route for food item search
+router.get('/food-search', async (request, response) => {
+  const { q } = request.query;
+
+  try {
+    // Perform a text search for food items
+    const results = await FoodItems.find({
+      $text: { $search: q }
+    });
+
+    response.status(200).json(results);
+  } catch (error) {
+    console.error('Error searching for food items:', error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Mount the router on the app
+app.use('/api', router);
 
 })
 

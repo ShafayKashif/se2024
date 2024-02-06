@@ -45,12 +45,23 @@ const Signup = (props) => {
   const [room_Number, setRoomNumber] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
+  const validEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    return emailRegex.test(email);
+  }
 
   const handleSignup = async (event) => {
     event.preventDefault();
 
     if (!name || !email || !phone_Number || !password || !Confirmpassword || !roll_Number || !hostel || !room_Number) {
       alert("Please fill in all required fields.");
+      return;
+    }
+    
+    if (!validEmail(email))
+    {
+      alert("Please enter a valid email!");
       return;
     }
 

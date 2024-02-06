@@ -4,6 +4,7 @@ import axios from 'axios';
 import React from 'react';
 import {useNavigate} from 'react-router-dom'
 
+
 const isPasswordStrong = (password) => {
   //at least 8 characters long
   if (password.length < 8) {
@@ -76,6 +77,20 @@ const Signup = (props) => {
     }
 
 
+
+
+    if (password !== Confirmpassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    if (!isPasswordStrong(password)) {
+      alert("Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, and a special character.");
+      return;
+    }
+
+
+
     try {
       const response = await axios.post("http://localhost:3001/", {
         name,
@@ -93,11 +108,11 @@ const Signup = (props) => {
       if (response.status === 200) {
         console.log("Signup successful!");
         navigate('/');
-      } else {
-        console.error("Signup failed:", await response.text());
-      }
+      } 
     } catch (error) {
       console.error("Error during signup:", error.message);
+      console.log("Sign up Failed");
+      alert("Email already in use");
     }
   };
 

@@ -14,6 +14,7 @@ import StudentVendorHome from './components/StudentVendorHome';
 import AdminHome from './components/AdminHome';
 import CustomerReview from './components/CustomerReview';
 import SeeOrders from './components/SeeOrders';
+import AddItem from './components/AddItem';
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
             <Route path="/StudentVendorHome" element={<StudentVendorHome/>}/>
             <Route path="/AdminHome" element={<AdminHome/>}/>
             <Route path="/CustomerReview" element={<CustomerReview/>}/>
+            <Route path="/AddItem" element={<AddItem/>}/>
             
             <Route path="/SeeOrders" element={<SeeOrders/>}/>
 

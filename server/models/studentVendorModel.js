@@ -29,6 +29,10 @@ const studentVendorsSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    status: {
+        type: String,
+        required: false, 
     }
 },{timestamps: true})
 

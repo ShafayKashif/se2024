@@ -8,6 +8,7 @@ import studentVendors from './models/studentVendorModel.js';
 import Vendors from './models/vendorModel.js';
 import Customers from './models/customerModel.js'
 import Couriers from './models/courierModel.js'
+import Order from './models/ordersModel.js';
 
 dotenv.config();
 
@@ -265,3 +266,14 @@ app.post('/', async (request, response) => {
 
 
 })
+
+app.get('/order', async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+

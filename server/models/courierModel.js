@@ -28,8 +28,7 @@ couriersSchema.methods.comparePassword = function(candidatePassword) {
     // compare hash of the passwords
     return this.password === candidatePassword;
   };
-
-
+  
 const Couriers = mongoose.model('Couriers', couriersSchema);
 export default Couriers;
 

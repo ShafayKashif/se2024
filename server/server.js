@@ -8,6 +8,9 @@ import studentVendors from './models/studentVendorModel.js';
 import Vendors from './models/vendorModel.js';
 import Customers from './models/customerModel.js'
 import Couriers from './models/courierModel.js'
+import Items from './models/itemModel.js';
+
+import multer from 'multer';
 
 dotenv.config();
 
@@ -27,8 +30,11 @@ mongoose.connect(process.env.MONG_URI)
     console.log(error)
   })
 
+  const storage = multer.memoryStorage(); // Store file in memory
+  const upload = multer({ storage: storage });
+
 //Make your API calls for every usecase here
-app.post('/', async (request, response) => {
+app.post('/upload', upload.single('image'), async (request, response) => {
   console.log('Post request received: ', request.body);
 
   if (request.body.type === 'signup' && request.body.usertype === 'student_vendor') {
@@ -46,7 +52,7 @@ app.post('/', async (request, response) => {
 
       if (existingUser) {
         console.log('email already exists. Cannot sign up.');
-        response.status(450).json({ isAuthenticated: false });
+        response.send({ isAuthenticated: false });
       } else {
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -226,6 +232,30 @@ app.post('/', async (request, response) => {
     }
   }
 
+  if(request.body.type === 'add_item'){
+    console.log("adding item");
+    try {
+      const { itemName, category, stock, price, vendorEmail } = request.body;
+  
+      // Create a new item in the database
+      const newItem = new Items({
+        itemName,
+        category,
+        stock,
+        price,
+        image: request.file.buffer,
+        vendorEmail,
+      });
+  
+      const savedItem = await newItem.save();
+  
+      console.log('Item added successfully:', savedItem);
+      response.status(200).json({ message: 'Item added successfully' });
+    } catch (error) {
+      console.error('Error adding item:', error);
+      response.status(500).json({ message: 'Failed to add item. Please try again.' });
+    }
+  }
   
   if (request.body.type === 'login') {
     console.log('logging in');

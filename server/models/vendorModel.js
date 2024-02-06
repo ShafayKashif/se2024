@@ -17,6 +17,10 @@ const VendorsSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    status: {
+        type: String,
+        required: false, // Set to false for not required
     }
 },{timestamps: true})
 

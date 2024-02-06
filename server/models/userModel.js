@@ -13,7 +13,11 @@ const UsersSchema = new Schema({
     role: {
         type: String,
         required: true
-    }
+    },
+    status:{
+        type: String,
+        required: false
+    },
 },{timestamps: true})
 
 UsersSchema.methods.comparePassword = function(candidatePassword) {

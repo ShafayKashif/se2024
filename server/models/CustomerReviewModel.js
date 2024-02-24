@@ -2,15 +2,23 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema
 
 const CustomerReviewSchema = new Schema({
-    description: {
+    id: {
+        type: Number,
+        required: false
+    },
+    customer_email: {
         type: String,
-        required: true 
+        required: false
+    },
+    vendor_email: {
+        type: String,
+        required: false
     },
     rating: {
         type: Number,
         required: true
     },
-    vendor: {
+    comment: {
         type: String,
         required: true
     }

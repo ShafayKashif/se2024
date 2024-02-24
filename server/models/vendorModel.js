@@ -21,6 +21,14 @@ const VendorsSchema = new Schema({
     status: {
         type: String,
         required: false, // Set to false for not required
+    },
+    keywords: {
+        type: String,
+        required: false, // Set to false for not required
+    },
+    application: {
+        type: String,
+        required: false, // Set to false for not required
     }
 },{timestamps: true})
 

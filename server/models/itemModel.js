@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const ItemsSchema = new Schema({
+    itemId: {
+        type: String,
+        required: true
+    },
     itemName: {
         type: String,
         required: true
@@ -21,6 +25,10 @@ const ItemsSchema = new Schema({
     image: {
         type: Buffer,
         required: true
+    },
+    calories: {
+        type: Number,
+        required: false
     },
     vendorEmail: {
         type: String,

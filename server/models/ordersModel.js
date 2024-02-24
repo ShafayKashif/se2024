@@ -2,6 +2,14 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema
 
 const ordersSchema = new Schema({
+    id: {
+        type: Number,
+        required: false 
+    },
+    item_id: {
+        type: Number,
+        required: false 
+    },
     client: {
         type: String,
         required: true 
@@ -10,13 +18,25 @@ const ordersSchema = new Schema({
         type: String,
         required: true
     },
-    clientHostel: {
+    client_addr: {
         type: String,
         required: true
     },
-    vendorHostel: {
+    vendor_addr: {
         type: String,
         required: true
+    },
+    quantity: {
+        type: Number,
+        required: false
+    },
+    status: {
+        type: String,
+        required: false
+    },
+    delivered_by: {
+        type: String,
+        required: false
     },
 },{timestamps: true})
 

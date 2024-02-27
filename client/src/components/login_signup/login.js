@@ -3,21 +3,23 @@ import { useState } from "react";
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+// Import useAuth hook
+import { useAuth } from "./AuthContext"; 
 
 const Login = (prop) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // Use useAuth hook here
+  const { dispatch } = useAuth();
 
   const validEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     return emailRegex.test(email);
   };
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    // Validate user input including user role
     if (!email || !password) {
       alert("Please fill in all required fields.");
       return;
@@ -33,30 +35,33 @@ const Login = (prop) => {
         email,
         password,
         type: "login",
-        usertype: "any",
       });
 
-      console.log(response.message);
-
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.message) {
         console.log("login successful!");
-        console.log("response.data", response.data.message);
-        // console.log("response.message", response.message);
+        
+        // TO DO Update the authentication state based on the role
+        dispatch({
+          type: 'LOGIN',
+          payload: { role: response.data.message }
+        });
+
+        // Navigate based on the user role
         if (response.data.message === "Student_Vendor") {
           navigate("/StudentVendorHome");
         } else if (response.data.message === "Vendor") {
           navigate("/VendorHome");
         } else if (response.data.message === "Customer") {
-          navigate("/CustomerHome");
+          navigate("/CustomerHome"); // Ensures only customers navigate to CustomerHome
         } else if (response.data.message === "Courier") {
           navigate("/CourierHome");
         } else if (response.data.message === "Admin") {
           navigate("/AdminHome");
         } else {
-          console.log("Login failed:", await response.text());
+          console.log("Role not recognized:", response.data.message);
         }
       } else {
-        console.error("Login failed:", await response.text());
+        console.error("Login failed:", response.data.message || "Unknown error");
       }
     } catch (error) {
       console.error("Error during login:", error.message);

@@ -1,20 +1,28 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
-import Login from "./components/login";
-import MainSignup from "./components/MainSignup";
-import CustomerSignup from "./components/CustomerSignup";
-import CourierSignup from "./components/CourierSignup";
-import VendorSignup from "./components/VendorSignup";
-import StudentVendorSignup from "./components/StudentVendorSignup";
+
+// login signup imports
+import Login from "./components/login_signup/login";
+import MainSignup from "./components/login_signup/MainSignup";
+import CustomerSignup from "./components/login_signup/CustomerSignup";
+import CourierSignup from "./components/login_signup/CourierSignup";
+import VendorSignup from "./components/login_signup/VendorSignup";
+import StudentVendorSignup from "./components/login_signup/StudentVendorSignup";
+
+// customer imports
 import CustomerHome from "./components/CustomerHome";
-import VendorHome from "./components/VendorHome";
-import CourierHome from "./components/CourierHome";
-import StudentVendorHome from "./components/StudentVendorHome";
-import AdminHome from "./components/AdminHome";
 import CustomerReview from "./components/CustomerReview";
-import SeeOrders from "./components/SeeOrders";
+
+// vender imports
+import StudentVendorHome from "./components/StudentVendorHome";
+import VendorHome from "./components/VendorHome";
 import AddItem from "./components/AddItem";
+import CourierHome from "./components/CourierHome";
+import SeeOrders from "./components/SeeOrders";
+
+//admin imports
+import AdminHome from "./components/AdminHome";
 import SeeVendorReviews from "./components/admin/SeeVendorReviews";
 import SeeVendorRequests from "./components/admin/SeeVendorRequests";
 import BanVendors from "./components/admin/BanVendors";

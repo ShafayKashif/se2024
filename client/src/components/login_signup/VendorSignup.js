@@ -1,8 +1,8 @@
-import "../styles/StudentVendorSignup.css";
+import "../../styles/VendorSignup.css";
 import { useState } from "react";
-import axios from 'axios';
-import React from 'react';
-import {useNavigate} from 'react-router-dom'
+import axios from "axios";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = (props) => {
   const navigate = useNavigate();
@@ -11,46 +11,40 @@ const Signup = (props) => {
   const [phone_Number, setPhonenumber] = useState("");
   const [password, setPassword] = useState("");
   const [Confirmpassword, setConfirmPassword] = useState("");
-  const [roll_Number, setRollNumber] = useState("");
-  const [hostel, setHostel] = useState("");
-  const [room_Number, setRoomNumber] = useState("");
 
   const validEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     return emailRegex.test(email);
-  }
+  };
 
   const handleSignup = async (event) => {
     event.preventDefault();
-
-    if (!name || !email || !phone_Number || !password || !Confirmpassword || !roll_Number || !hostel || !room_Number) {
+    // Validate user input including user role
+    if (!name || !email || !phone_Number || !password || !Confirmpassword) {
       alert("Please fill in all required fields.");
       return;
     }
 
-    if (!validEmail(email))
-    {
+    if (!validEmail(email)) {
       alert("Please enter a valid email!");
       return;
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/", {     
-      name,
-      email,
-      phone_Number,
-      password,
-      Confirmpassword,
-      roll_Number,
-      hostel,
-      room_Number,
-      type: "signup",
-      usertype: "customer",});
+      const response = await axios.post("http://localhost:3001/", {
+        name,
+        email,
+        phone_Number,
+        password,
+        Confirmpassword,
+        type: "signup",
+        usertype: "vendor",
+      });
 
       if (response.status === 200) {
         console.log("Signup successful!");
-        navigate('/');
+        navigate("/");
       } else {
         console.error("Signup failed:", await response.text());
       }
@@ -61,9 +55,7 @@ const Signup = (props) => {
 
   return (
     <div className="signup-page">
-      <h1 className="signup-header">
-        CUSTOMER SIGNUP
-      </h1>
+      <h1 className="signup-header">VENDOR SIGNUP</h1>
       <div className="partition"></div>
       <form className="form" onSubmit={handleSignup}>
         <div>
@@ -88,38 +80,12 @@ const Signup = (props) => {
           <input
             className="user-inp"
             type="text"
-            placeholder="Phonenumber"
+            placeholder="phonenumber"
             value={phone_Number}
             onChange={(e) => setPhonenumber(e.target.value)}
           />
         </div>
-        <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="Roll number"
-            value={roll_Number}
-            onChange={(e) => setRollNumber(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="Hostel"
-            value={hostel}
-            onChange={(e) => setHostel(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="Room number"
-            value={room_Number}
-            onChange={(e) => setRoomNumber(e.target.value)}
-          />
-        </div>
+
         <div>
           <input
             className="pass-inp"
@@ -133,7 +99,7 @@ const Signup = (props) => {
           <input
             className="pass-inp"
             type="password"
-            placeholder="Confirm Password"
+            placeholder="confirm Password"
             value={Confirmpassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />

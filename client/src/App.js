@@ -19,6 +19,8 @@ import SeeVendorReviews from "./components/admin/SeeVendorReviews";
 import SeeVendorRequests from "./components/admin/SeeVendorRequests";
 import BanVendors from "./components/admin/BanVendors";
 import SeeCourierRequests from "./components/admin/SeeCourierRequests";
+import CustomerViewCart from "./components/CustomerViewCart";
+import CustomerPlaceOrder from "./components/CustomerPlaceOrder";
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
         <Route path="/CustomerReview" element={<CustomerReview />} />
         <Route path="/AddItem" element={<AddItem />} />
         <Route path="/SeeOrders" element={<SeeOrders />} />
+        <Route path="/CustomerViewCart" element={<CustomerViewCart />} />
+        <Route path="/CustomerPlaceOrder" element={<CustomerPlaceOrder />} />
         <Route
           path="/admin/see-vendor-reviews"
           element={<SeeVendorReviews />}

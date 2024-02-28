@@ -7,7 +7,8 @@ const CustomerHome = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const handlePlaceOrder = async (event) => {
-        // Placing an order
+        navigate('/CustomerPlaceOrder');
+
     };
 
     const handleLeaveReview = async (event) => {
@@ -22,6 +23,10 @@ const CustomerHome = () => {
     const handleSearchSubmit = (event) => {
         event.preventDefault();
         navigate(`/search?q=${searchQuery}`); // Navigate to the search route with the search query
+    };
+
+    const handleViewCart = async (event) => {
+        navigate('/CustomerViewCart');
     };
 
     return (        
@@ -47,6 +52,12 @@ const CustomerHome = () => {
             <form className="form" onSubmit={handleLeaveReview}>
                 <div>
                     <button className="sub-button-Home" type="submit">Leave a Review</button>
+                </div>
+            </form>
+
+            <form className="form" onSubmit={handleViewCart}>
+                <div>
+                    <button className="sub-button-Home" type="submit">View Cart</button>
                 </div>
             </form>
         </div>

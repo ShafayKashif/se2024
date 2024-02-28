@@ -12,6 +12,7 @@ import CustomerReviews from "./models/CustomerReviewModel.js";
 import { Router } from "express";
 import Order from "./models/ordersModel.js";
 import Items from "./models/itemModel.js";
+import Carts from "./models/cartsModel.js";
 
 
 import multer from "multer";
@@ -63,6 +64,29 @@ app.post("/", upload.single("image"), async (request, response) => {
       console.error("Error submitting review:", error);
     }
   }
+
+  if (request.body.type === "placeOrder" && request.body.usertype === "customer") {
+    console.log("Placing order");
+    try {
+      const { vendor_email, customer_email, quantity, item_name, price, total } = request.body;
+      const newOrder = new Carts({
+        vendor_email,
+        customer_email,
+        quantity,
+        item_name,
+        price,
+        total,
+      });
+      const savedOrder = await newOrder.save();
+      console.log("Order placed:", savedOrder);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  }
+
+
+
 
 
   if (
@@ -444,6 +468,36 @@ app.get("/order", async (req, res) => {
     res.json(orders);
   } catch (error) {
     console.error("Error fetching orders:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/vendors", async (req, res) => {
+  try {
+    const vendors = await studentVendors.find();
+    res.json(vendors);
+  } catch (error) {
+    console.error("Error fetching vendors:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/customers", async (req, res) => {
+  try {
+    const customers = await Customers.find();
+    res.json(customers);
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/items", async (req, res) => {
+  try {
+    const items = await Items.find();
+    res.json(items);
+  } catch (error) {
+    console.error("Error fetching items:", error);
     res.status(500).send("Internal Server Error");
   }
 });

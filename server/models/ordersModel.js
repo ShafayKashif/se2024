@@ -14,7 +14,15 @@ const ordersSchema = new Schema({
         type: String,
         required: true 
     },
+    clientEmail: {
+        type: String,
+        required: true
+    },
     vendor: {
+        type: String,
+        required: true
+    },
+    vendorEmail: {
         type: String,
         required: true
     },

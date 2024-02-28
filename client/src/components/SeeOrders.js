@@ -7,7 +7,7 @@ const SeeOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/order'); // Replace with your actual endpoint
+        const response = await axios.get('http://localhost:3001/order'); 
         if (response.status === 200) {
           setOrders(response.data);
         } else {

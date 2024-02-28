@@ -9,16 +9,18 @@ const CustomerReview = (props) => {
   const [vendor, setVendor] = useState("");
   const [rating, setRating] = useState("");
   const [description, setDescription] = useState("");
- 
-
 
   const handleReview = async (event) => {
     event.preventDefault();
-
     if (!vendor || !rating || !description) {
       alert("Please fill in all required fields.");
       return;
     }
+
+    const customerEmail = window.localStorage.getItem('email');
+    console.log("customerEmail", customerEmail);  
+    
+    
 
     try {
       const response = await axios.post("http://localhost:3001/", {     
@@ -37,6 +39,9 @@ const CustomerReview = (props) => {
     } catch (error) {
       console.error("error logging review::", error.message);
     }
+
+
+
   };
 
   return (

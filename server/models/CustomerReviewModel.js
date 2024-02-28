@@ -16,11 +16,11 @@ const CustomerReviewSchema = new Schema({
     },
     rating: {
         type: Number,
-        required: true
+        required: false
     },
     comment: {
         type: String,
-        required: true
+        required: false
     }
 },{timestamps: true})
 

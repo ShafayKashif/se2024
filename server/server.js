@@ -39,8 +39,121 @@ const storage = multer.memoryStorage(); // Store file in memory
 const upload = multer({ storage: storage });
 
 //Make your API calls for every usecase here
-app.post("/upload", upload.single("image"), async (request, response) => {
+app.post("/", upload.single("image"), async (request, response) => {
   console.log("Post request received: ", request.body);
+
+  if (
+    request.body.type === "review" &&
+    request.body.usertype === "customer"
+  ) {
+    console.log("Review of customer received");
+    try {
+      const { vendor_email, customer_email, rating, comment } = request.body;
+
+      const newReview = new CustomerReviews({
+        vendor_email,
+        customer_email,
+        rating,
+        comment,
+      });
+      const savedReview = await newReview.save();
+      console.log("Review submitted:", savedReview);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    }
+  }
+
+
+  if (
+    request.body.type === "signup" &&
+    request.body.usertype === "customer"
+  ) {
+    console.log("Signing up as customer");
+    try {
+      const {
+        email,
+        roll_Number,
+        room_Number,
+        hostel,
+        name,
+        phone_Number,
+        password,
+      } = request.body;
+
+      const existingUser = await Customers.findOne({ email });
+
+      if (existingUser) {
+        console.log("email already exists. Cannot sign up.");
+        response.send({ isAuthenticated: false });
+      } else {
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = new Customers({
+          email,
+          roll_Number,
+          room_Number,
+          hostel,
+          name,
+          phone_Number,
+          password: hashedPassword,
+        });
+
+        const savedUser = await newUser.save();
+        //login table redirection code
+        let role = "Customer";
+        const newUser2 = new Users({
+          email,
+          password: hashedPassword,
+          role,
+        });
+        const savedUser2 = await newUser2.save();
+        console.log("User signed up in customer database:", savedUser);
+        console.log("User data stored in users database", savedUser2);
+        response.status(200).json({ isAuthenticated: true });
+      }
+    } catch (error) {
+      console.error("Error signing up user:", error);
+    }
+  }
+
+
+
+  if (request.body.type === "login") {
+    console.log("logging in");
+    try {
+      const { email, password } = request.body;
+
+      const existingUser = await Users.findOne({ email });
+      console.log(existingUser);
+
+      if (!existingUser) {
+        return response.status(404).json({ message: "User doesn't exist" });
+      }
+
+      bcrypt.compare(password, existingUser.password, function (err, result) {
+        if (err) {
+          return response
+            .status(402)
+            .json({ message: "Invalid credentials" });
+        }
+        if (result) {
+          let role = existingUser.role;
+          response.status(200).json({ message: role });
+        }
+      });
+
+      // if (existingUser.password !== hashedPassword) {
+      //   return response.status(402).json({ message: "Invalid credentials" });
+      // }
+      // let role = existingUser.role;
+      // response.status(200).json({ message: role });
+    } catch (error) {
+      console.error("Error signing up user:", error);
+    }
+  }
+  
+
 
   if (
     request.body.type === "signup" &&
@@ -91,6 +204,7 @@ app.post("/upload", upload.single("image"), async (request, response) => {
   //Make your API calls for every usecase here
   app.post("/", async (request, response) => {
     console.log("Post request received: ", request.body);
+
 
     if (
       request.body.type === "signup" &&
@@ -178,57 +292,7 @@ app.post("/upload", upload.single("image"), async (request, response) => {
       }
     }
 
-    if (
-      request.body.type === "signup" &&
-      request.body.usertype === "customer"
-    ) {
-      console.log("Signing up as customer");
-      try {
-        const {
-          email,
-          roll_Number,
-          room_Number,
-          hostel,
-          name,
-          phone_Number,
-          password,
-        } = request.body;
-
-        const existingUser = await Customers.findOne({ email });
-
-        if (existingUser) {
-          console.log("email already exists. Cannot sign up.");
-          response.send({ isAuthenticated: false });
-        } else {
-          const hashedPassword = await bcrypt.hash(password, 10);
-
-          const newUser = new Customers({
-            email,
-            roll_Number,
-            room_Number,
-            hostel,
-            name,
-            phone_Number,
-            password: hashedPassword,
-          });
-
-          const savedUser = await newUser.save();
-          //login table redirection code
-          let role = "Customer";
-          const newUser2 = new Users({
-            email,
-            password: hashedPassword,
-            role,
-          });
-          const savedUser2 = await newUser2.save();
-          console.log("User signed up in customer database:", savedUser);
-          console.log("User data stored in users database", savedUser2);
-          response.status(200).json({ isAuthenticated: true });
-        }
-      } catch (error) {
-        console.error("Error signing up user:", error);
-      }
-    }
+    
 
     if (request.body.type === "add_item") {
       console.log("adding item");

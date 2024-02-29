@@ -86,6 +86,29 @@ app.post("/", upload.single("image"), async (request, response) => {
   }
 
 
+  if (request.body.type === "selfpickup" && request.body.usertype === "customer") {
+    console.log("selfpicking order");
+    try {
+      const { vendor_email, vendorname, customer_email, customername,  quantity, item_name, clientAddr, vendorAddr, status, } = request.body;
+      const newOrder = new Order({
+        vendorEmail: vendor_email,
+        clientEmail: customer_email,
+        vendor: vendorname,
+        client: customername,
+        quantity,
+        item_name,
+        client_addr: clientAddr,
+        vendor_addr: vendorAddr,
+        status,
+      });
+      const savedOrder = await newOrder.save();
+      console.log("Order placed:", savedOrder);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  }
+
 
 
 
@@ -472,9 +495,19 @@ app.get("/order", async (req, res) => {
   }
 });
 
-app.get("/vendors", async (req, res) => {
+app.get("/studentvendors", async (req, res) => {
   try {
     const vendors = await studentVendors.find();
+    res.json(vendors);
+  } catch (error) {
+    console.error("Error fetching vendors idher hi:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/vendors", async (req, res) => {
+  try {
+    const vendors = await Vendors.find();
     res.json(vendors);
   } catch (error) {
     console.error("Error fetching vendors:", error);

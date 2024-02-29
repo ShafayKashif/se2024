@@ -47,7 +47,7 @@ function App() {
           <Route path="/CustomerSignup" element={<CustomerSignup />} />
           
           {/* Protected Routes with role-based access */}
-          <Route path="/VendorHome" element={<ProtectedRoute allowedRoles={['Vendor']}><VendorHome /></ProtectedRoute>} />
+          <Route path="/VendorHome" element={<ProtectedRoute allowedRoles={['vendor']}><VendorHome /></ProtectedRoute>} />
           <Route path="/CustomerHome" element={<ProtectedRoute allowedRoles={['Customer']}><CustomerHome /></ProtectedRoute>} />
           <Route path="/CourierHome" element={<ProtectedRoute allowedRoles={['Courier']}><CourierHome /></ProtectedRoute>} />
           <Route path="/StudentVendorHome" element={<ProtectedRoute allowedRoles={['Student_Vendor']}><StudentVendorHome /></ProtectedRoute>} />

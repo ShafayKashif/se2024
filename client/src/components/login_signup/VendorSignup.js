@@ -4,25 +4,21 @@ import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Signup = (props) => {
+const VendorSignup = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone_Number, setPhonenumber] = useState("");
+  const [phone_Number, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [Confirmpassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const validEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    return emailRegex.test(email);
-  };
+  const validEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleSignup = async (event) => {
     event.preventDefault();
-    // Validate user input including user role
-    if (!name || !email || !phone_Number || !password || !Confirmpassword) {
-      alert("Please fill in all required fields.");
+
+    if (!name || !email || !phone_Number || !password || password !== confirmPassword) {
+      alert("Please ensure all fields are filled correctly and passwords match.");
       return;
     }
 
@@ -32,24 +28,25 @@ const Signup = (props) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/", {
+      const response = await axios.post("http://localhost:3001/signup", {
         name,
         email,
         phone_Number,
         password,
-        Confirmpassword,
-        type: "signup",
         usertype: "vendor",
       });
 
-      if (response.status === 200) {
+      if (response.data.token) {
         console.log("Signup successful!");
-        navigate("/");
+        // Optionally store the token if you're auto-logging in users after signup
+        localStorage.setItem('token', response.data.token);
+        navigate("/"); // Navigating to the home page or dashboard after signup
       } else {
-        console.error("Signup failed:", await response.text());
+        alert("Signup failed: " + (response.data.msg || "Please try again later."));
       }
     } catch (error) {
-      console.error("Error during signup:", error.message);
+      console.error("Error during signup:", error.response?.data?.msg || error.message);
+      alert("Error during signup: " + (error.response?.data?.msg || error.message));
     }
   };
 
@@ -58,57 +55,42 @@ const Signup = (props) => {
       <h1 className="signup-header">VENDOR SIGNUP</h1>
       <div className="partition"></div>
       <form className="form" onSubmit={handleSignup}>
-        <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="user-inp"
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="phonenumber"
-            value={phone_Number}
-            onChange={(e) => setPhonenumber(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <input
-            className="pass-inp"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="pass-inp"
-            type="password"
-            placeholder="confirm Password"
-            value={Confirmpassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
-        <div>
-          <button className="sub-button" type="submit">
-            Signup
-          </button>
-        </div>
+        <input
+          className="user-inp"
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          className="user-inp"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          className="user-inp"
+          type="text"
+          placeholder="Phone Number"
+          value={phone_Number}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+        />
+        <input
+          className="pass-inp"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <input
+          className="pass-inp"
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <button className="sub-button" type="submit">Signup</button>
       </form>
       <div className="question">
         Already have an account? <a href="/">Login</a>
@@ -117,4 +99,4 @@ const Signup = (props) => {
   );
 };
 
-export default Signup;
+export default VendorSignup;

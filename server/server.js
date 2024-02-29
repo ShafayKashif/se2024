@@ -3,382 +3,124 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import multer from "multer";
+
+// Import models
 import Users from "./models/userModel.js";
 import studentVendors from "./models/studentVendorModel.js";
 import Vendors from "./models/vendorModel.js";
 import Customers from "./models/customerModel.js";
 import Couriers from "./models/courierModel.js";
-import CustomerReviews from "./models/CustomerReviewModel.js";
-import { Router } from "express";
-import Order from "./models/ordersModel.js";
-import Items from "./models/itemModel.js";
-
-import multer from "multer";
 
 dotenv.config();
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
-app.use(cors());
-mongoose
-  .connect(process.env.MONG_URI)
-  .then(() => {
-    app.listen(process.env.PORT, () => {
-      console.log(`listening on port ${process.env.PORT}`);
-      console.log("Connected to Database");
-    });
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+mongoose.connect(process.env.MONG_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.error(err));
 
-const storage = multer.memoryStorage(); // Store file in memory
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-//Make your API calls for every usecase here
-app.post("/upload", upload.single("image"), async (request, response) => {
-  console.log("Post request received: ", request.body);
+// Generate JWT Token
+const generateToken = (user) => {
+  return jwt.sign({
+    id: user.id,
+    email: user.email,
+    role: user.role,
+  }, process.env.JWT_SECRET, { expiresIn: '1h' });
+};
 
-  if (
-    request.body.type === "signup" &&
-    request.body.usertype === "student_vendor"
-  ) {
-    console.log("Post malone");
-    try {
-      const {
-        email,
-        roll_Number,
-        room_Number,
-        hostel,
-        name,
-        phone_Number,
-        password,
-      } = request.body;
+// JWT Verification Middleware
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
-      const existingUser = await studentVendors.findOne({ name });
+  if (!token) return res.status(401).send({ message: 'Access denied. No token provided.' });
 
-      if (existingUser) {
-        console.log("username already exists. Cannot sign up.");
-        response.send({ isAuthenticated: false });
-      } else {
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = new studentVendors({
-          email,
-          roll_Number,
-          room_Number,
-          hostel,
-          name,
-          phone_Number,
-          password: hashedPassword,
-        });
-
-        const savedUser = await newUser.save();
-        console.log("User signed up:", savedUser);
-        response.status(200).json({ isAuthenticated: true });
-      }
-    } catch (error) {
-      console.error("Error signing up user:", error);
-      response
-        .status(500)
-        .json({ isAuthenticated: false, error: "Internal server error." });
-    }
-  }
-
-  //Make your API calls for every usecase here
-  app.post("/", async (request, response) => {
-    console.log("Post request received: ", request.body);
-
-    if (
-      request.body.type === "signup" &&
-      request.body.usertype === "student_vendor"
-    ) {
-      signUpStudentVendor(request, response);
-    }
-
-    if (request.body.type === "signup" && request.body.usertype === "vendor") {
-      console.log("signing up as vendor");
-      try {
-        const { email, name, phone_Number, password } = request.body;
-
-        const existingUser = await Vendors.findOne({ email });
-
-        if (existingUser) {
-          console.log("email already exists. Cannot sign up.");
-          response.send({ isAuthenticated: false });
-        } else {
-          const hashedPassword = await bcrypt.hash(password, 10);
-
-          const newUser = new Vendors({
-            email,
-            name,
-            phone_Number,
-            password: hashedPassword,
-          });
-
-          const savedUser = await newUser.save();
-
-          //login table redirection code
-          let role = "Vendor";
-          const newUser2 = new Users({
-            email,
-            password: hashedPassword,
-            role,
-          });
-          const savedUser2 = await newUser2.save();
-          console.log("User signed up in vendor database:", savedUser);
-          console.log("User data stored in users database", savedUser2);
-
-          response.status(200).json({ isAuthenticated: true });
-        }
-      } catch (error) {
-        console.error("Error signing up user:", error);
-      }
-    }
-
-    if (request.body.type === "signup" && request.body.usertype === "courier") {
-      console.log("Signing up as courier man");
-      try {
-        const { email, roll_Number, name, phone_Number, password } =
-          request.body;
-
-        const existingUser = await Couriers.findOne({ email });
-
-        if (existingUser) {
-          console.log("email already exists. Cannot sign up.");
-          response.send({ isAuthenticated: false });
-        } else {
-          const hashedPassword = await bcrypt.hash(password, 10);
-          const newUser = new Couriers({
-            email,
-            roll_Number,
-            name,
-            phone_Number,
-            password: hashedPassword,
-          });
-
-          const savedUser = await newUser.save();
-          //login table redirection code
-          let role = "Courier";
-          const newUser2 = new Users({
-            email,
-            password: hashedPassword,
-            role,
-          });
-          const savedUser2 = await newUser2.save();
-          console.log("User signed up in courier database:", savedUser);
-          console.log("User data stored in users database", savedUser2);
-          response.status(200).json({ isAuthenticated: true });
-        }
-      } catch (error) {
-        console.error("Error signing up user:", error);
-      }
-    }
-
-    if (
-      request.body.type === "signup" &&
-      request.body.usertype === "customer"
-    ) {
-      console.log("Signing up as customer");
-      try {
-        const {
-          email,
-          roll_Number,
-          room_Number,
-          hostel,
-          name,
-          phone_Number,
-          password,
-        } = request.body;
-
-        const existingUser = await Customers.findOne({ email });
-
-        if (existingUser) {
-          console.log("email already exists. Cannot sign up.");
-          response.send({ isAuthenticated: false });
-        } else {
-          const hashedPassword = await bcrypt.hash(password, 10);
-
-          const newUser = new Customers({
-            email,
-            roll_Number,
-            room_Number,
-            hostel,
-            name,
-            phone_Number,
-            password: hashedPassword,
-          });
-
-          const savedUser = await newUser.save();
-          //login table redirection code
-          let role = "Customer";
-          const newUser2 = new Users({
-            email,
-            password: hashedPassword,
-            role,
-          });
-          const savedUser2 = await newUser2.save();
-          console.log("User signed up in customer database:", savedUser);
-          console.log("User data stored in users database", savedUser2);
-          response.status(200).json({ isAuthenticated: true });
-        }
-      } catch (error) {
-        console.error("Error signing up user:", error);
-      }
-    }
-
-    if (request.body.type === "add_item") {
-      console.log("adding item");
-      try {
-        const { itemName, category, stock, price, vendorEmail } = request.body;
-
-        // Create a new item in the database
-        const newItem = new Items({
-          itemName,
-          category,
-          stock,
-          price,
-          image: request.file.buffer,
-          vendorEmail,
-        });
-
-        const savedItem = await newItem.save();
-
-        console.log("Item added successfully:", savedItem);
-        response.status(200).json({ message: "Item added successfully" });
-      } catch (error) {
-        console.error("Error adding item:", error);
-        response
-          .status(500)
-          .json({ message: "Failed to add item. Please try again." });
-      }
-    }
-
-    if (request.body.type === "login") {
-      console.log("logging in");
-      try {
-        const { email, password } = request.body;
-
-        const existingUser = await Users.findOne({ email });
-        console.log(existingUser);
-
-        if (!existingUser) {
-          return response.status(404).json({ message: "User doesn't exist" });
-        }
-
-        bcrypt.compare(password, existingUser.password, function (err, result) {
-          if (err) {
-            return response
-              .status(402)
-              .json({ message: "Invalid credentials" });
-          }
-          if (result) {
-            let role = existingUser.role;
-            response.status(200).json({ message: role });
-          }
-        });
-
-        // if (existingUser.password !== hashedPassword) {
-        //   return response.status(402).json({ message: "Invalid credentials" });
-        // }
-        // let role = existingUser.role;
-        // response.status(200).json({ message: role });
-      } catch (error) {
-        console.error("Error signing up user:", error);
-      }
-    }
-
-    if (
-      request.body.type === "review" &&
-      request.body.usertype === "customer"
-    ) {
-      console.log("Review of customer received");
-      try {
-        const { vendor, rating, description } = request.body;
-
-        const newReview = new CustomerReviews({
-          vendor,
-          rating,
-          description,
-        });
-        const savedReview = await newReview.save();
-        console.log("Review submitted:", savedReview);
-        response.status(200).json({ isAuthenticated: true });
-      } catch (error) {
-        console.error("Error submitting review:", error);
-      }
-    }
-  });
-
-  // Create a new router instance
-  const router = Router();
-
-  // Define a route for food item search
-  router.get("/food-search", async (request, response) => {
-    const { q } = request.query;
-
-    try {
-      // Perform a text search for food items
-      const results = await FoodItems.find({
-        $text: { $search: q },
-      });
-
-      response.status(200).json(results);
-    } catch (error) {
-      console.error("Error searching for food items:", error);
-      response.status(500).json({ error: "Internal server error" });
-    }
-  });
-
-  // Mount the router on the app
-  app.use("/api", router);
-});
-
-// Admin endpoints
-
-// Fetch Vendor Reviews
-app.get("/api/admin/see-vendor-reviews", (req, res) => {
-  res.json([
-    { vendor: "Vendor 1", rating: 5, description: "Great service!" },
-    {
-      vendor: "Vendor 2",
-      rating: 4,
-      description: "Good, but room for improvement.",
-    },
-  ]);
-});
-
-// Fetch Vendor Requests
-app.get("/api/admin/see-vendor-requests", (req, res) => {
-  // Placeholder
-  res.json([{ vendorName: "New Vendor Request 1", requestDate: "2024-02-10" }]);
-});
-
-// Ban Vendors - Listing for now
-app.get("/api/admin/vendors", (req, res) => {
-  res.json([
-    { name: "Vendor 1", id: "v1" },
-    { name: "Vendor 2", id: "v2" },
-  ]);
-});
-
-// Fetch Courier Requests
-app.get("/api/admin/see-courier-requests", (req, res) => {
-  // Placeholder
-  res.json([
-    { courierName: "New Courier Request 1", requestDate: "2024-02-10" },
-    // Add more mock
-  ]);
-});
-
-app.get("/order", async (req, res) => {
   try {
-    const orders = await Order.find();
-    res.json(orders);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = decoded;
+      next();
   } catch (error) {
-    console.error("Error fetching orders:", error);
-    res.status(500).send("Internal Server Error");
+      res.status(400).send({ message: 'Invalid token.' });
+  }
+};
+
+
+
+// Unified Signup Route
+app.post("/signup", upload.single("image"), async (req, res) => {
+  const { email, password, usertype, name, phone_Number, roll_Number, room_Number, hostel } = req.body;
+  let Model = Users; // Default to general Users model
+  let newUser;
+
+  // Check for existing user in general Users model
+  let user = await Users.findOne({ email });
+  if (user) return res.status(400).json({ msg: "User already exists" });
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  switch (usertype) {
+    case "student_vendor":
+      Model = studentVendors;
+      newUser = { email, roll_Number, room_Number, hostel, name, phone_Number, password: hashedPassword };
+      break;
+    case "vendor":
+      Model = Vendors;
+      newUser = { email, name, phone_Number, password: hashedPassword };
+      break;
+    case "courier":
+      Model = Couriers;
+      newUser = { email, roll_Number, name, phone_Number, password: hashedPassword };
+      break;
+    case "customer":
+      Model = Customers;
+      newUser = { email, roll_Number, room_Number, hostel, name, phone_Number, password: hashedPassword };
+      break;
+    default:
+      return res.status(400).send("Invalid user type");
+  }
+
+  try {
+    const savedUser = new Model(newUser);
+    await savedUser.save();
+
+    // Also save to general Users model if necessary
+    await new Users({ email, password: hashedPassword, role: usertype }).save();
+
+    const token = generateToken(savedUser);
+    res.status(201).json({ token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
   }
 });
+
+// Login Route
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    let user = await Users.findOne({ email });
+    if (!user) return res.status(400).json({ msg: "User not found" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
+
+    // Generate token
+    const token = generateToken(user);
+    console.log("User Role:", user.role);
+    res.json({ token, role: user.role });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

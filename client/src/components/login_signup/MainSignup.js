@@ -1,36 +1,18 @@
-import "../../styles/MainSignup.css";
-import { useState } from "react";
+import { Link } from "react-router-dom";
 
-const MainSignup = (prop) => {
+const MainSignup = () => {
   return (
     <div className="MainSignup-page">
-      <h3 className="MainSignup-header"> Signup As: </h3>
+      <h3 className="MainSignup-header">Signup As:</h3>
       <div className="partition"></div>
-      <form className="form">
-        <div>
-          <button className="sub-button">
-            <a href="/VendorSignup">Vendor</a>
-          </button>
-        </div>
-        <div>
-          <button className="sub-button">
-            <a href="/StudentVendorSignup">Student Vendor</a>
-          </button>
-        </div>
-        <div>
-          <button className="sub-button">
-            <a href="/CustomerSignup">Customer</a>
-          </button>
-        </div>
-        <div>
-          <button className="sub-button">
-            {" "}
-            <a href="/CourierSignup">Courier man</a>
-          </button>
-        </div>
-      </form>
+      <div className="form">
+        <Link to="/VendorSignup" className="sub-button">Vendor</Link>
+        <Link to="/StudentVendorSignup" className="sub-button">Student Vendor</Link>
+        <Link to="/CustomerSignup" className="sub-button">Customer</Link>
+        <Link to="/CourierSignup" className="sub-button">Courier</Link>
+      </div>
       <div className="question">
-        Already have an account? <a href="/">Login</a>{" "}
+        Already have an account? <Link to="/">Login</Link>
       </div>
     </div>
   );

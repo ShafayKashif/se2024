@@ -13,7 +13,7 @@ const authReducer = (state, action) => {
     case 'LOGOUT':
       localStorage.removeItem('token'); // Clear token on logout
       return { ...state, isAuthenticated: false, role: null, token: null };
-    case 'SET_TOKEN': // Added to directly set a token (optional if you're managing token in LOGIN action)
+    case 'SET_TOKEN': // Added to directly set a token 
       localStorage.setItem('token', action.payload.token); // Save token to local storage
       return { ...state, token: action.payload.token };
     default:

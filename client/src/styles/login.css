@@ -51,12 +51,12 @@
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  margin-top: 20px; /* Space above the button */
-  margin-bottom: 20px; /* Space below the button for the signup redirect */
+  margin-top: 20px;
+  margin-bottom: 20px; 
 }
 
 .signup-redirect {
   color: darkblue;
-  text-decoration: underline; /* Makes it clear that it's clickable */
-  cursor: pointer; /* Changes cursor to indicate interaction */
+  text-decoration: underline; 
+  cursor: pointer; 
 }

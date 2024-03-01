@@ -5,6 +5,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
+import lumsBackground from "../../styles/lums_background.png";
+import logoImage from "../../styles/logo.png";
+
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -73,30 +76,31 @@ const Login = () => {
   };
 
   return (
-    <div className="login-page">
-      <h1 className="login-header">CampusCousine</h1>
-      <div className="partition"></div>
-      <form className="form" onSubmit={handleLogin}>
-        <input
-          className="user-inp"
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="pass-inp"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="sub-button" type="submit">
-          Login
-        </button>
-      </form>
-      <div className="question">
-        Don't have an account? <a href="/MainSignup">Signup</a>
+    <div className="login-container">
+      <div className="login-left" style={{ backgroundImage: `url(${lumsBackground})` }}></div>
+      <div className="login-right">
+        <img src={logoImage} alt="Logo" className="login-logo" />
+        <h2 className="login-title">Login</h2>  
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder="Email" // Ensure this is set
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="login-input" // Add className for styling
+            />
+            <input
+              type="password"
+              placeholder="Password" // Ensure this is set
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="login-input" // Add className for styling
+            />
+            <button type="submit" className="login-button">Sign In</button>
+          </form>
+        <div className="signup-redirect">
+          No account? <a href="/MainSignup">Sign up</a>
+        </div>
       </div>
     </div>
   );

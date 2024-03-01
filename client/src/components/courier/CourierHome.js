@@ -1,14 +1,14 @@
-import '../styles/CourierHome.css';
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import "../../styles/CourierHome.css";
+// import { useState } from "react";
+// import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const CourierHome = () => {
   const navigate = useNavigate();
 
   const handleLeaveReview = (event) => {
     event.preventDefault(); // Prevent the form submission
-    navigate('/SeeOrders');
+    navigate("/SeeOrders");
   };
 
   return (

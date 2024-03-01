@@ -26,7 +26,10 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/login", { email, password });
+      const response = await axios.post("http://localhost:3001/login", {
+        email,
+        password,
+      });
 
       if (response.status === 200 && response.data.token) {
         console.log("Login successful!");
@@ -34,22 +37,22 @@ const Login = () => {
         console.log("Received Role:", response.data.role);
         // Dispatch login action with role and token
         dispatch({
-          type: 'LOGIN',
-          payload: { role: response.data.role, token: response.data.token }
+          type: "LOGIN",
+          payload: { role: response.data.role, token: response.data.token },
         });
 
         // Navigate based on user role
         switch (response.data.role) {
-          case "Student_Vendor":
+          case "student_vendor":
             navigate("/StudentVendorHome");
             break;
           case "vendor":
             navigate("/VendorHome");
             break;
-          case "Customer":
+          case "customer":
             navigate("/CustomerHome");
             break;
-          case "Courier":
+          case "courier":
             navigate("/CourierHome");
             break;
           case "Admin":
@@ -59,7 +62,10 @@ const Login = () => {
             console.log("Role not recognized:", response.data.role);
         }
       } else {
-        console.error("Login failed:", response.data.message || "Unknown error");
+        console.error(
+          "Login failed:",
+          response.data.message || "Unknown error"
+        );
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -71,11 +77,27 @@ const Login = () => {
       <h1 className="login-header">CampusCousine</h1>
       <div className="partition"></div>
       <form className="form" onSubmit={handleLogin}>
-        <input className="user-inp" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input className="pass-inp" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button className="sub-button" type="submit">Login</button>
+        <input
+          className="user-inp"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          className="pass-inp"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button className="sub-button" type="submit">
+          Login
+        </button>
       </form>
-      <div className="question">Don't have an account? <a href="/MainSignup">Signup</a></div>
+      <div className="question">
+        Don't have an account? <a href="/MainSignup">Signup</a>
+      </div>
     </div>
   );
 };

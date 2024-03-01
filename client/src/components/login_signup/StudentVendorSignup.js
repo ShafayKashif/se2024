@@ -5,207 +5,147 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const isPasswordStrong = (password) => {
-  //at least 8 characters long
-  if (password.length < 8) {
-    return false;
-  }
-
-  //has an uppercase letter
-  if (!/[A-Z]/.test(password)) {
-    return false;
-  }
-
-  // has a lowercase letter
-  if (!/[a-z]/.test(password)) {
-    return false;
-  }
-
-  //has a special character
-  if (!/[@#$%^&*!()_+{}\[\]:;<>,.?~\\-]/.test(password)) {
-    return false;
-  }
-
-  return true;
+  return (
+    password.length >= 8 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /[@#$%^&*!()_+\-=[\]{};':"\\|,.<>/?]+/.test(password)
+  );
 };
 
-const Signup = (props) => {
+const StudentVendorSignup = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone_Number, setPhonenumber] = useState("");
+  const [phone_Number, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [Confirmpassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [roll_Number, setRollNumber] = useState("");
   const [hostel, setHostel] = useState("");
   const [room_Number, setRoomNumber] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
-  const validEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    return emailRegex.test(email);
-  };
+  const [error, setError] = useState("");
 
   const handleSignup = async (event) => {
     event.preventDefault();
+    setError(""); // Reset error message
 
+    // Validate inputs
     if (
       !name ||
       !email ||
       !phone_Number ||
       !password ||
-      !Confirmpassword ||
+      !confirmPassword ||
       !roll_Number ||
       !hostel ||
       !room_Number
     ) {
-      alert("Please fill in all required fields.");
+      setError("Please fill in all fields.");
       return;
     }
-
-    if (!validEmail(email)) {
-      alert("Please enter a valid email!");
-      return;
-    }
-
-    if (password !== Confirmpassword) {
-      setPasswordError("Passwords do not match");
-      return;
-    }
-
     if (!isPasswordStrong(password)) {
-      setPasswordError(
-        "Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, and a special character."
+      setError(
+        "Password must be at least 8 characters long and include uppercase, lowercase, and special characters."
       );
       return;
     }
-
-    if (password !== Confirmpassword) {
-      alert("Passwords do not match");
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
-    if (!isPasswordStrong(password)) {
-      alert(
-        "Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, and a special character."
-      );
-      return;
-    }
-
+    // Attempt signup
     try {
-      const response = await axios.post("http://localhost:3001/", {
+      const response = await axios.post("http://localhost:3001/signup", {
         name,
         email,
         phone_Number,
         password,
-        Confirmpassword,
         roll_Number,
         hostel,
         room_Number,
-        type: "signup",
         usertype: "student_vendor",
       });
 
-      if (response.status === 200) {
+      if (response.data.token) {
         console.log("Signup successful!");
-        navigate("/");
+        localStorage.setItem("token", response.data.token); // Store the token
+        navigate("/"); // Navigate to the login page or dashboard
+      } else {
+        setError("Signup failed. Please try again later.");
       }
     } catch (error) {
-      console.error("Error during signup:", error.message);
-      console.log("Sign up Failed");
-      alert("Email already in use");
+      setError(error.response?.data?.msg || "An error occurred during signup.");
     }
   };
 
   return (
     <div className="signup-page">
-      <h1 className="signup-header">STUDENT VENDOR SIGNUP</h1>
+      <h1 className="signup-header">Student Vendor Signup</h1>
       <div className="partition"></div>
       <form className="form" onSubmit={handleSignup}>
-        <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="user-inp"
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="Phonenumber"
-            value={phone_Number}
-            onChange={(e) => setPhonenumber(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="Roll number"
-            value={roll_Number}
-            onChange={(e) => setRollNumber(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="Hostel"
-            value={hostel}
-            onChange={(e) => setHostel(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="Room number"
-            value={room_Number}
-            onChange={(e) => setRoomNumber(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="pass-inp"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setPasswordError("");
-            }}
-          />
-        </div>
-        <div>
-          <input
-            className="pass-inp"
-            type="password"
-            placeholder="Confirm Password"
-            value={Confirmpassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-              setPasswordError("");
-            }}
-          />
-        </div>
-        {passwordError && <div className="error-message">{passwordError}</div>}
-        <div>
-          <button className="sub-button" type="submit">
-            Signup
-          </button>
-        </div>
+        {/* Input fields */}
+        <input
+          className="user-inp"
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          className="user-inp"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          className="user-inp"
+          type="text"
+          placeholder="Phone Number"
+          value={phone_Number}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+        />
+        <input
+          className="user-inp"
+          type="text"
+          placeholder="Roll Number"
+          value={roll_Number}
+          onChange={(e) => setRollNumber(e.target.value)}
+        />
+        <input
+          className="user-inp"
+          type="text"
+          placeholder="Hostel"
+          value={hostel}
+          onChange={(e) => setHostel(e.target.value)}
+        />
+        <input
+          className="user-inp"
+          type="text"
+          placeholder="Room Number"
+          value={room_Number}
+          onChange={(e) => setRoomNumber(e.target.value)}
+        />
+        <input
+          className="pass-inp"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <input
+          className="pass-inp"
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        {/* Error display */}
+        {error && <div className="error-message">{error}</div>}
+        <button className="sub-button" type="submit">
+          Signup
+        </button>
       </form>
       <div className="question">
         Already have an account? <a href="/">Login</a>
@@ -214,4 +154,4 @@ const Signup = (props) => {
   );
 };
 
-export default Signup;
+export default StudentVendorSignup;

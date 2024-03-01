@@ -23,7 +23,7 @@ const ItemsSchema = new Schema({
         required: true
     },
     image: {
-        type: Buffer,
+        type: String,
         required: true
     },
     calories: {

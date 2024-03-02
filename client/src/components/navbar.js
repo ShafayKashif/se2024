@@ -1,43 +1,52 @@
-// Navbar.js
 import React from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "./login_signup/AuthContext"; // Adjust the path as necessary
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./login_signup/AuthContext";
+import "../styles/Navbar.css";
+// Import the logo image here. Adjust the path as necessary.
+import logoImage from "../styles/logo.png";
+import settingImage from "../styles/settings.png";
 
 const Navbar = () => {
-  const { authState } = useAuth(); // Directly use useAuth here
+  const navigate = useNavigate();
+  const { authState } = useAuth();
   const { role } = authState;
+
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
 
   return (
     <nav className="navbar">
-      <div className="navbar-logo">Logo</div>
+      <div className="navbar-logo">
+        {/* Use the imported logoImage variable as the src */}
+        <img src={logoImage} alt="Logo" />
+      </div>
       <div className="navbar-links">
         {role === "customer" && (
           <>
-            <Link to="/CustomerHome">Homepage</Link>
-            <Link to="/CurrentOrder">Current Order</Link>
-            <Link to="/PlaceOrder">Place Order</Link>
-            <Link to="/ViewCart">View Cart</Link>
-            <Link to="/LeaveReview">Leave Review</Link>
+            <button onClick={() => handleNavigate("/CustomerHome")}>
+              Homepage
+            </button>
+            <button onClick={() => handleNavigate("/CurrentOrder")}>
+              Current Order
+            </button>
+            <button onClick={() => handleNavigate("/PlaceOrder")}>
+              Place Order
+            </button>
+            <button onClick={() => handleNavigate("/ViewCart")}>
+              View Cart
+            </button>
+            <button onClick={() => handleNavigate("/CustomerReview")}>
+              Leave Review
+            </button>
           </>
         )}
-        {role === "vendor" && (
-          <>
-            <Link to="/VendorHome">Homepage</Link>
-            <Link to="/UpdateMenu">Update Menu</Link>
-            <Link to="/ViewCurrentOrders">View Current Orders</Link>
-            <Link to="/ViewReviews">View Reviews</Link>
-          </>
-        )}
-        {role === "courier" && (
-          <>
-            <Link to="/CourierHome">Homepage</Link>
-            <Link to="/ViewProgress">View My Progress</Link>
-          </>
-        )}
-        <div className="navbar-settings">
-          <Link to="/Settings">Settings</Link>
-        </div>
+        {/* Include navigation for other roles here */}
       </div>
+      <button className="settings-button">
+        {/* Assume settings-icon.png is also imported if needed */}
+        <img src={settingImage} alt="Settings" />
+      </button>
     </nav>
   );
 };

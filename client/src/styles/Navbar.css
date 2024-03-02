@@ -1,0 +1,62 @@
+/* Reset margins and paddings */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Navbar styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #003366; /* Dark blue */
+  padding: 10px 20px;
+  color: white;
+  width: 100%; /* Ensure navbar is full width */
+  position: fixed; /* Make navbar stay at the top */
+  top: 0; /* Align to the top of the screen */
+  left: 0; /* Align to the left of the screen */
+  z-index: 1000; /* Ensure navbar is above other content */
+}
+
+.navbar-logo img {
+  width: 50px; /* Adjust logo size as needed */
+  height: auto;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 10px;
+}
+
+.navbar-links button {
+  background-color: white;
+  color: #003366; /* Dark blue */
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-links button:hover {
+  background-color: #f2f2f2;
+}
+
+.settings-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  color: #003366; /* Dark blue */
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.settings-button img {
+  width: 20px;
+  height: 20px;
+}

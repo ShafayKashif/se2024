@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import './../../styles/SearchResultsPage.css';
 
 const SearchResultsPage = () => {
     const location = useLocation();
@@ -71,51 +71,56 @@ const SearchResultsPage = () => {
     });
 
     return (
-        <div>
-            <form onSubmit={handleSearchSubmit}>
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    value={newSearchQuery}
-                    onChange={handleSearchInputChange}
-                />
-                <button type="submit">Search</button>
+        <div className="search-results-page">
+          <h1 className="search-results-title"></h1>
+          <div className="search-sort-container">
+            <form onSubmit={handleSearchSubmit} className="search-form">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={newSearchQuery}
+                onChange={handleSearchInputChange}
+                className="search-input"
+              />
+              <button type="submit" className="search-button">Search</button>
             </form>
-            <h1>Search Results</h1>
-            <p>Showing results for: {searchQuery}</p>
-            <div>
-                <label htmlFor="sort">Sort by:</label>
-                <select id="sort" value={sortBy} onChange={handleSortChange}>
-                    <option value="itemName">Name</option>
-                    <option value="calories">Calories</option>
-                    <option value="price">Price</option>
-                </select>
+            <div className="sort-by-container">
+              <label htmlFor="sort" className="sort-label">Sort by:</label>
+              <select id="sort" value={sortBy} onChange={handleSortChange} className="sort-select">
+                <option value="itemName">Name</option>
+                <option value="calories">Calories</option>
+                <option value="price">Price</option>
+              </select>
             </div>
-            <ul>
-                {sortedResults.map((result, index) => (
-                    <li key={index}>
-                        <h2>{result.itemName}</h2>
-                        <p>Vendor Email: {result.vendorEmail}</p>
-                        <p>Price: {result.price}</p>
-                        <p>Calories: {result.calories}</p>
-                        <img src={result.image} alt={result.itemName} />
-                        <button onClick={() => handleAddToCart(result)}>Add to Cart</button>
-                    </li>
-                ))}
-            </ul>
-            {cartItems.length > 0 && (
+          </div>
+          <p className="search-results-query">Results: {searchQuery}</p>
+          <ul className="search-results-list">
+            {sortedResults.map((result, index) => (
+              <li key={index} className="search-results-item">
+                <img src={result.image} alt={result.itemName} className="item-image" />
                 <div>
-                    <h2>Cart</h2>
-                    <ul>
-                        {cartItems.map((item, index) => (
-                            <li key={index}>{item.itemName}</li>
-                        ))}
-                    </ul>
-                    <button onClick={handleCheckout}>Checkout</button>
+                  <h2 className="item-name">{result.itemName}</h2>
+                  <p className="vendor-email">Vendor Email: {result.vendorEmail}</p>
+                  <p className="item-price">Price: {result.price}</p>
+                  <p className="item-calories">Calories: {result.calories}</p>
+                  <button onClick={() => handleAddToCart(result)} className="add-to-cart-button">Add to Cart</button>
                 </div>
-            )}
+              </li>
+            ))}
+          </ul>
+          {cartItems.length > 0 && (
+            <div className="cart-container">
+              <h2 className="cart-title">Cart</h2>
+              <ul className="cart-list">
+                {cartItems.map((item, index) => (
+                  <li key={index} className="cart-item">{item.itemName}</li>
+                ))}
+              </ul>
+              <button onClick={handleCheckout} className="checkout-button">Checkout</button>
+            </div>
+          )}
         </div>
-    );
+      );     
 };
 
 export default SearchResultsPage;

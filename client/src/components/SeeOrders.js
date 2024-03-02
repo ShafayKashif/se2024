@@ -1,8 +1,9 @@
 // SeeOrders.js
+//page author: Talha Tariq
 import '../styles/SeeOrders.css'
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from 'axios'; 
 
 const SeeOrders = () => {
   // State for storing orders and item information
@@ -28,6 +29,7 @@ const SeeOrders = () => {
   };
 
   // Function to get the next status based on the current status
+  //took syntactical help from: https://www.geeksforgeeks.org
   const getNextStatus = (currentStatus) => {
     return currentStatus === 'New' ? 'InProgress' : currentStatus === 'InProgress' ? 'Completed' : 'New';
   };
@@ -76,6 +78,7 @@ const SeeOrders = () => {
   }, []);
 
   // JSX to render the component
+  //styling help from youtube and syntaxtical from gpt
   return (
     <div className="form-container">
       <h2>Customer orders</h2>

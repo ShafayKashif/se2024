@@ -1,4 +1,5 @@
 // SeeOrders.js
+import '../styles/SeeOrders.css'
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -96,9 +97,9 @@ const SeeOrders = () => {
                   {/* Display item name or 'Loading...' if not fetched */}
                   {itemInfo[orderItem.item_id] ? itemInfo[orderItem.item_id].itemName : 'Loading...'}
                 </td>
-                <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client_addr}</td>
-                <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client}</td>
                 <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.vendor_addr}</td>
+                <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client}</td>
+                <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client_addr}</td>
                 <td style={{ textAlign: 'center', padding: '15px' }}>
                   {/* Button to change order status */}
                   <button

@@ -8,7 +8,6 @@ const CustomerHome = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const handlePlaceOrder = async (event) => {
-        // Placing an order
     };
 
     const handleLeaveReview = async (event) => {
@@ -35,12 +34,12 @@ const CustomerHome = () => {
     }
     
 
-    return (        
+    return (      
         <div>
             <h1>
-                Hello, welcome to CampusCuisine
+                Hello, welcome to CampusCuisine, use the navbar to navigate since home page isnt implemented yet
             </h1>
-            <form onSubmit={handleSearchSubmit}>
+            {/* <form onSubmit={handleSearchSubmit}>
                 <input
                     type="text"
                     placeholder="Search..."
@@ -59,7 +58,7 @@ const CustomerHome = () => {
                 <div>
                     <button className="sub-button-Home" type="submit">Leave a Review</button>
                 </div>
-            </form>
+            </form> */}
         </div>
     );
 

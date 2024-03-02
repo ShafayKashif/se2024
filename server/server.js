@@ -291,7 +291,8 @@ app.post("/query", async (request, response) => {
   }
 });
 
-//hassan ali reviews and place order
+//HASSAN ALI reviews and place order
+//below is an "API call" i presume, mostly inspired by the initial login and signup designes we did, i think those were by shehbaz. i jut changed the body.type to review and usertype to customer as an identifier (also this if exists because initially, we used the same api.post("/") call and redirected using if conditions) anyways, a pretty self explanatory function, extracts vendor, customer email, rating and comment from request body and saves it in the database and sends 200 status code as a response, if successful (later used to redirect on the front end side)
 app.post("/logreview", async (request, response) => {
 if (
   request.body.type === "review" &&
@@ -300,7 +301,6 @@ if (
   console.log("Review of customer received");
   try {
     const { vendor_email, customer_email, rating, comment } = request.body;
-
     const newReview = new CustomerReviews({
       vendor_email,
       customer_email,
@@ -316,6 +316,7 @@ if (
 }
 });
 
+//places order on database (cartitems table) received from front end, this p much isnt available to others, later used in view cart functionality (not implemented yet) (this and below ones (by hassan) inspired by the leave a review function)
 app.post("/placeOrder", async (request, response) => {
 if (request.body.type === "placeOrder" && request.body.usertype === "customer") {
   console.log("Placing order");
@@ -338,7 +339,7 @@ if (request.body.type === "placeOrder" && request.body.usertype === "customer") 
 }
 });
 
-
+// [EXPERIMENTAL] puts the order data into orders table, as in its an official order now which everyone can access 
 app.post("/selfpickup", async (request, response) => {
 if (request.body.type === "selfpickup" && request.body.usertype === "customer") {
   console.log("selfpicking order");
@@ -364,6 +365,7 @@ if (request.body.type === "selfpickup" && request.body.usertype === "customer") 
 }
 });
 
+// this function is inspired by the one talha wrote in his branch for fetching orders for his courier page, this one primarily is used to get all order details so cross verification can be done whether the customer reviewing a vendor ordered from them or not
 app.get("/order", async (req, res) => {
   try {
     const orders = await Order.find();
@@ -374,6 +376,7 @@ app.get("/order", async (req, res) => {
   }
 });
 
+// same inspiration as above, this one returns all student vendors for cross validation
 app.get("/studentvendors", async (req, res) => {
   try {
     const vendors = await studentVendors.find();
@@ -384,6 +387,7 @@ app.get("/studentvendors", async (req, res) => {
   }
 });
 
+//same inspiration as above, this one returns all vendors for cross validation
 app.get("/vendors", async (req, res) => {
   try {
     const vendors = await Vendors.find();
@@ -394,6 +398,7 @@ app.get("/vendors", async (req, res) => {
   }
 });
 
+//same inspiration as above, this one returns all customers for cross validation
 app.get("/customers", async (req, res) => {
   try {
     const customers = await Customers.find();
@@ -404,6 +409,7 @@ app.get("/customers", async (req, res) => {
   }
 });
 
+//same inspiration as above, this one returns all items for cross validation
 app.get("/items", async (req, res) => {
   try {
     const items = await Items.find();
@@ -413,6 +419,8 @@ app.get("/items", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+
 //below three api are of talha tariq
 
 //fetch orders for couriers

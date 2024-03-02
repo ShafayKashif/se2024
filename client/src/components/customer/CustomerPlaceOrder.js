@@ -293,7 +293,7 @@ const CustomerPlaceOrder = (props) => {
         item_name,
         clientAddr,
         vendorAddr,
-        status: "new",
+        status: "New",
       type: "selfpickup",
       usertype: "customer",});
       if (response.status === 200) {

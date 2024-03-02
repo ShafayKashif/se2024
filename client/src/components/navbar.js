@@ -58,6 +58,16 @@ const Navbar = () => {
             </button>
           </>
         )}
+        {role === "courier" && (
+          <>
+            <button onClick={() => handleNavigate("/SeeOrders")}>
+              See All Orders
+            </button>
+            {/* <button onClick={() => handleNavigate("/view")}>
+              view analytics
+            </button> */}
+          </>
+        )}
         {/* You can include navigation for other roles here */}
       </div>
       <button className="settings-button">

@@ -413,3 +413,48 @@ app.get("/items", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+//below three api are of talha tariq
+
+//fetch orders for couriers
+app.get("/order", async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+// Update order status from courier side, New->InProgress->Completed 
+app.put('/order/update', async (req, res) => {
+  const { orderId, newStatus } = req.body;
+  
+  try {
+    const order =  await Order.findOne({ id: orderId }).exec();
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    order.status = newStatus;
+
+    await order.save();
+
+    res.status(200).json({ message: 'Order status updated successfully', updatedOrder: order });
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+// Fetch item information provided the itemId from courier Page
+app.get('/item/:itemId', async (req, res) => {
+  try {
+    const itemId = req.params.itemId;
+    const itemInfo = await Items.findOne({ itemId }).select('itemName image');
+    if (!itemInfo) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    res.status(200).json(itemInfo);
+  } catch (error) {
+    console.error('Error fetching item information:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});

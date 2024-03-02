@@ -24,7 +24,6 @@ import StudentVendorHome from "./components/StudentVendorHome";
 import VendorHome from "./components/vender/VendorHome";
 import AddItem from "./components/AddItem";
 import CourierHome from "./components/courier/CourierHome";
-import SeeOrders from "./components/SeeOrders";
 
 //admin imports
 import AdminHome from "./components/admin/AdminHome";
@@ -32,7 +31,7 @@ import SeeVendorReviews from "./components/admin/SeeVendorReviews";
 import SeeVendorRequests from "./components/admin/SeeVendorRequests";
 import BanVendors from "./components/admin/BanVendors";
 import SeeCourierRequests from "./components/admin/SeeCourierRequests";
-
+import SeeOrders from "./components/SeeOrders";
 function App() {
   return (
     <BrowserRouter>
@@ -98,6 +97,14 @@ function App() {
                 <ProtectedRoute allowedRoles={["Admin"]}>
                   <AdminHome />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/SeeOrders"
+              element={
+                // <ProtectedRoute allowedRoles={["Admin"]}>
+                  <SeeOrders />
+                // </ProtectedRoute>
               }
             />
             <Route

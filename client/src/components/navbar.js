@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./login_signup/AuthContext";
 import "../styles/Navbar.css";
-// Import the logo image here. Adjust the path as necessary.
 import logoImage from "../styles/logo.png";
 import settingImage from "../styles/settings.png";
 

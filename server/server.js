@@ -12,16 +12,11 @@ import studentVendors from "./models/studentVendorModel.js";
 import Vendors from "./models/vendorModel.js";
 import Customers from "./models/customerModel.js";
 import Couriers from "./models/courierModel.js";
-<<<<<<< HEAD
+
 import CustomerReviews from "./models/CustomerReviewModel.js";
 import { Router } from "express";
 import Order from "./models/ordersModel.js";
 import Items from "./models/itemModel.js";
-
-
-import multer from "multer";
-=======
->>>>>>> shafay
 
 dotenv.config();
 
@@ -29,43 +24,61 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONG_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose
+  .connect(process.env.MONG_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("MongoDB connected"))
-  .catch(err => console.error(err));
+  .catch((err) => console.error(err));
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Generate JWT Token
 const generateToken = (user) => {
-  return jwt.sign({
-    id: user.id,
-    email: user.email,
-    role: user.role,
-  }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  return jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
 };
 
 // JWT Verification Middleware
 const verifyToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
 
-  if (!token) return res.status(401).send({ message: 'Access denied. No token provided.' });
+  if (!token)
+    return res
+      .status(401)
+      .send({ message: "Access denied. No token provided." });
 
   try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded;
-      next();
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
   } catch (error) {
-      res.status(400).send({ message: 'Invalid token.' });
+    res.status(400).send({ message: "Invalid token." });
   }
 };
 
-
-
 // Unified Signup Route
 app.post("/signup", upload.single("image"), async (req, res) => {
-  const { email, password, usertype, name, phone_Number, roll_Number, room_Number, hostel } = req.body;
+  const {
+    email,
+    password,
+    usertype,
+    name,
+    phone_Number,
+    roll_Number,
+    room_Number,
+    hostel,
+  } = req.body;
   let Model = Users; // Default to general Users model
   let newUser;
 
@@ -78,7 +91,15 @@ app.post("/signup", upload.single("image"), async (req, res) => {
   switch (usertype) {
     case "student_vendor":
       Model = studentVendors;
-      newUser = { email, roll_Number, room_Number, hostel, name, phone_Number, password: hashedPassword };
+      newUser = {
+        email,
+        roll_Number,
+        room_Number,
+        hostel,
+        name,
+        phone_Number,
+        password: hashedPassword,
+      };
       break;
     case "vendor":
       Model = Vendors;
@@ -86,11 +107,25 @@ app.post("/signup", upload.single("image"), async (req, res) => {
       break;
     case "courier":
       Model = Couriers;
-      newUser = { email, roll_Number, name, phone_Number, password: hashedPassword };
+      newUser = {
+        email,
+        roll_Number,
+        name,
+        phone_Number,
+        password: hashedPassword,
+      };
       break;
     case "customer":
       Model = Customers;
-      newUser = { email, roll_Number, room_Number, hostel, name, phone_Number, password: hashedPassword };
+      newUser = {
+        email,
+        roll_Number,
+        room_Number,
+        hostel,
+        name,
+        phone_Number,
+        password: hashedPassword,
+      };
       break;
     default:
       return res.status(400).send("Invalid user type");

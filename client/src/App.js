@@ -93,9 +93,9 @@ function App() {
             <Route
               path="/CustomerReview"
               element={
-                <ProtectedRoute allowedRoles={["Customer"]}>
-                  <CustomerReview />
-                </ProtectedRoute>
+                //<ProtectedRoute allowedRoles={["customer"]}>
+                <CustomerReview />
+                //</ProtectedRoute>
               }
             />
             <Route

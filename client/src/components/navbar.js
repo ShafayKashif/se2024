@@ -17,7 +17,6 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        {/* Use the imported logoImage variable as the src */}
         <img src={logoImage} alt="Logo" />
       </div>
       <div className="navbar-links">
@@ -40,10 +39,25 @@ const Navbar = () => {
             </button>
           </>
         )}
-        {/* Include navigation for other roles here */}
+        {role === "vendor" && (
+          <>
+            <button onClick={() => handleNavigate("/VendorHome")}>
+              Homepage
+            </button>
+            <button onClick={() => handleNavigate("/UpdateMenu")}>
+              Update Menu
+            </button>
+            <button onClick={() => handleNavigate("/ViewCurrentOrders")}>
+              View Current Orders
+            </button>
+            <button onClick={() => handleNavigate("/ViewCustomerReviews")}>
+              View Customer Reviews
+            </button>
+          </>
+        )}
+        {/* You can include navigation for other roles here */}
       </div>
       <button className="settings-button">
-        {/* Assume settings-icon.png is also imported if needed */}
         <img src={settingImage} alt="Settings" />
       </button>
     </nav>

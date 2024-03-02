@@ -44,20 +44,18 @@ const Navbar = () => {
             <button onClick={() => handleNavigate("/VendorHome")}>
               Homepage
             </button>
-            <button onClick={() => handleNavigate("/Additem")}>
+            <button onClick={() => handleNavigate("/AddItem")}>
               Add Item
-            </button>
-            <button onClick={() => handleNavigate("/UpdateMenu")}>
-              Update Menu
             </button>
             <button onClick={() => handleNavigate("/ViewCurrentOrders")}>
               View Current Orders
             </button>
-            <button onClick={() => handleNavigate("/ViewCustomerReviews")}>
+            <button onClick={() => handleNavigate("/ViewCustomersReviews")}>
               View Customer Reviews
             </button>
           </>
         )}
+        {/* You can include navigation for other roles here */}
         {role === "courier" && (
           <>
             <button onClick={() => handleNavigate("/SeeOrders")}>

@@ -2,7 +2,7 @@
 import React, { useState} from 'react';
 import axios from 'axios';
 import { useNavigate} from 'react-router-dom';
-import '../styles/AddItem.css';
+import '../../styles/addItemCustom.css';
 
 const AddItem = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const AddItem = () => {
 
     if (!itemName || !category || !stock || !price || !imageLink || !calories) {
       alert('Please fill in all fields');
-      return; // Prevent further execution
+      return; 
     }
 
     try {
@@ -33,7 +33,7 @@ const AddItem = () => {
         category,
         stock,
         price,
-        image: imageLink, // Send Cloudinary image link to the server
+        image: imageLink, // Cloudinary image link 
         vendorEmail,
         calories,
         type: 'add_item',
@@ -59,7 +59,7 @@ const AddItem = () => {
 
     const formData = new FormData();
     formData.append('file', selectedImage);
-    formData.append('upload_preset', 'pv6cd033'); // Replace 'your_upload_preset' with your Cloudinary upload preset
+    formData.append('upload_preset', 'pv6cd033'); 
 
     try {
       const response = await axios.post('https://api.cloudinary.com/v1_1/dcswark7e/image/upload', formData);

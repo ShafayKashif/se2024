@@ -171,8 +171,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
-
-//Shehbaz
 //Make your API calls for every usecase here
 app.post("/add_item",async (request, response) => {
   //Shehbaz
@@ -225,7 +223,7 @@ app.post('/items', async (req, res) => {
     let { email } = req.body;
     // If email is null or undefined, assign a default value
     email = email || "default@email.com";
-    const items = await Items.find({ vendorEmail: email }).limit(4); 
+    const items = await Items.find({ vendorEmail: email }); 
     console.log(items)
     res.json(items);
   } catch (error) {
@@ -234,6 +232,22 @@ app.post('/items', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+app.post('/ViewCustomerReviews', async (req, res) => {
+  //Shehbaz
+  console.log("Fetching vendor reviews")
+  const vendorEmail = req.body.vendorEmail
+  console.log(vendorEmail)
+
+  try {
+      const reviews = await CustomerReviews.find({ vendor_email: vendorEmail });
+      console.log(reviews)
+      res.json(reviews);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
 
 
 // Source: Chat GPT

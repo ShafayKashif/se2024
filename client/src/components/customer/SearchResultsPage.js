@@ -93,7 +93,7 @@ const SearchResultsPage = () => {
               </select>
             </div>
           </div>
-          <p className="search-results-query">Results: {searchQuery}</p>
+          <p className="search-results-query"></p>
           <ul className="search-results-list">
             {sortedResults.map((result, index) => (
               <li key={index} className="search-results-item">

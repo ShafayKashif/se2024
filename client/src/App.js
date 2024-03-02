@@ -42,6 +42,8 @@ function App() {
           <Route path="/CustomerSignup" element={<CustomerSignup />} />
           <Route path="/CourierSignup" element={<CourierSignup />} />
           <Route path="/VendorSignup" element={<VendorSignup />} />
+          <Route path="/VendorHome/AddItem" element={<AddItem/>} />
+          
           <Route
             path="/StudentVendorSignup"
             element={<StudentVendorSignup />}
@@ -53,9 +55,9 @@ function App() {
             <Route
               path="/VendorHome"
               element={
-                <ProtectedRoute allowedRoles={["vendor"]}>
+
                   <VendorHome />
-                </ProtectedRoute>
+
               }
             />
             <Route
@@ -82,6 +84,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/VendorHome" element={<VendorHome />} />
             <Route
               path="/AdminHome"
               element={

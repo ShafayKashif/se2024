@@ -54,6 +54,8 @@ const Login = () => {
             window.localStorage.setItem('email', email);
             break;
           case "customer":
+            window.localStorage.setItem('CustomerEmail', email);
+            console.log("set item customer: ", email)
             navigate("/CustomerHome");
             break;
           case "courier":

@@ -290,3 +290,126 @@ app.post("/query", async (request, response) => {
 
   }
 });
+
+//hassan ali reviews and place order
+app.post("/logreview", async (request, response) => {
+if (
+  request.body.type === "review" &&
+  request.body.usertype === "customer"
+) {
+  console.log("Review of customer received");
+  try {
+    const { vendor_email, customer_email, rating, comment } = request.body;
+
+    const newReview = new CustomerReviews({
+      vendor_email,
+      customer_email,
+      rating,
+      comment,
+    });
+    const savedReview = await newReview.save();
+    console.log("Review submitted:", savedReview);
+    response.status(200).json({ isAuthenticated: true });
+  } catch (error) {
+    console.error("Error submitting review:", error);
+  }
+}
+});
+
+app.post("/placeOrder", async (request, response) => {
+if (request.body.type === "placeOrder" && request.body.usertype === "customer") {
+  console.log("Placing order");
+  try {
+    const { vendor_email, customer_email, quantity, item_name, price, total } = request.body;
+    const newOrder = new Carts({
+      vendor_email,
+      customer_email,
+      quantity,
+      item_name,
+      price,
+      total,
+    });
+    const savedOrder = await newOrder.save();
+    console.log("Order placed:", savedOrder);
+    response.status(200).json({ isAuthenticated: true });
+  } catch (error) {
+    console.error("Error placing order:", error);
+  }
+}
+});
+
+
+app.post("/selfpickup", async (request, response) => {
+if (request.body.type === "selfpickup" && request.body.usertype === "customer") {
+  console.log("selfpicking order");
+  try {
+    const { vendor_email, vendorname, customer_email, customername,  quantity, item_name, clientAddr, vendorAddr, status, } = request.body;
+    const newOrder = new Order({
+      vendorEmail: vendor_email,
+      clientEmail: customer_email,
+      vendor: vendorname,
+      client: customername,
+      quantity,
+      item_name,
+      client_addr: clientAddr,
+      vendor_addr: vendorAddr,
+      status,
+    });
+    const savedOrder = await newOrder.save();
+    console.log("Order placed:", savedOrder);
+    response.status(200).json({ isAuthenticated: true });
+  } catch (error) {
+    console.error("Error placing order:", error);
+  }
+}
+});
+
+app.get("/order", async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/studentvendors", async (req, res) => {
+  try {
+    const vendors = await studentVendors.find();
+    res.json(vendors);
+  } catch (error) {
+    console.error("Error fetching vendors idher hi:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/vendors", async (req, res) => {
+  try {
+    const vendors = await Vendors.find();
+    res.json(vendors);
+  } catch (error) {
+    console.error("Error fetching vendors:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/customers", async (req, res) => {
+  try {
+    const customers = await Customers.find();
+    res.json(customers);
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/items", async (req, res) => {
+  try {
+    const items = await Items.find();
+    res.json(items);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});

@@ -10,6 +10,26 @@ const cartsSchema = new Schema({
         type: String,
         required: true
     },
+    vendor_email: {
+        type: String,
+        required: true
+    },
+    quantity: {
+        type: Number,
+        required: false
+    },
+    item_name: {
+        type: String,
+        required: false
+    },
+    price: {
+        type: Number,
+        required: false
+    },
+    total: {
+        type: Number,
+        required: false
+    },
 },{timestamps: true})
 
 const carts = mongoose.model('carts', cartsSchema);

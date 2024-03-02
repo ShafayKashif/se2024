@@ -44,6 +44,9 @@ const Navbar = () => {
             <button onClick={() => handleNavigate("/VendorHome")}>
               Homepage
             </button>
+            <button onClick={() => handleNavigate("/Additem")}>
+              Add Item
+            </button>
             <button onClick={() => handleNavigate("/UpdateMenu")}>
               Update Menu
             </button>

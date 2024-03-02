@@ -1,4 +1,4 @@
-import "../styles/CustomerReview.css";
+import "../../styles/CustomerReview.css";
 import { useState } from "react";
 import axios from 'axios';
 import React from 'react';
@@ -6,27 +6,45 @@ import {useNavigate} from 'react-router-dom'
 
 const CustomerReview = (props) => {
   const navigate = useNavigate();
-  const [vendor, setVendor] = useState("");
+  const [vendor_email, setVendor] = useState("");
   const [rating, setRating] = useState("");
-  const [description, setDescription] = useState("");
+  const [comment, setDescription] = useState("");
 
   const handleReview = async (event) => {
     event.preventDefault();
-    if (!vendor || !rating || !description) {
+    if (!vendor_email || !rating || !comment) {
       alert("Please fill in all required fields.");
       return;
     }
 
-    const customerEmail = window.localStorage.getItem('email');
-    console.log("customerEmail", customerEmail);  
-    
-    
+    const customer_email = window.localStorage.getItem('CustomerEmail');
+    console.log("customer_email", customer_email); 
 
     try {
-      const response = await axios.post("http://localhost:3001/", {     
-        vendor,
+      const response = await axios.get('http://localhost:3001/order'); 
+      if (response.status === 200) {
+        console.log("orders fetched!");
+        const orders = response.data;
+        console.log("orders", orders);
+        const order = orders.find(order => order.vendorEmail === vendor_email && order.clientEmail === customer_email);
+        console.log("order", order);
+        if (!order) {
+          alert("You have not ordered from this vendor.");
+          return;
+        }
+      } else {
+        console.error('Failed to fetch orders:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error.message);
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3001/logreview", {     
+        vendor_email,
+        customer_email,
         rating,
-        description,
+        comment,
       type: "review",
       usertype: "customer",});
 
@@ -56,7 +74,7 @@ const CustomerReview = (props) => {
             className="user-inp"
             type="text"
             placeholder="Vendor Name"
-            value={vendor}
+            value={vendor_email}
             onChange={(e) => setVendor(e.target.value)}
           />
         </div>
@@ -65,7 +83,7 @@ const CustomerReview = (props) => {
             className="user-inp"
             type="text"
             placeholder="Description"
-            value={description}
+            value={comment}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>

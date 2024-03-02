@@ -16,6 +16,7 @@ import ProtectedRoute from "./components/login_signup/ProtectedRoute";
 // customer imports
 import CustomerHome from "./components/customer/CustomerHome";
 import CustomerReview from "./components/CustomerReview";
+import SearchResultsPage from "./components/customer/SearchResultsPage";
 
 // vender imports
 import StudentVendorHome from "./components/StudentVendorHome";
@@ -42,7 +43,8 @@ function App() {
           <Route path="/CustomerSignup" element={<CustomerSignup />} />
           <Route path="/CourierSignup" element={<CourierSignup />} />
           <Route path="/VendorSignup" element={<VendorSignup />} />
-          <Route path="/VendorHome/AddItem" element={<AddItem/>} />
+          
+          
           
           <Route
             path="/StudentVendorSignup"
@@ -60,14 +62,16 @@ function App() {
 
               }
             />
+            <Route path="/VendorHome/AddItem" element={<AddItem/>} />
             <Route
               path="/CustomerHome"
               element={
-                <ProtectedRoute allowedRoles={["customer"]}>
+                // <ProtectedRoute allowedRoles={["customer"]}>
                   <CustomerHome />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
+            <Route path="/search" element={<SearchResultsPage/>} />
             <Route
               path="/CourierHome"
               element={

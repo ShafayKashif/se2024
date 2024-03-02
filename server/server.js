@@ -234,3 +234,59 @@ app.post('/items', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+
+// Source: Chat GPT
+// Function to calculate Jaccard similarity between two strings
+function jaccardSimilarity(str1, str2) {
+  const set1 = new Set(str1);
+  const set2 = new Set(str2);
+
+  // Calculate intersection size
+  let intersectionSize = 0;
+  set1.forEach(element => {
+      if (set2.has(element)) {
+          intersectionSize++;
+      }
+  });
+
+  // Calculate union size
+  const unionSize = set1.size + set2.size - intersectionSize;
+
+  // Calculate Jaccard similarity
+  if (unionSize === 0) {
+      return 0; // If union is empty, return 0 to avoid division by zero
+  } else {
+      return intersectionSize / unionSize;
+  }
+}
+
+
+app.post("/query", async (request, response) => {
+  if (request.body.type && request.body.type=== "food-search")
+  {
+    console.log("Request: ", request.body.query);
+
+    try {
+      const query = request.body.query;
+      const results = await Items.find(); // retrieve all food items
+      console.log("Results: ", results);
+
+      // Filter items based on similarity of their names
+      const filteredItems = results.filter(item => {
+
+        // Calculate similarity score between item name and search query
+        const similarityScore = jaccardSimilarity(item.itemName.toLowerCase(), query.toLowerCase());
+        return similarityScore >= 0.5; // Adjust threshold as needed    
+      });
+
+      response.status(200).json(filteredItems);
+      console.log("Filtered Food items list: ", filteredItems);
+
+    } catch (error) {
+      console.error("Error searching for food items:", error);
+      response.status(500).json({ error: "Internal server error" });
+    }
+
+  }
+});

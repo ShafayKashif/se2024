@@ -1,6 +1,7 @@
 import { useState } from "react";
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const CustomerHome = () => {
     const navigate = useNavigate();
@@ -19,15 +20,25 @@ const CustomerHome = () => {
         // Perform filtering or other operations based on the search query here
     };
 
-    const handleSearchSubmit = (event) => {
+    const handleSearchSubmit = async (event) => {
         event.preventDefault();
-        navigate(`/search?q=${searchQuery}`); // Navigate to the search route with the search query
-    };
+        try {
+            const response = await axios.post("http://localhost:3001/query", {     
+                type: "food-search",
+                query: searchQuery,
+            }); 
+    
+            navigate(`/search`, { state: { searchResults: response.data } });
+        } catch(error) {
+            console.error("Error during search:", error.message);
+        }
+    }
+    
 
     return (        
         <div>
             <h1>
-                Hello, welcome to CampusCousine
+                Hello, welcome to CampusCuisine
             </h1>
             <form onSubmit={handleSearchSubmit}>
                 <input
@@ -51,6 +62,7 @@ const CustomerHome = () => {
             </form>
         </div>
     );
-};
+
+}
 
 export default CustomerHome;

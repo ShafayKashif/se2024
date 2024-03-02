@@ -51,7 +51,7 @@ const Login = () => {
             break;
           case "vendor":
             navigate("/VendorHome");
-            window.localStorage.setItem('email', email);
+            window.localStorage.setItem('vendorEmail', email);
             break;
           case "customer":
             window.localStorage.setItem('CustomerEmail', email);

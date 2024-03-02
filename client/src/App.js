@@ -21,9 +21,11 @@ import CustomerPlaceOrder from "./components/customer/CustomerPlaceOrder";
 
 // vender imports
 import StudentVendorHome from "./components/StudentVendorHome";
-import VendorHome from "./components/vender/VendorHome";
-import AddItem from "./components/AddItem";
+import VendorHome from "./components/vendor/VendorHome";
+import AddItem from "./components/vendor/AddItem";
 import CourierHome from "./components/courier/CourierHome";
+import SeeOrders from "./components/SeeOrders";
+import ViewCustomersReviews from "./components/vendor/ViewCustomerReviews"
 
 //admin imports
 import AdminHome from "./components/admin/AdminHome";
@@ -31,7 +33,6 @@ import SeeVendorReviews from "./components/admin/SeeVendorReviews";
 import SeeVendorRequests from "./components/admin/SeeVendorRequests";
 import BanVendors from "./components/admin/BanVendors";
 import SeeCourierRequests from "./components/admin/SeeCourierRequests";
-import SeeOrders from "./components/SeeOrders";
 function App() {
   return (
     <BrowserRouter>
@@ -64,6 +65,8 @@ function App() {
               }
             />
             <Route path="/AddItem" element={<AddItem/>} />
+            <Route path="/Additem" element={<AddItem/>} />
+            <Route path="/ViewCustomersReviews" element={<ViewCustomersReviews/>} />
             <Route
               path="/CustomerHome"
               element={

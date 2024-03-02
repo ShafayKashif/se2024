@@ -1,10 +1,9 @@
 // Shehbaz
-import '../../styles/itemsdisplay.css'
+import '../../styles/vendorHome.css'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-console.log("POSTY")
 
 const VendorHome = () => {
   const navigate = useNavigate();
@@ -23,14 +22,10 @@ const VendorHome = () => {
 
     fetchItems();
   }, []);
-  const handleAddItem = () => {
-    navigate('Additem'); 
-  };
 
   return (
     <div>
-      <h1>VendorHome</h1>
-      <button onClick={handleAddItem} className="add-item-button">Add Item</button> {/* Button to navigate to Additem page */}
+      <h1>Welcome,</h1>
       <div className="items-container">
         {items.map(item => (
           <div key={item.itemId} className="item-card">

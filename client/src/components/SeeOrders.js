@@ -31,8 +31,8 @@ const SeeOrders = () => {
   // Function to get the next status based on the current status
   //took syntactical help from: https://www.geeksforgeeks.org
   const getNextStatus = (currentStatus) => {
-    return currentStatus === 'New' ? 'InProgress' : currentStatus === 'InProgress' ? 'Completed' : 'New';
-  };
+    return currentStatus === 'New' ? 'InProgress' : currentStatus === 'InProgress' ? 'Completed' : 'Completed';
+};
 
   // Function to fetch item information for a given item ID
   const fetchItemInfo = async (itemId) => {

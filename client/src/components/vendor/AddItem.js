@@ -1,8 +1,10 @@
 //Shehbaz Ali
-import React, { useState} from 'react';
+//ChatGPT was used for detecting errors
+import React, { useState} from 'react'; // usestate to store the input values, learnt from: https://www.youtube.com/watch?v=5e9_hp0nh1Q
 import axios from 'axios';
 import { useNavigate} from 'react-router-dom';
 import '../../styles/addItemCustom.css';
+
 
 const AddItem = () => {
   const navigate = useNavigate();
@@ -44,7 +46,7 @@ const AddItem = () => {
       if (response.status === 200) {
         console.log('Item added successfully!');
         alert('Item added successfully!');
-        navigate(-1);
+        navigate(-1);//Once item is added, The user is sent one tab back
       }
     } catch (error) {
       console.error('Error adding item:', error.message);
@@ -59,7 +61,7 @@ const AddItem = () => {
 
     const formData = new FormData();
     formData.append('file', selectedImage);
-    formData.append('upload_preset', 'pv6cd033'); 
+    formData.append('upload_preset', 'pv6cd033'); //cloudinary API https://youtu.be/yb3H3Zv1QMA?si=cERMBSP_TK5CEI6y
 
     try {
       const response = await axios.post('https://api.cloudinary.com/v1_1/dcswark7e/image/upload', formData);
@@ -76,7 +78,7 @@ const AddItem = () => {
       setLoading(false); // Set loading to false when image upload completes
     }
   };
-
+//The skeleton code from DB was expanded to include more fields and buttons
   return (
     <div className="add-item-page">
       <h1 className="add-item-header">ADD ITEM</h1>

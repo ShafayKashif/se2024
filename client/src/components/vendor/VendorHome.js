@@ -14,7 +14,7 @@ const VendorHome = () => {
     const fetchItems = async () => {
       try {
         const response = await axios.post('http://localhost:3001/items', { email }); 
-        setItems(response.data);
+        setItems(response.data);//Server returns items being sold by he vendor
       } catch (error) {
         console.error('Error fetching items:', error);
       }

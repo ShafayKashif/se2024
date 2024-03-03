@@ -179,12 +179,9 @@ app.post("/add_item", async (request, response) => {
         request.body;
       vendorEmail = vendorEmail || "default@email.com";
 
-      // Find the maximum itemId in the database
-      const maxItemId = await Items.findOne(
-        {},
-        { itemId: 1 },
-        { sort: { itemId: -1 } }
-      );
+    // Find the maximum itemId in the database
+    //Item ID was chosen to be auto incrementing
+    const maxItemId = await Items.findOne({}, { itemId: 1 }, { sort: { itemId: -1 } });
 
       let nextItemId = 1;
       if (maxItemId) {
@@ -222,7 +219,7 @@ app.post("/items", async (req, res) => {
   console.log("Showing Items");
   try {
     let { email } = req.body;
-    // If email is null or undefined, assign a default value
+    // If email is null or undefined, assign a default value, Used during initial testing
     email = email || "default@email.com";
     const items = await Items.find({ vendorEmail: email });
     console.log(items);
@@ -236,9 +233,10 @@ app.post("/items", async (req, res) => {
 
 app.post("/ViewCustomerReviews", async (req, res) => {
   //Shehbaz
-  console.log("Fetching vendor reviews");
-  const vendorEmail = req.body.vendorEmail;
-  console.log(vendorEmail);
+  //Simpy check and fetch query from our DB
+  console.log("Fetching vendor reviews")
+  const vendorEmail = req.body.vendorEmail
+  console.log(vendorEmail)
 
   try {
     const reviews = await CustomerReviews.find({ vendor_email: vendorEmail });

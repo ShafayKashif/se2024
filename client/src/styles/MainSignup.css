@@ -1,4 +1,3 @@
-/* MainSignup.css */
 .MainSignup-page {
   display: flex;
   flex-direction: column;
@@ -13,6 +12,12 @@
   margin-bottom: 20px;
 }
 
+.MainSignup-logo {
+  margin-bottom: 20px;
+  width: 100px;
+  height: auto;
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -20,13 +25,14 @@
 }
 
 .sub-button {
-  background-color: darkblue;
+  background-color: #003366;
   color: white;
   padding: 10px 20px;
   margin: 10px 0;
   text-decoration: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  border: none;
 }
 
 .question {

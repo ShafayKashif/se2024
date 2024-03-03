@@ -17,8 +17,16 @@ const VendorSignup = () => {
   const handleSignup = async (event) => {
     event.preventDefault();
 
-    if (!name || !email || !phone_Number || !password || password !== confirmPassword) {
-      alert("Please ensure all fields are filled correctly and passwords match.");
+    if (
+      !name ||
+      !email ||
+      !phone_Number ||
+      !password ||
+      password !== confirmPassword
+    ) {
+      alert(
+        "Please ensure all fields are filled correctly and passwords match."
+      );
       return;
     }
 
@@ -38,15 +46,21 @@ const VendorSignup = () => {
 
       if (response.data.token) {
         console.log("Signup successful!");
-        // Optionally store the token if you're auto-logging in users after signup
-        localStorage.setItem('token', response.data.token);
-        navigate("/"); // Navigating to the home page or dashboard after signup
+        localStorage.setItem("token", response.data.token);
+        navigate("/");
       } else {
-        alert("Signup failed: " + (response.data.msg || "Please try again later."));
+        alert(
+          "Signup failed: " + (response.data.msg || "Please try again later.")
+        );
       }
     } catch (error) {
-      console.error("Error during signup:", error.response?.data?.msg || error.message);
-      alert("Error during signup: " + (error.response?.data?.msg || error.message));
+      console.error(
+        "Error during signup:",
+        error.response?.data?.msg || error.message
+      );
+      alert(
+        "Error during signup: " + (error.response?.data?.msg || error.message)
+      );
     }
   };
 
@@ -90,7 +104,9 @@ const VendorSignup = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
-        <button className="sub-button" type="submit">Signup</button>
+        <button className="sub-button" type="submit">
+          Signup
+        </button>
       </form>
       <div className="question">
         Already have an account? <a href="/">Login</a>

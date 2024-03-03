@@ -35,7 +35,8 @@ mongoose
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Generate JWT Token
+// Token implmentaion learned by https://www.freecodecamp.org/news/how-to-secure-your-mern-stack-application/ and through chatgpt
+//JWT Token Generation
 const generateToken = (user) => {
   return jwt.sign(
     {
@@ -51,7 +52,7 @@ const generateToken = (user) => {
 // JWT Verification Middleware
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token)
     return res
@@ -79,10 +80,9 @@ app.post("/signup", upload.single("image"), async (req, res) => {
     room_Number,
     hostel,
   } = req.body;
-  let Model = Users; // Default to general Users model
+  let Model = Users;
   let newUser;
 
-  // Check for existing user in general Users model
   let user = await Users.findOne({ email });
   if (user) return res.status(400).json({ msg: "User already exists" });
 
@@ -135,7 +135,6 @@ app.post("/signup", upload.single("image"), async (req, res) => {
     const savedUser = new Model(newUser);
     await savedUser.save();
 
-    // Also save to general Users model if necessary
     await new Users({ email, password: hashedPassword, role: usertype }).save();
 
     const token = generateToken(savedUser);
@@ -157,7 +156,7 @@ app.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
 
-    // Generate token
+    // token generation
     const token = generateToken(user);
     console.log("User Role:", user.role);
     res.json({ token, role: user.role });
@@ -170,28 +169,31 @@ app.post("/login", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-
 //Make your API calls for every usecase here
-app.post("/add_item",async (request, response) => {
+app.post("/add_item", async (request, response) => {
   //Shehbaz
   if (request.body.type === "add_item") {
     console.log("adding item");
     try {
-      let { itemName, category, stock, price,image, vendorEmail,calories } = request.body;
+      let { itemName, category, stock, price, image, vendorEmail, calories } =
+        request.body;
       vendorEmail = vendorEmail || "default@email.com";
 
-    // Find the maximum itemId in the database
-    const maxItemId = await Items.findOne({}, { itemId: 1 }, { sort: { itemId: -1 } });
+      // Find the maximum itemId in the database
+      const maxItemId = await Items.findOne(
+        {},
+        { itemId: 1 },
+        { sort: { itemId: -1 } }
+      );
 
-    let nextItemId = 1;
-    if (maxItemId) {
-      nextItemId = maxItemId.itemId + 1;
-    }
-
+      let nextItemId = 1;
+      if (maxItemId) {
+        nextItemId = maxItemId.itemId + 1;
+      }
 
       // Create a new item in the database
       const newItem = new Items({
-        itemId:nextItemId,
+        itemId: nextItemId,
         itemName,
         category,
         stock,
@@ -214,41 +216,38 @@ app.post("/add_item",async (request, response) => {
   }
 });
 
-
-app.post('/items', async (req, res) => {
+app.post("/items", async (req, res) => {
   //Shehbaz
-  console.log(req.body)
-  console.log("Showing Items")
+  console.log(req.body);
+  console.log("Showing Items");
   try {
     let { email } = req.body;
     // If email is null or undefined, assign a default value
     email = email || "default@email.com";
-    const items = await Items.find({ vendorEmail: email }); 
-    console.log(items)
+    const items = await Items.find({ vendorEmail: email });
+    console.log(items);
     res.json(items);
   } catch (error) {
-    console.error('Error fetching items:', error);
-    
-    res.status(500).json({ error: 'Server error' });
+    console.error("Error fetching items:", error);
+
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-app.post('/ViewCustomerReviews', async (req, res) => {
+app.post("/ViewCustomerReviews", async (req, res) => {
   //Shehbaz
-  console.log("Fetching vendor reviews")
-  const vendorEmail = req.body.vendorEmail
-  console.log(vendorEmail)
+  console.log("Fetching vendor reviews");
+  const vendorEmail = req.body.vendorEmail;
+  console.log(vendorEmail);
 
   try {
-      const reviews = await CustomerReviews.find({ vendor_email: vendorEmail });
-      console.log(reviews)
-      res.json(reviews);
+    const reviews = await CustomerReviews.find({ vendor_email: vendorEmail });
+    console.log(reviews);
+    res.json(reviews);
   } catch (error) {
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
-
-
 
 // Source: Chat GPT
 // Function to calculate Jaccard similarity between two strings
@@ -258,10 +257,10 @@ function jaccardSimilarity(str1, str2) {
 
   // Calculate intersection size
   let intersectionSize = 0;
-  set1.forEach(element => {
-      if (set2.has(element)) {
-          intersectionSize++;
-      }
+  set1.forEach((element) => {
+    if (set2.has(element)) {
+      intersectionSize++;
+    }
   });
 
   // Calculate union size
@@ -269,16 +268,14 @@ function jaccardSimilarity(str1, str2) {
 
   // Calculate Jaccard similarity
   if (unionSize === 0) {
-      return 0; // If union is empty, return 0 to avoid division by zero
+    return 0; // If union is empty, return 0 to avoid division by zero
   } else {
-      return intersectionSize / unionSize;
+    return intersectionSize / unionSize;
   }
 }
 
-
 app.post("/query", async (request, response) => {
-  if (request.body.type && request.body.type=== "food-search")
-  {
+  if (request.body.type && request.body.type === "food-search") {
     console.log("Request: ", request.body.query);
 
     try {
@@ -287,96 +284,116 @@ app.post("/query", async (request, response) => {
       console.log("Results: ", results);
 
       // Filter items based on similarity of their names
-      const filteredItems = results.filter(item => {
-
+      const filteredItems = results.filter((item) => {
         // Calculate similarity score between item name and search query
-        const similarityScore = jaccardSimilarity(item.itemName.toLowerCase(), query.toLowerCase());
-        return similarityScore >= 0.5; // Adjust threshold as needed    
+        const similarityScore = jaccardSimilarity(
+          item.itemName.toLowerCase(),
+          query.toLowerCase()
+        );
+        return similarityScore >= 0.5; // Adjust threshold as needed
       });
 
       response.status(200).json(filteredItems);
       console.log("Filtered Food items list: ", filteredItems);
-
     } catch (error) {
       console.error("Error searching for food items:", error);
       response.status(500).json({ error: "Internal server error" });
     }
-
   }
 });
 
 //HASSAN ALI reviews and place order
 //below is an "API call" i presume, mostly inspired by the initial login and signup designes we did, i think those were by shehbaz. i jut changed the body.type to review and usertype to customer as an identifier (also this if exists because initially, we used the same api.post("/") call and redirected using if conditions) anyways, a pretty self explanatory function, extracts vendor, customer email, rating and comment from request body and saves it in the database and sends 200 status code as a response, if successful (later used to redirect on the front end side)
 app.post("/logreview", async (request, response) => {
-if (
-  request.body.type === "review" &&
-  request.body.usertype === "customer"
-) {
-  console.log("Review of customer received");
-  try {
-    const { vendor_email, customer_email, rating, comment } = request.body;
-    const newReview = new CustomerReviews({
-      vendor_email,
-      customer_email,
-      rating,
-      comment,
-    });
-    const savedReview = await newReview.save();
-    console.log("Review submitted:", savedReview);
-    response.status(200).json({ isAuthenticated: true });
-  } catch (error) {
-    console.error("Error submitting review:", error);
+  if (request.body.type === "review" && request.body.usertype === "customer") {
+    console.log("Review of customer received");
+    try {
+      const { vendor_email, customer_email, rating, comment } = request.body;
+      const newReview = new CustomerReviews({
+        vendor_email,
+        customer_email,
+        rating,
+        comment,
+      });
+      const savedReview = await newReview.save();
+      console.log("Review submitted:", savedReview);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    }
   }
-}
 });
 
 //places order on database (cartitems table) received from front end, this p much isnt available to others, later used in view cart functionality (not implemented yet) (this and below ones (by hassan) inspired by the leave a review function)
 app.post("/placeOrder", async (request, response) => {
-if (request.body.type === "placeOrder" && request.body.usertype === "customer") {
-  console.log("Placing order");
-  try {
-    const { vendor_email, customer_email, quantity, item_name, price, total } = request.body;
-    const newOrder = new Carts({
-      vendor_email,
-      customer_email,
-      quantity,
-      item_name,
-      price,
-      total,
-    });
-    const savedOrder = await newOrder.save();
-    console.log("Order placed:", savedOrder);
-    response.status(200).json({ isAuthenticated: true });
-  } catch (error) {
-    console.error("Error placing order:", error);
+  if (
+    request.body.type === "placeOrder" &&
+    request.body.usertype === "customer"
+  ) {
+    console.log("Placing order");
+    try {
+      const {
+        vendor_email,
+        customer_email,
+        quantity,
+        item_name,
+        price,
+        total,
+      } = request.body;
+      const newOrder = new Carts({
+        vendor_email,
+        customer_email,
+        quantity,
+        item_name,
+        price,
+        total,
+      });
+      const savedOrder = await newOrder.save();
+      console.log("Order placed:", savedOrder);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
   }
-}
 });
 
-// [EXPERIMENTAL] puts the order data into orders table, as in its an official order now which everyone can access 
+// [EXPERIMENTAL] puts the order data into orders table, as in its an official order now which everyone can access
 app.post("/selfpickup", async (request, response) => {
-if (request.body.type === "selfpickup" && request.body.usertype === "customer") {
-  console.log("selfpicking order");
-  try {
-    const { vendor_email, vendorname, customer_email, customername,  quantity, item_name, clientAddr, vendorAddr, status, } = request.body;
-    const newOrder = new Order({
-      vendorEmail: vendor_email,
-      clientEmail: customer_email,
-      vendor: vendorname,
-      client: customername,
-      quantity,
-      item_name,
-      client_addr: clientAddr,
-      vendor_addr: vendorAddr,
-      status,
-    });
-    const savedOrder = await newOrder.save();
-    console.log("Order placed:", savedOrder);
-    response.status(200).json({ isAuthenticated: true });
-  } catch (error) {
-    console.error("Error placing order:", error);
+  if (
+    request.body.type === "selfpickup" &&
+    request.body.usertype === "customer"
+  ) {
+    console.log("selfpicking order");
+    try {
+      const {
+        vendor_email,
+        vendorname,
+        customer_email,
+        customername,
+        quantity,
+        item_name,
+        clientAddr,
+        vendorAddr,
+        status,
+      } = request.body;
+      const newOrder = new Order({
+        vendorEmail: vendor_email,
+        clientEmail: customer_email,
+        vendor: vendorname,
+        client: customername,
+        quantity,
+        item_name,
+        client_addr: clientAddr,
+        vendor_addr: vendorAddr,
+        status,
+      });
+      const savedOrder = await newOrder.save();
+      console.log("Order placed:", savedOrder);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
   }
-}
 });
 
 // this function is inspired by the one talha wrote in his branch for fetching orders for his courier page, this one primarily is used to get all order details so cross verification can be done whether the customer reviewing a vendor ordered from them or not
@@ -434,7 +451,6 @@ app.get("/items", async (req, res) => {
   }
 });
 
-
 //below three api are of talha tariq
 
 //fetch orders for couriers
@@ -447,36 +463,39 @@ app.get("/order", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-// Update order status from courier side, New->InProgress->Completed 
-app.put('/order/update', async (req, res) => {
+// Update order status from courier side, New->InProgress->Completed
+app.put("/order/update", async (req, res) => {
   const { orderId, newStatus } = req.body;
-  
+
   try {
-    const order =  await Order.findOne({ id: orderId }).exec();
+    const order = await Order.findOne({ id: orderId }).exec();
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
     order.status = newStatus;
 
     await order.save();
 
-    res.status(200).json({ message: 'Order status updated successfully', updatedOrder: order });
+    res.status(200).json({
+      message: "Order status updated successfully",
+      updatedOrder: order,
+    });
   } catch (error) {
-    console.error('Error updating order status:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error updating order status:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 // Fetch item information provided the itemId from courier Page
-app.get('/item/:itemId', async (req, res) => {
+app.get("/item/:itemId", async (req, res) => {
   try {
     const itemId = req.params.itemId;
-    const itemInfo = await Items.findOne({ itemId }).select('itemName image');
+    const itemInfo = await Items.findOne({ itemId }).select("itemName image");
     if (!itemInfo) {
-      return res.status(404).json({ message: 'Item not found' });
+      return res.status(404).json({ message: "Item not found" });
     }
     res.status(200).json(itemInfo);
   } catch (error) {
-    console.error('Error fetching item information:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error fetching item information:", error);
+    res.status(500).send("Internal Server Error");
   }
 });

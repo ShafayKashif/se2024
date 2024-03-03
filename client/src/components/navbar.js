@@ -44,9 +44,7 @@ const Navbar = () => {
             <button onClick={() => handleNavigate("/VendorHome")}>
               Homepage
             </button>
-            <button onClick={() => handleNavigate("/AddItem")}>
-              Add Item
-            </button>
+            <button onClick={() => handleNavigate("/AddItem")}>Add Item</button>
             <button onClick={() => handleNavigate("/ViewCurrentOrders")}>
               View Current Orders
             </button>
@@ -55,7 +53,7 @@ const Navbar = () => {
             </button>
           </>
         )}
-        {/* You can include navigation for other roles here */}
+        {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECSES */}
         {role === "courier" && (
           <>
             <button onClick={() => handleNavigate("/SeeOrders")}>
@@ -66,7 +64,6 @@ const Navbar = () => {
             </button> */}
           </>
         )}
-        {/* You can include navigation for other roles here */}
       </div>
       <button className="settings-button">
         <img src={settingImage} alt="Settings" />

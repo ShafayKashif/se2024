@@ -25,7 +25,7 @@ import VendorHome from "./components/vendor/VendorHome";
 import AddItem from "./components/vendor/AddItem";
 import CourierHome from "./components/courier/CourierHome";
 import SeeOrders from "./components/SeeOrders";
-import ViewCustomersReviews from "./components/vendor/ViewCustomerReviews"
+import ViewCustomersReviews from "./components/vendor/ViewCustomerReviews";
 
 //admin imports
 import AdminHome from "./components/admin/AdminHome";
@@ -33,6 +33,8 @@ import SeeVendorReviews from "./components/admin/SeeVendorReviews";
 import SeeVendorRequests from "./components/admin/SeeVendorRequests";
 import BanVendors from "./components/admin/BanVendors";
 import SeeCourierRequests from "./components/admin/SeeCourierRequests";
+
+// NOTE : the protected element is a JWT tokken implementation so that only specific users with specific roles can access certain pages however certain of those elements are commented out due to issues in merging and will be fixed by the next phase
 function App() {
   return (
     <BrowserRouter>
@@ -44,10 +46,7 @@ function App() {
           <Route path="/CustomerSignup" element={<CustomerSignup />} />
           <Route path="/CourierSignup" element={<CourierSignup />} />
           <Route path="/VendorSignup" element={<VendorSignup />} />
-  
-          
-          
-          
+
           <Route
             path="/StudentVendorSignup"
             element={<StudentVendorSignup />}
@@ -56,27 +55,23 @@ function App() {
           {/* Layout with Navbar */}
           <Route element={<LayoutWithNavbar />}>
             {/* Protected Routes with Navbar */}
+            <Route path="/VendorHome" element={<VendorHome />} />
+            <Route path="/AddItem" element={<AddItem />} />
+            <Route path="/Additem" element={<AddItem />} />
             <Route
-              path="/VendorHome"
-              element={
-
-                  <VendorHome />
-
-              }
+              path="/ViewCustomersReviews"
+              element={<ViewCustomersReviews />}
             />
-            <Route path="/AddItem" element={<AddItem/>} />
-            <Route path="/Additem" element={<AddItem/>} />
-            <Route path="/ViewCustomersReviews" element={<ViewCustomersReviews/>} />
             <Route
               path="/CustomerHome"
               element={
                 // <ProtectedRoute allowedRoles={["customer"]}>
-                  <CustomerHome />
+                <CustomerHome />
                 // </ProtectedRoute>
               }
             />
-            <Route path="/search" element={<SearchResultsPage/>} />
-            <Route path="/PlaceOrder" element={<CustomerPlaceOrder/>} />
+            <Route path="/search" element={<SearchResultsPage />} />
+            <Route path="/PlaceOrder" element={<CustomerPlaceOrder />} />
             <Route
               path="/CourierHome"
               element={
@@ -106,7 +101,7 @@ function App() {
               path="/SeeOrders"
               element={
                 // <ProtectedRoute allowedRoles={["Admin"]}>
-                  <SeeOrders />
+                <SeeOrders />
                 // </ProtectedRoute>
               }
             />

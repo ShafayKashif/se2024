@@ -49,8 +49,8 @@ const CourierSignup = () => {
 
       if (response.data.token) {
         console.log("Signup successful!");
-        localStorage.setItem("token", response.data.token); // Store the token
-        navigate("/"); // Navigate to the login page or dashboard
+        localStorage.setItem("token", response.data.token);
+        navigate("/");
       } else {
         alert("Signup failed. Please try again later.");
       }

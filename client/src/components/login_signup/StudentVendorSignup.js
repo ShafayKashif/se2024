@@ -27,9 +27,8 @@ const StudentVendorSignup = () => {
 
   const handleSignup = async (event) => {
     event.preventDefault();
-    setError(""); // Reset error message
+    setError("");
 
-    // Validate inputs
     if (
       !name ||
       !email ||
@@ -54,7 +53,6 @@ const StudentVendorSignup = () => {
       return;
     }
 
-    // Attempt signup
     try {
       const response = await axios.post("http://localhost:3001/signup", {
         name,
@@ -69,8 +67,8 @@ const StudentVendorSignup = () => {
 
       if (response.data.token) {
         console.log("Signup successful!");
-        localStorage.setItem("token", response.data.token); // Store the token
-        navigate("/"); // Navigate to the login page or dashboard
+        localStorage.setItem("token", response.data.token);
+        navigate("/");
       } else {
         setError("Signup failed. Please try again later.");
       }
@@ -84,7 +82,6 @@ const StudentVendorSignup = () => {
       <h1 className="signup-header">Student Vendor Signup</h1>
       <div className="partition"></div>
       <form className="form" onSubmit={handleSignup}>
-        {/* Input fields */}
         <input
           className="user-inp"
           type="text"
@@ -141,7 +138,6 @@ const StudentVendorSignup = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
-        {/* Error display */}
         {error && <div className="error-message">{error}</div>}
         <button className="sub-button" type="submit">
           Signup

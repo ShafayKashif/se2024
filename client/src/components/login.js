@@ -37,7 +37,7 @@ const Login = (prop)=>{
           usertype: "any",
         });
 
-        console.log(response.message)
+        console.log("My message: ", response.message)
 
           if (response.status === 200) {
             console.log("login successful!");
@@ -56,7 +56,7 @@ const Login = (prop)=>{
             else if (response.data.message === "Courier") {
               navigate('/CourierHome');
             }
-            else if (response.data.message === "Admin") {
+            else if (response.data.message === "admin") {
               navigate('/AdminHome');
             }
             else {

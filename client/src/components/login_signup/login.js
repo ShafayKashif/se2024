@@ -59,7 +59,7 @@ const Login = () => {
           case "courier":
             navigate("/CourierHome");
             break;
-          case "Admin":
+          case "admin":
             navigate("/AdminHome");
             break;
           default:

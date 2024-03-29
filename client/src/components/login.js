@@ -48,6 +48,7 @@ const Login = (prop)=>{
             }
             else if (response.data.message === "Vendor") {
               navigate('/VendorHome');
+              
             }
             else if (response.data.message === "Customer") {
               navigate('/CustomerHome');

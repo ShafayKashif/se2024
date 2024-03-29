@@ -1,4 +1,5 @@
-import { useState } from "react";
+import '../../styles/CustomerHome.css'
+import { useState, useEffect } from "react";
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -6,59 +7,69 @@ import axios from 'axios';
 const CustomerHome = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
+    const [items, setItems] = useState([]);
 
     const handlePlaceOrder = async (event) => {
     };
 
     const handleLeaveReview = async (event) => {
-        navigate('/CustomerReview');  
+        navigate('/CustomerReview');
     };
 
     const handleSearchInputChange = (event) => {
         setSearchQuery(event.target.value);
-        // Perform filtering or other operations based on the search query here
     };
 
     const handleSearchSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3001/query", {     
+            const response = await axios.post("http://localhost:3001/query", {
                 type: "food-search",
                 query: searchQuery,
-            }); 
-    
+            });
+
             navigate(`/search`, { state: { searchResults: response.data } });
-        } catch(error) {
+        } catch (error) {
             console.error("Error during search:", error.message);
         }
     }
-    
 
-    return (      
-        <div>
-            <h1>
-                Hello, welcome to CampusCuisine, use the navbar to navigate since home page isnt implemented yet
-            </h1>
-            {/* <form onSubmit={handleSearchSubmit}>
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const response = await axios.post('http://localhost:3001/CustomerTopVendors');
+                setItems(response.data);//Server returns items being sold by he vendor
+            } catch (error) {
+                console.error('Error fetching items:', error);
+            }
+        };
+        fetchItems();
+    }, []);
+
+
+    return (
+        <div className='maindiv'>
+            <form onSubmit={handleSearchSubmit}>
                 <input
                     type="text"
                     placeholder="Search..."
                     value={searchQuery}
                     onChange={handleSearchInputChange}
                 />
-                <button type="submit">Search</button>
+                <button type="submit" className='SearchButton'>Search</button>
             </form>
-            <form className="form" onSubmit={handlePlaceOrder}>
-                <div>
-                    <button className="sub-button-Home" type="submit">Place Order</button>
-                </div>
-            </form>
-
-            <form className="form" onSubmit={handleLeaveReview}>
-                <div>
-                    <button className="sub-button-Home" type="submit">Leave a Review</button>
-                </div>
-            </form> */}
+            <h3 className='title'>
+                Most Ordered from Vendors:
+            </h3>
+            <div className="items-container1">
+                {items.map(item => (
+                    <div key={item.itemId} className="item-card1">
+                        <img src={item.image} alt={item.itemName} className="item-image1" />
+                        <h6>{item.itemName}</h6>
+                        <p>Category: {item.category}</p>
+                    </div>
+                ))}
+            </div> 
         </div>
     );
 

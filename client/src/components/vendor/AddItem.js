@@ -9,7 +9,8 @@ import '../../styles/addItemCustom.css';
 const AddItem = () => {
   const navigate = useNavigate();
 
-  const vendorEmail = window.localStorage.getItem('email');
+  const vendorEmail = window.localStorage.getItem('vendorEmail');
+  console.log("customer_email", vendorEmail); 
 
 
 

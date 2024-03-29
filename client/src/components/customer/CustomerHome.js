@@ -39,6 +39,15 @@ const CustomerHome = () => {
             <h1>
                 Hello, welcome to CampusCuisine, use the navbar to navigate since home page isnt implemented yet
             </h1>
+            <form onSubmit={handleSearchSubmit}>
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={handleSearchInputChange}
+                />
+                <button type="submit">Search</button>
+            </form>
             {/* <form onSubmit={handleSearchSubmit}>
                 <input
                     type="text"

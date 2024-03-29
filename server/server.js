@@ -385,6 +385,30 @@ app.get("/items", async (req, res) => {
   }
 });
 
+const CustomerTopVendors = async (req, res) => {
+  //Hassan Ali
+  console.log(req.body);
+  console.log("Top vendors: ");
+  try {
+    // If email is null or undefined, assign a default value, Used during initial testing
+    const items = await Order.find();
+    console.log(items);
+    let vendorEmails = [];
+    items.forEach((item) => {
+      vendorEmails.push(item.vendorEmail);
+    });
+    console.log("printing vendor emails " + vendorEmails);
+    const vendors = await Items.find({ vendorEmail: { $in: vendorEmails } });
+    console.log(vendors);
+    res.json(vendors);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+app.post("/CustomerTopVendors", CustomerTopVendors);
+
 //below three api are of talha tariq
 
 //fetch orders for couriers

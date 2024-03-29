@@ -220,9 +220,10 @@ app.post("/items", async (req, res) => {
   try {
     let { email } = req.body;
     // If email is null or undefined, assign a default value, Used during initial testing
+    // console.log("email is: ", email);
     email = email || "default@email.com";
     const items = await Items.find({ vendorEmail: email });
-    console.log(items);
+    // console.log(items);
     res.json(items);
   } catch (error) {
     console.error("Error fetching items:", error);

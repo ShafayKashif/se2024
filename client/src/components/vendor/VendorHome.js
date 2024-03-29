@@ -8,12 +8,13 @@ import { useNavigate } from 'react-router-dom';
 const VendorHome = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
-  const email = window.localStorage.getItem('email');
+  const vendorEmail = window.localStorage.getItem('vendorEmail');
+  console.log("customer_email", vendorEmail); 
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/items', { email }); 
+        const response = await axios.post('http://localhost:3001/showitems', { vendorEmail }); 
         setItems(response.data);//Server returns items being sold by he vendor
       } catch (error) {
         console.error('Error fetching items:', error);

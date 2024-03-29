@@ -42,6 +42,11 @@
   background-color: #f9f9f9;
 }
 
+.login-input::placeholder {
+  color: black;
+  opacity: 1;
+}
+
 .login-button {
   width: 85%;
   padding: 10px;

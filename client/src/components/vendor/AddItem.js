@@ -15,6 +15,7 @@ const AddItem = () => {
 
 
   const [itemName, setItemName] = useState('');
+  const [itemId, setItemId] = useState(''); 
   const [category, setCategory] = useState('');
   const [stock, setStock] = useState('');
   const [price, setPrice] = useState('');
@@ -25,7 +26,7 @@ const AddItem = () => {
   const handleAddItem = async (event) => {
     event.preventDefault();
 
-    if (!itemName || !category || !stock || !price || !imageLink || !calories) {
+    if (!itemName || !itemId ||  !category || !stock || !price || !imageLink || !calories) {
       alert('Please fill in all fields');
       return; 
     }
@@ -33,6 +34,7 @@ const AddItem = () => {
     try {
       const formData = {
         itemName,
+        itemId,
         category,
         stock,
         price,
@@ -92,6 +94,15 @@ const AddItem = () => {
             placeholder="Item Name"
             value={itemName}
             onChange={(e) => setItemName(e.target.value)}
+          />
+        </div>
+        <div>
+          <input
+            className="item-inp"
+            type="text"
+            placeholder="Item ID"
+            value={itemId}
+            onChange={(e) => setItemId(e.target.value)}
           />
         </div>
         <div>

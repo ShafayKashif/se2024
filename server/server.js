@@ -271,6 +271,7 @@ app.post("/placeOrder", async (request, response) => {
         customer_email,
         quantity,
         item_name,
+        item_id,
         price,
         total,
       } = request.body;
@@ -279,6 +280,7 @@ app.post("/placeOrder", async (request, response) => {
         customer_email,
         quantity,
         item_name,
+        item_id,
         price,
         total,
       });
@@ -306,6 +308,7 @@ app.post("/selfpickup", async (request, response) => {
         customername,
         quantity,
         item_name,
+        item_id,
         clientAddr,
         vendorAddr,
         status,
@@ -317,6 +320,7 @@ app.post("/selfpickup", async (request, response) => {
         client: customername,
         quantity,
         item_name,
+        item_id,
         client_addr: clientAddr,
         vendor_addr: vendorAddr,
         status,

@@ -60,6 +60,7 @@ const Login = () => {
             navigate("/CourierHome");
             break;
           case "admin":
+            window.localStorage.setItem("AdminEmail", email);
             navigate("/AdminHome");
             break;
           default:

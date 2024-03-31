@@ -17,6 +17,7 @@ import CustomerReviews from "./models/CustomerReviewModel.js";
 import { Router } from "express";
 import Order from "./models/ordersModel.js";
 import Items from "./models/itemModel.js";
+import VendorItemsSold from "./models/vendorItemsSold.js";
 
 dotenv.config();
 
@@ -300,6 +301,63 @@ app.post("/query", async (request, response) => {
   }
 });
 
+// GPT to speed up the process
+app.get("/getPopularVendorsInfo", async (request, response) => {
+  try {
+    // Fetch top two vendors based on total price of items sold
+
+    //******************************************** */
+    // ********REMOVE THE LIMIT PART**************
+    //********************************************
+    const vendorsItemsSoldInfo = await VendorItemsSold.find().sort({ totalPriceOfItemsSold: -1 }).limit(2);
+
+    // Extract email addresses of top two vendors
+    const topTwoVendorEmails = vendorsItemsSoldInfo.map(vendor => vendor.vendorEmail);
+
+    // Find vendors in the Vendors collection
+    const vendors = await Vendors.find({ email: { $in: topTwoVendorEmails } });
+
+    // Find items for the top two vendors
+    const items = await Items.find({ vendorEmail: { $in: topTwoVendorEmails } });
+
+    // Calculate price range for each vendor
+    const vendorPriceRanges = [];
+    for (const vendor of vendors) {
+      const vendorItems = items.filter(item => item.vendorEmail === vendor.email);
+      const prices = vendorItems.map(item => item.price);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      vendorPriceRanges.push({ email: vendor.email, minPrice, maxPrice });
+    }
+
+    // Find customer reviews for the top two vendors
+    const customerReviews = await CustomerReview.find({ vendor_email: { $in: topTwoVendorEmails } });
+
+    // Calculate average rating for each vendor
+    const vendorAvgRatings = [];
+    for (const vendor of vendors) {
+      const vendorReviews = customerReviews.filter(review => review.vendor_email === vendor.email);
+      const totalRatings = vendorReviews.reduce((acc, review) => acc + review.rating, 0);
+      const avgRating = totalRatings / vendorReviews.length;
+      vendorAvgRatings.push({ email: vendor.email, avgRating });
+    }
+
+    // Combine vendors, price ranges, and average ratings into a single array
+    const popularVendorsInfo = vendors.map(vendor => {
+      const { email, name } = vendor;
+      const { minPrice, maxPrice } = vendorPriceRanges.find(item => item.email === email);
+      const { avgRating } = vendorAvgRatings.find(item => item.email === email);
+      return { email, name, minPrice, maxPrice, avgRating };
+    });
+
+    // Send popular vendors' information to the frontend
+    response.json(popularVendorsInfo);
+  } catch (error) {
+    console.error("Error fetching popular vendors info:", error);
+    response.status(500).send("Internal Server Error");
+  }
+});
+
 //HASSAN ALI reviews and place order
 //below is an "API call" i presume, mostly inspired by the initial login and signup designes we did, i think those were by shehbaz. i jut changed the body.type to review and usertype to customer as an identifier (also this if exists because initially, we used the same api.post("/") call and redirected using if conditions) anyways, a pretty self explanatory function, extracts vendor, customer email, rating and comment from request body and saves it in the database and sends 200 status code as a response, if successful (later used to redirect on the front end side)
 app.post("/logreview", async (request, response) => {
@@ -323,6 +381,8 @@ app.post("/logreview", async (request, response) => {
 });
 
 //places order on database (cartitems table) received from front end, this p much isnt available to others, later used in view cart functionality (not implemented yet) (this and below ones (by hassan) inspired by the leave a review function)
+
+// Bilal: Need to change this functionality a bit to get the admin homepage to work
 app.post("/placeOrder", async (request, response) => {
   if (
     request.body.type === "placeOrder" &&
@@ -349,8 +409,28 @@ app.post("/placeOrder", async (request, response) => {
       const savedOrder = await newOrder.save();
       console.log("Order placed:", savedOrder);
       response.status(200).json({ isAuthenticated: true });
+
+      // ***for admin***
+      const existingVendorItemsSoldInfo = await VendorItemsSold.findOne({ vendorEmail: vendor_email })
+
+      if (existingVendorItemsSoldInfo) {
+        // If the vendor exists, update the quantity and total price sold
+        existingVendorItemsSoldInfo.totalItemsSold += quantity
+        existingVendorItemsSoldInfo.totalPriceOfItemsSold += total
+        await existingVendorItemsSoldInfo.save()
+        console.log("Vendor items sold info updated:", existingVendorItemsSoldInfo)
+      } else {
+        // If the vendor does not exist, create a new entry
+        const newVendorForVendorItemsSoldInfoTable = new VendorItemsSold({
+          vendorEmail: vendor_email,
+          totalItemsSold: quantity,
+          totalPriceOfItemsSold: total
+        })
+        await newVendorForVendorItemsSoldInfoTable.save()
+        console.log("New vendor items sold info created:", newVendorForVendorItemsSoldInfoTable)
+      }
     } catch (error) {
-      console.error("Error placing order:", error);
+      console.error("Error placing order:", error)
     }
   }
 });

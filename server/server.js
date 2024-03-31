@@ -392,7 +392,7 @@ app.get("/items", async (req, res) => {
 //below three api are of talha tariq
 
 //fetch orders for couriers
-app.get("/order", async (req, res) => {
+app.get("/courierorder", async (req, res) => {
   try {
     const orders = await Order.find();
     res.json(orders);
@@ -406,7 +406,7 @@ app.put("/order/update", async (req, res) => {
   const { orderId, newStatus } = req.body;
 
   try {
-    const order = await Order.findOne({ id: orderId }).exec();
+    const order = await Order.findOne({ _id: orderId }).exec();
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }

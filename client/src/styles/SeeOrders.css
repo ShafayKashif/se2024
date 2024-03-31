@@ -30,7 +30,7 @@ body::before {
   z-index: -1;
 }
 .form-container {
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(7, 0, 0, 0.5);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -62,7 +62,7 @@ h1 {
 .table {
   width: 100%;
   border-collapse: collapse;
-  background-color: transparent;
+  background-color: rgba(0, 93, 233, 0.5);
 }
 
 .table th,
@@ -74,7 +74,7 @@ h1 {
 }
 
 .table th {
-  background-color: rgba(242, 242, 242, 0.5);
+  background-color: rgba(12, 18, 215, 0.5);
 }
 .checkbox-label {
   cursor: pointer;

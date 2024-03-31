@@ -17,6 +17,7 @@ import CustomerReviews from "./models/CustomerReviewModel.js";
 import { Router } from "express";
 import Order from "./models/ordersModel.js";
 import Items from "./models/itemModel.js";
+import Carts from "./models/cartsModel.js";  
 
 //controllers
 import { showitems , add_item , ViewCustomerReviews} from "./controllers/vendorController.js";
@@ -308,6 +309,52 @@ app.post("/selfpickup", async (request, response) => {
         item_name,
         clientAddr,
         vendorAddr,
+        price,
+        total,
+        status,
+      } = request.body;
+      console.log("request body: ", request.body);
+      const newOrder = new Order({
+        vendorEmail: vendor_email,
+        clientEmail: customer_email,
+        vendor: vendorname,
+        client: customername,
+        quantity,
+        item_name,
+        price,
+        total,
+        client_addr: clientAddr,
+        vendor_addr: vendorAddr,
+        delivery: false,
+        status,
+      });
+      const savedOrder = await newOrder.save();
+      console.log("Order placed:", savedOrder);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  }
+});
+
+app.post("/customerDelivery", async (request, response) => {
+  if (
+    request.body.type === "delivery" &&
+    request.body.usertype === "customer"
+  ) {
+    console.log("selfpicking order");
+    try {
+      const {
+        vendor_email,
+        vendorname,
+        customer_email,
+        customername,
+        quantity,
+        item_name,
+        clientAddr,
+        vendorAddr,
+        price,
+        total,
         status,
       } = request.body;
       const newOrder = new Order({
@@ -319,6 +366,9 @@ app.post("/selfpickup", async (request, response) => {
         item_name,
         client_addr: clientAddr,
         vendor_addr: vendorAddr,
+        price,
+        total,
+        delivery: true,
         status,
       });
       const savedOrder = await newOrder.save();
@@ -329,6 +379,8 @@ app.post("/selfpickup", async (request, response) => {
     }
   }
 });
+
+
 
 // this function is inspired by the one talha wrote in his branch for fetching orders for his courier page, this one primarily is used to get all order details so cross verification can be done whether the customer reviewing a vendor ordered from them or not
 app.get("/order", async (req, res) => {

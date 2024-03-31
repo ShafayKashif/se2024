@@ -70,6 +70,9 @@ const CustomerHome = () => {
                     </div>
                 ))}
             </div> 
+            {/* <h3 className='title'>
+                All of our Menu:
+            </h3> */}
         </div>
     );
 

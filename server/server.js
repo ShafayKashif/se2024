@@ -461,6 +461,25 @@ const CustomerTopVendors = async (req, res) => {
 
 app.post("/CustomerTopVendors", CustomerTopVendors);
 
+
+const CustomerViewCart = async (req, res) => {
+  //Hassan Ali
+  console.log(req.body);
+  console.log("view cart: ");
+  const customerEmail = req.body.customerEmail;
+  try {
+    // If email is null or undefined, assign a default value, Used during initial testing
+    const cartItems = await Carts.find({ customer_email: customerEmail });
+    console.log(cartItems);
+    res.json(cartItems);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+app.post("/CustomerViewCart", CustomerViewCart);
+
 //below three api are of talha tariq
 
 //fetch orders for couriers

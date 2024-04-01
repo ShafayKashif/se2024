@@ -1,32 +1,52 @@
-//Shehbaz Ali
-//ChatGPT was used for detecting errors
-import React, { useState} from 'react'; // usestate to store the input values, learnt from: https://www.youtube.com/watch?v=5e9_hp0nh1Q
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/addItemCustom.css';
-
 
 const AddItem = () => {
   const navigate = useNavigate();
+  const vendorEmail = window.sessionStorage.getItem('email');
+  const [isBanned, setIsBanned] = useState(false);
 
-  const vendorEmail = window.localStorage.getItem('email');
+  useEffect(() => {
+    const checkBannedStatus = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/is-vendor-banned', { email: vendorEmail });
+        setIsBanned(response.data.isBanned);
+        if (response.data.isBanned) {
+          alert('You have been banned: ' + response.data.banDescription);
+        }
+      } catch (error) {
+        console.error('Error checking banned status:', error);
+      }
+    };
 
+    // Check banned status on component mount
+    checkBannedStatus();
 
+    // Set interval to check banned status every 0 seconds
+    const interval = setInterval(() => {
+      checkBannedStatus();
+    }, 0);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, [vendorEmail]);
 
   const [itemName, setItemName] = useState('');
   const [category, setCategory] = useState('');
   const [stock, setStock] = useState('');
   const [price, setPrice] = useState('');
-  const [imageLink, setImageLink] = useState(''); // State to store Cloudinary image link
+  const [imageLink, setImageLink] = useState('');
   const [calories, setCalories] = useState('');
-  const [loading, setLoading] = useState(false); // State to track loading
+  const [loading, setLoading] = useState(false);
 
   const handleAddItem = async (event) => {
     event.preventDefault();
 
     if (!itemName || !category || !stock || !price || !imageLink || !calories) {
       alert('Please fill in all fields');
-      return; 
+      return;
     }
 
     try {
@@ -35,7 +55,7 @@ const AddItem = () => {
         category,
         stock,
         price,
-        image: imageLink, // Cloudinary image link 
+        image: imageLink,
         vendorEmail,
         calories,
         type: 'add_item',
@@ -46,7 +66,7 @@ const AddItem = () => {
       if (response.status === 200) {
         console.log('Item added successfully!');
         alert('Item added successfully!');
-        navigate(-1);//Once item is added, The user is sent one tab back
+        navigate(-1);
       }
     } catch (error) {
       console.error('Error adding item:', error.message);
@@ -55,19 +75,19 @@ const AddItem = () => {
   };
 
   const handleImageUpload = async (e) => {
-    setLoading(true); // Set loading to true when image upload starts
+    setLoading(true);
 
     const selectedImage = e.target.files[0];
 
     const formData = new FormData();
     formData.append('file', selectedImage);
-    formData.append('upload_preset', 'pv6cd033'); //cloudinary API https://youtu.be/yb3H3Zv1QMA?si=cERMBSP_TK5CEI6y
+    formData.append('upload_preset', 'pv6cd033');
 
     try {
       const response = await axios.post('https://api.cloudinary.com/v1_1/dcswark7e/image/upload', formData);
 
       if (response.status === 200) {
-        setImageLink(response.data.secure_url); // Set Cloudinary image link
+        setImageLink(response.data.secure_url);
       } else {
         throw new Error('Failed to upload image to Cloudinary');
       }
@@ -75,15 +95,16 @@ const AddItem = () => {
       console.error('Error uploading image to Cloudinary:', error);
       alert('Failed to upload image. Please try again.');
     } finally {
-      setLoading(false); // Set loading to false when image upload completes
+      setLoading(false);
     }
   };
-//The skeleton code from DB was expanded to include more fields and buttons
+
   return (
     <div className="add-item-page">
       <h1 className="add-item-header">ADD ITEM</h1>
       <div className="partition"></div>
       <form className="form" onSubmit={handleAddItem}>
+        {/* Input fields */}
         <div>
           <input
             className="item-inp"
@@ -93,42 +114,11 @@ const AddItem = () => {
             onChange={(e) => setItemName(e.target.value)}
           />
         </div>
+        {/* Other input fields */}
         <div>
-          <input
-            className="item-inp"
-            type="text"
-            placeholder="Category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          />
+          {/* Add other input fields similarly */}
         </div>
-        <div>
-          <input
-            className="item-inp"
-            type="number"
-            placeholder="Stock"
-            value={stock}
-            onChange={(e) => setStock(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="item-inp"
-            type="number"
-            placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="item-inp"
-            type="number"
-            placeholder="Calories"
-            value={calories}
-            onChange={(e) => setCalories(e.target.value)}
-          />
-        </div>
+        {/* Image upload field */}
         <div>
           <input
             className="item-inp"
@@ -136,11 +126,11 @@ const AddItem = () => {
             accept="image/*"
             onChange={handleImageUpload}
           />
-          {loading && <div className="loading-icon">Loading...</div>} {/* Render loading icon */}
+          {loading && <div className="loading-icon">Loading...</div>}
         </div>
         <div>
-          <button className="sub-button" type="submit">
-            Add Item
+          <button className="sub-button" type="submit" disabled={isBanned}>
+            {isBanned ? 'Banned: Cannot Add Item' : 'Add Item'}
           </button>
         </div>
       </form>

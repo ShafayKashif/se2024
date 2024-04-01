@@ -13,11 +13,12 @@ import Vendors from "./models/vendorModel.js";
 import Customers from "./models/customerModel.js";
 import Couriers from "./models/courierModel.js";
 
-import CustomerReviews from "./models/CustomerReviewModel.js";
+// import CustomerReviews from "./models/CustomerReviewModel.js";
 import { Router } from "express";
 import Order from "./models/ordersModel.js";
 import Items from "./models/itemModel.js";
 import VendorItemsSold from "./models/vendorItemsSold.js";
+import CustomerReview from "./models/CustomerReviewModel.js";
 
 dotenv.config();
 
@@ -100,11 +101,12 @@ app.post("/signup", upload.single("image"), async (req, res) => {
         name,
         phone_Number,
         password: hashedPassword,
+        application: 'processing'
       };
       break;
     case "vendor":
       Model = Vendors;
-      newUser = { email, name, phone_Number, password: hashedPassword };
+      newUser = { email, name, phone_Number, password: hashedPassword, application: 'processing'};
       break;
     case "courier":
       Model = Couriers;
@@ -114,6 +116,7 @@ app.post("/signup", upload.single("image"), async (req, res) => {
         name,
         phone_Number,
         password: hashedPassword,
+        application: 'processing'
       };
       break;
     case "customer":
@@ -302,27 +305,46 @@ app.post("/query", async (request, response) => {
 });
 
 // GPT to speed up the process
-app.get("/getPopularVendorsInfo", async (request, response) => {
+
+// ********************ADMIN*************************
+// **************************************************
+app.get("/getInfoForAdminHomePage", async (request, response) => {
   try {
-    // Fetch top two vendors based on total price of items sold
+    const orders = await Order.find();
 
-    //******************************************** */
-    // ********REMOVE THE LIMIT PART**************
-    //********************************************
-    const vendorsItemsSoldInfo = await VendorItemsSold.find().sort({ totalPriceOfItemsSold: -1 }).limit(2);
+    // Group orders by vendor email and calculate total quantity and sales for each vendor
+    const vendorSalesInfo = {};
+    orders.forEach(order => {
+      if (!vendorSalesInfo[order.vendorEmail]) {
+        vendorSalesInfo[order.vendorEmail] = {
+          totalItemsSold: 0,
+          totalPriceOfItemsSold: 0,
+          orderCount: 0  // Initialize order count
+        };
+      }
+      vendorSalesInfo[order.vendorEmail].totalItemsSold += order.quantity;
+      vendorSalesInfo[order.vendorEmail].totalPriceOfItemsSold += order.total;
+      vendorSalesInfo[order.vendorEmail].orderCount++;  // Increment order count
+    });
 
-    // Extract email addresses of top two vendors
-    const topTwoVendorEmails = vendorsItemsSoldInfo.map(vendor => vendor.vendorEmail);
+    // Get email addresses
+    const topVendorEmails = Object.keys(vendorSalesInfo);
 
     // Find vendors in the Vendors collection
-    const vendors = await Vendors.find({ email: { $in: topTwoVendorEmails } });
+    const vendors = await Vendors.find({ email: { $in: topVendorEmails } });
 
-    // Find items for the top two vendors
-    const items = await Items.find({ vendorEmail: { $in: topTwoVendorEmails } });
+    // Find student vendors in the StudentVendors collection
+    const myStudentVendors = await studentVendors.find({ email: { $in: topVendorEmails } });
+
+    // Combine vendors and student vendors into a single array
+    const allVendors = [...vendors, ...myStudentVendors];
+
+    // Find items for the vendors
+    const items = await Items.find({ vendorEmail: { $in: topVendorEmails } });
 
     // Calculate price range for each vendor
     const vendorPriceRanges = [];
-    for (const vendor of vendors) {
+    for (const vendor of allVendors) {
       const vendorItems = items.filter(item => item.vendorEmail === vendor.email);
       const prices = vendorItems.map(item => item.price);
       const minPrice = Math.min(...prices);
@@ -330,36 +352,196 @@ app.get("/getPopularVendorsInfo", async (request, response) => {
       vendorPriceRanges.push({ email: vendor.email, minPrice, maxPrice });
     }
 
-    // Find customer reviews for the top two vendors
-    const customerReviews = await CustomerReview.find({ vendor_email: { $in: topTwoVendorEmails } });
+    // Find customer reviews for each vendor
+    const customerReviews = await CustomerReview.find({ vendor_email: { $in: topVendorEmails } });
 
     // Calculate average rating for each vendor
     const vendorAvgRatings = [];
-    for (const vendor of vendors) {
+    for (const vendor of allVendors) {
       const vendorReviews = customerReviews.filter(review => review.vendor_email === vendor.email);
       const totalRatings = vendorReviews.reduce((acc, review) => acc + review.rating, 0);
       const avgRating = totalRatings / vendorReviews.length;
       vendorAvgRatings.push({ email: vendor.email, avgRating });
     }
 
-    // Combine vendors, price ranges, and average ratings into a single array
-    const popularVendorsInfo = vendors.map(vendor => {
+    // Combine vendors, price ranges, average ratings, and order counts into a single array
+    const vendorsInfo = allVendors.map(vendor => {
       const { email, name } = vendor;
       const { minPrice, maxPrice } = vendorPriceRanges.find(item => item.email === email);
       const { avgRating } = vendorAvgRatings.find(item => item.email === email);
-      return { email, name, minPrice, maxPrice, avgRating };
+      const { orderCount } = vendorSalesInfo[email];
+      return { email, name, minPrice, maxPrice, avgRating, orderCount };
     });
 
+    // Get all customer reviews
+    const myCustomerReviews = await CustomerReview.find();
+
     // Send popular vendors' information to the frontend
-    response.json(popularVendorsInfo);
+    response.json({ vendorsInfo, myCustomerReviews });
   } catch (error) {
     console.error("Error fetching popular vendors info:", error);
     response.status(500).send("Internal Server Error");
   }
 });
 
+app.post("/view-vendor-ratings", async (request, response) => {
+  if (request.body && request.body.type === 'view-vendor-ratings'){
+    try{
+      const queried_email = request.body.query
+      // console.log("Email: ", queried_email)
+      const vendorReviews = await CustomerReview.find({ vendor_email: queried_email })
+      console.log("REviews: ", vendorReviews)
+      response.status(200).json(vendorReviews)
+    } catch(err){
+      console.error("Error searching for reviews of the vendor:")
+      response.status(500).json({ error: "Internal server error" })
+    }
+  }
+});
+
+app.post('/ban-vendor', async (request, response) => {
+  if (request.body && request.body.type === 'ban-vendor'){
+    try{
+      const email_to_ban = request.body.email_to_ban
+      const description = request.body.description
+      // console.log("Email: ", queried_email)
+      
+      const vendor = await Vendors.findOne({ email: email_to_ban })
+      console.log("Vendor: ", vendor)
+      if (!vendor) {
+        const student_vendor = await studentVendors.findOne({email: email_to_ban})
+        if (!student_vendor){
+          return response.status(200).json({ error: "Vendor not found" , valid: false})
+        }
+        student_vendor.status = "banned" + ":" + description 
+        await student_vendor.save()
+      }
+      else {
+        vendor.status = "banned" + ":" + description
+        await vendor.save()
+      }
+      
+      return response.status(200).json({ message: "Vendor banned successfully" , valid: true})
+    } catch(err){
+      console.error("Error banning vendor:")
+      response.status(500).json({ error: "Internal server error" })
+    }
+  }
+})
+
+// ping to vendor for ban or unbanned
+app.post('/is-vendor-banned', async (request, response) => {
+  const requestedEmail = request.body.email;
+
+  let isBanned = false;
+  let banDescription = '';
+
+  // Check in Vendors collection
+  const vendor = await Vendors.findOne({ email: requestedEmail });
+  if (vendor && vendor.status && vendor.status.startsWith('banned')) {
+    isBanned = true;
+    banDescription = vendor.status.slice(7);
+  }
+
+  // Check in studentVendors collection if not found in Vendors
+  if (!isBanned) {
+    const studentVendor = await studentVendors.findOne({ email: requestedEmail });
+    if (studentVendor && studentVendor.status && studentVendor.status.startsWith('banned')) {
+      isBanned = true;
+      banDescription = studentVendor.status.slice(7);
+    }
+  }
+
+  // Send response to frontend
+  response.json({ isBanned, banDescription });
+});
+
+app.get('/view-join-requests', async (request, response) => {
+  try {
+    const processing_vendors = await Vendors.find({ application: 'processing' });
+    const processing_student_vendors = await studentVendors.find({ application: 'processing' });
+    const processing_couriers = await Couriers.find({ application: 'processing' });
+
+    let allUsers = [];
+
+    // Add user type to each object and push to allUsers array
+    if (processing_vendors) {
+      allUsers = allUsers.concat(processing_vendors.map(vendor => ({ ...vendor.toObject(), userType: 'vendor' })));
+    }
+    if (processing_student_vendors) {
+      allUsers = allUsers.concat(processing_student_vendors.map(studentVendor => ({ ...studentVendor.toObject(), userType: 'studentVendor' })));
+    }
+    if (processing_couriers) {
+      allUsers = allUsers.concat(processing_couriers.map(courier => ({ ...courier.toObject(), userType: 'courier' })));
+    }
+
+    response.status(200).json({ allUsers });
+  } catch (err) {
+    console.log("Error while generating response:", err);
+    response.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post('/application-decision', async (request, response) => {
+
+  const vendor_email = request.body.vendorEmail
+  const decision = request.body.decision
+  try {
+    const vendor = await Vendors.findOne({ email: requestedEmail })
+
+    if (vendor) {
+      vendor.application = decision
+      await vendor.save()
+    }
+    else {
+      const student_vendor = await studentVendors.findOne({email: requestedEmail})
+  
+      if (student_vendor) {
+        student_vendor.application = decision
+        await student_vendor.save()
+      }
+      else {
+        const courier = await Couriers.findOne({email: requestedEmail})
+
+        if (courier) {
+          courier.application = decision
+          await courier.save()
+        }
+      }
+    }
+    
+  } catch(err) {
+    console.log("Error while decision being made")
+  }
+})
+
+app.post('/is-application-approved', async (request, response) => {
+  const requestedEmail = request.body.email
+  const requested_user_role = request.body.user_role
+  try {
+    if (requested_user_role === 'vendor') {
+      const vendor = await Vendors.findOne({email: requestedEmail})
+      response.status(200).json({decision: vendor.application})
+    }
+    else if (requested_user_role === 'student_vendor') {
+      const student_vendor = await studentVendors.findOne({email: requestedEmail})
+      response.status(200).json({decision: student_vendor.application})
+    }
+    else if (requested_user_role === 'courier') {
+      const courier = await Couriers.findOne({email: requestedEmail})
+      response.status(200).json({decision: courier.application})
+    }
+  } catch(err){
+    console.log("error")
+  }
+  
+});
+
+// ***************************************************
+// ***************************************************
+
 //HASSAN ALI reviews and place order
-//below is an "API call" i presume, mostly inspired by the initial login and signup designes we did, i think those were by shehbaz. i jut changed the body.type to review and usertype to customer as an identifier (also this if exists because initially, we used the same api.post("/") call and redirected using if conditions) anyways, a pretty self explanatory function, extracts vendor, customer email, rating and comment from request body and saves it in the database and sends 200 status code as a response, if successful (later used to redirect on the front end side)
+//below is an "API call" i presume, mostly inspired by the initial login and signup designes we did, i think those were by shehbaz. i just changed the body.type to review and usertype to customer as an identifier (also this if exists because initially, we used the same api.post("/") call and redirected using if conditions) anyways, a pretty self explanatory function, extracts vendor, customer email, rating and comment from request body and saves it in the database and sends 200 status code as a response, if successful (later used to redirect on the front end side)
 app.post("/logreview", async (request, response) => {
   if (request.body.type === "review" && request.body.usertype === "customer") {
     console.log("Review of customer received");
@@ -382,7 +564,6 @@ app.post("/logreview", async (request, response) => {
 
 //places order on database (cartitems table) received from front end, this p much isnt available to others, later used in view cart functionality (not implemented yet) (this and below ones (by hassan) inspired by the leave a review function)
 
-// Bilal: Need to change this functionality a bit to get the admin homepage to work
 app.post("/placeOrder", async (request, response) => {
   if (
     request.body.type === "placeOrder" &&
@@ -409,26 +590,6 @@ app.post("/placeOrder", async (request, response) => {
       const savedOrder = await newOrder.save();
       console.log("Order placed:", savedOrder);
       response.status(200).json({ isAuthenticated: true });
-
-      // ***for admin***
-      const existingVendorItemsSoldInfo = await VendorItemsSold.findOne({ vendorEmail: vendor_email })
-
-      if (existingVendorItemsSoldInfo) {
-        // If the vendor exists, update the quantity and total price sold
-        existingVendorItemsSoldInfo.totalItemsSold += quantity
-        existingVendorItemsSoldInfo.totalPriceOfItemsSold += total
-        await existingVendorItemsSoldInfo.save()
-        console.log("Vendor items sold info updated:", existingVendorItemsSoldInfo)
-      } else {
-        // If the vendor does not exist, create a new entry
-        const newVendorForVendorItemsSoldInfoTable = new VendorItemsSold({
-          vendorEmail: vendor_email,
-          totalItemsSold: quantity,
-          totalPriceOfItemsSold: total
-        })
-        await newVendorForVendorItemsSoldInfoTable.save()
-        console.log("New vendor items sold info created:", newVendorForVendorItemsSoldInfoTable)
-      }
     } catch (error) {
       console.error("Error placing order:", error)
     }

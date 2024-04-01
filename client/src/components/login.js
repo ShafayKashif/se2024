@@ -8,7 +8,6 @@ const Login = (prop)=>{
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
     const validEmail = (email) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
@@ -42,6 +41,8 @@ const Login = (prop)=>{
           if (response.status === 200) {
             console.log("login successful!");
             console.log("response.data", response.data.message);
+            window.localStorage.setItem('email') = email;
+
             // console.log("response.message", response.message);
             if (response.data.message === "Student_Vendor") {
               navigate('/StudentVendorHome');

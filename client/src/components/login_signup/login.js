@@ -57,6 +57,7 @@ const Login = () => {
             navigate("/CustomerHome");
             break;
           case "courier":
+            window.localStorage.setItem("CourierEmail", email);
             navigate("/CourierHome");
             break;
           case "Admin":

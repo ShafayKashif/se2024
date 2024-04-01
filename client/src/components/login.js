@@ -56,6 +56,7 @@ const Login = (prop)=>{
             }
             else if (response.data.message === "Courier") {
               navigate('/CourierHome');
+              window.localStorage.setItem('email', email);
             }
             else if (response.data.message === "Admin") {
               navigate('/AdminHome');

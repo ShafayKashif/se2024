@@ -748,7 +748,7 @@ app.get("/courierorder", async (req, res) => {
 });
 // Update order status from courier side, New->InProgress->Completed
 app.put("/order/update", async (req, res) => {
-  const { orderId, newStatus } = req.body;
+  const { orderId, newStatus, delivered_by } = req.body;
 
   try {
     const order = await Order.findOne({ _id: orderId }).exec();
@@ -756,6 +756,7 @@ app.put("/order/update", async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
     order.status = newStatus;
+    order.delivered_by = delivered_by;
 
     await order.save();
 

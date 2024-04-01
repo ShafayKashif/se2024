@@ -10,7 +10,24 @@ import Customers from './models/customerModel.js'
 import Couriers from './models/courierModel.js'
 import Items from './models/itemModel.js';
 
+<<<<<<< Updated upstream
 import multer from 'multer';
+=======
+// Import models
+import Users from "./models/userModel.js";
+import studentVendors from "./models/studentVendorModel.js";
+import Vendors from "./models/vendorModel.js";
+import Customers from "./models/customerModel.js";
+import Couriers from "./models/courierModel.js";
+
+import CustomerReviews from "./models/CustomerReviewModel.js";
+import { Router } from "express";
+import Order from "./models/ordersModel.js";
+import Items from "./models/itemModel.js";
+
+//controllers
+import { showitems , add_item , ViewCustomerReviews, updateStockVendor,getNewOrders,vendorAnalytics} from "./controllers/vendorController.js";
+>>>>>>> Stashed changes
 
 dotenv.config();
 
@@ -213,6 +230,7 @@ app.post('/upload', upload.single('image'), async (request, response) => {
 
         });
 
+<<<<<<< Updated upstream
         const savedUser = await newUser.save();
           //login table redirection code
           let role = "Customer";
@@ -226,6 +244,84 @@ app.post('/upload', upload.single('image'), async (request, response) => {
           console.log('User data stored in users database', savedUser2);
         response.status(200).json({ isAuthenticated: true });
       }
+=======
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
+
+    // token generation
+    const token = generateToken(user);
+    console.log("User Role:", user.role);
+    res.json({ token, role: user.role });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+
+
+//Shehbaz
+app.post("/add_item", add_item );
+app.post("/showitems", showitems );
+app.post("/ViewCustomerReviews", ViewCustomerReviews );
+app.post("/updateStockVendor",updateStockVendor);
+app.post("/getNewOrders",getNewOrders);
+app.post("/vendorAnalytics",vendorAnalytics);
+
+
+
+
+// Source: Chat GPT
+// Function to calculate Jaccard similarity between two strings
+function jaccardSimilarity(str1, str2) {
+  const set1 = new Set(str1);
+  const set2 = new Set(str2);
+
+  // Calculate intersection size
+  let intersectionSize = 0;
+  set1.forEach((element) => {
+    if (set2.has(element)) {
+      intersectionSize++;
+    }
+  });
+
+  // Calculate union size
+  const unionSize = set1.size + set2.size - intersectionSize;
+
+  // Calculate Jaccard similarity
+  if (unionSize === 0) {
+    return 0; // If union is empty, return 0 to avoid division by zero
+  } else {
+    return intersectionSize / unionSize;
+  }
+}
+
+app.post("/query", async (request, response) => {
+  if (request.body.type && request.body.type === "food-search") {
+    console.log("Request: ", request.body.query);
+
+    try {
+      const query = request.body.query;
+      const results = await Items.find(); // retrieve all food items
+      console.log("Results: ", results);
+
+      // Filter items based on similarity of their names
+      const filteredItems = results.filter((item) => {
+        // Calculate similarity score between item name and search query
+        const similarityScore = jaccardSimilarity(
+          item.itemName.toLowerCase(),
+          query.toLowerCase()
+        );
+        return similarityScore >= 0.5; // Adjust threshold as needed
+      });
+
+      response.status(200).json(filteredItems);
+      console.log("Filtered Food items list: ", filteredItems);
+>>>>>>> Stashed changes
     } catch (error) {
       console.error('Error signing up user:', error);
 

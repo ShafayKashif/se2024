@@ -40,11 +40,11 @@ const ordersSchema = new Schema({
     },
     price: {
         type: Number,
-        required: true
+        required: false
     },
     total: {
         type: Number,
-        required: true
+        required: false
     },
     status: {
         type: String,

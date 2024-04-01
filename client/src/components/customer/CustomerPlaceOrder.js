@@ -30,7 +30,9 @@ const CustomerPlaceOrder = (props) => {
     let customerhostel = "";
     let customerroom = "";
     let customername = "";
+    let imglink = "";
     let price;
+    let itemID;
     // using this variable to check against both student vendors and vendors (room for refactoring)
     let vendorFound = false;
 
@@ -143,6 +145,8 @@ const CustomerPlaceOrder = (props) => {
           return;
         } else {
           price = item.price;
+          imglink = item.image;
+          itemID = item.itemId;
         }
       } else {
         console.error('Failed to fetch items:', await response.text());
@@ -160,6 +164,8 @@ const CustomerPlaceOrder = (props) => {
         item_name,
         price,
         total,
+        imglink,
+        itemID,
         type: "placeOrder",
         usertype: "customer",
       });
@@ -193,6 +199,7 @@ const CustomerPlaceOrder = (props) => {
     let customername = "";
     let price;
     let vendorFound = false;
+    let itemId;
 
     try {
       const response = await axios.get('http://localhost:3001/studentvendors');
@@ -293,6 +300,7 @@ const CustomerPlaceOrder = (props) => {
           return;
         } else {
           price = item.price;
+          itemId = item.itemId;
         }
       }
       else {
@@ -319,6 +327,7 @@ const CustomerPlaceOrder = (props) => {
         price,
         total,
         status: "New",
+        itemId,
         type: "selfpickup",
         usertype: "customer",
       });
@@ -351,6 +360,7 @@ const CustomerPlaceOrder = (props) => {
     let customername = "";
     let price;
     let vendorFound = false;
+    let itemId;
 
     try {
       const response = await axios.get('http://localhost:3001/studentvendors');
@@ -451,6 +461,7 @@ const CustomerPlaceOrder = (props) => {
           return;
         } else {
           price = item.price;
+          itemId = item.itemId;
         }
       }
       else {
@@ -477,6 +488,7 @@ const CustomerPlaceOrder = (props) => {
         price,
         total,
         status: "New",
+        itemId,
         type: "delivery",
         usertype: "customer",
       });

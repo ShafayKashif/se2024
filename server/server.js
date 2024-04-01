@@ -274,6 +274,8 @@ app.post("/placeOrder", async (request, response) => {
         item_name,
         price,
         total,
+        imglink,
+        itemId,
       } = request.body;
       const newOrder = new Carts({
         vendor_email,
@@ -282,6 +284,8 @@ app.post("/placeOrder", async (request, response) => {
         item_name,
         price,
         total,
+        image: imglink,
+        itemId,
       });
       const savedOrder = await newOrder.save();
       console.log("Order placed:", savedOrder);
@@ -312,6 +316,7 @@ app.post("/selfpickup", async (request, response) => {
         price,
         total,
         status,
+        itemId,
       } = request.body;
       console.log("request body: ", request.body);
       const newOrder = new Order({
@@ -327,6 +332,7 @@ app.post("/selfpickup", async (request, response) => {
         vendor_addr: vendorAddr,
         delivery: false,
         status,
+        item_id: itemId,
       });
       const savedOrder = await newOrder.save();
       console.log("Order placed:", savedOrder);
@@ -336,6 +342,61 @@ app.post("/selfpickup", async (request, response) => {
     }
   }
 });
+
+app.post("/selfpickupCart", async (request, response) => {
+  if (
+    request.body.type === "selfpickup" &&
+    request.body.usertype === "customer"
+  ) {
+    console.log("selfpicking order");
+    try {
+      const {
+        vendor_email,
+        vendorname,
+        customer_email,
+        customername,
+        quantity,
+        item_name,
+        clientAddr,
+        vendorAddr,
+        price,
+        total,
+        status,
+        itemId,
+      } = request.body;
+      console.log("request body: ", request.body);
+      const newOrder = new Order({
+        vendorEmail: vendor_email,
+        clientEmail: customer_email,
+        vendor: vendorname,
+        client: customername,
+        quantity,
+        item_name,
+        price,
+        total,
+        client_addr: clientAddr,
+        vendor_addr: vendorAddr,
+        delivery: false,
+        status,
+        item_id: itemId,
+      });
+      try {
+        const deletedCart = await Carts.deleteOne({ customer_email });
+        console.log("Deleted cart:", deletedCart);
+        response.status(200).json({ message: "Cart deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting cart:", error);
+        response.status(500).json({ error: "An error occurred while deleting cart" });
+      }
+      const savedOrder = await newOrder.save();
+      console.log("Order placed:", savedOrder);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  }
+});
+
 
 app.post("/customerDelivery", async (request, response) => {
   if (
@@ -356,6 +417,7 @@ app.post("/customerDelivery", async (request, response) => {
         price,
         total,
         status,
+        itemId,
       } = request.body;
       const newOrder = new Order({
         vendorEmail: vendor_email,
@@ -370,7 +432,63 @@ app.post("/customerDelivery", async (request, response) => {
         total,
         delivery: true,
         status,
+        item_id: itemId,
       });
+      
+      const savedOrder = await newOrder.save();
+      console.log("Order placed:", savedOrder);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  }
+});
+
+
+app.post("/customerDeliveryCart", async (request, response) => {
+  if (
+    request.body.type === "delivery" &&
+    request.body.usertype === "customer"
+  ) {
+    console.log("delivery cart order");
+    try {
+      const {
+        vendor_email,
+        vendorname,
+        customer_email,
+        customername,
+        quantity,
+        item_name,
+        clientAddr,
+        vendorAddr,
+        price,
+        total,
+        status,
+        itemId,
+      } = request.body;
+      const newOrder = new Order({
+        vendorEmail: vendor_email,
+        clientEmail: customer_email,
+        vendor: vendorname,
+        client: customername,
+        quantity,
+        item_name,
+        client_addr: clientAddr,
+        vendor_addr: vendorAddr,
+        price,
+        total,
+        delivery: true,
+        status,
+        item_id: itemId,
+      });
+      try {
+        const deletedCart = await Carts.deleteOne({ customer_email });
+        console.log("Deleted cart:", deletedCart);
+        response.status(200).json({ message: "Cart deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting cart:", error);
+        response.status(500).json({ error: "An error occurred while deleting cart" });
+      }
       const savedOrder = await newOrder.save();
       console.log("Order placed:", savedOrder);
       response.status(200).json({ isAuthenticated: true });
@@ -391,6 +509,17 @@ app.get("/order", async (req, res) => {
     console.error("Error fetching orders:", error);
     res.status(500).send("Internal Server Error");
   }
+});
+
+app.get("/customerCart", async (req, res) => {
+  try {
+    const carts = await Carts.find();
+    res.json(carts);
+  } catch (error) {
+    console.error("Error fetching carts:", error);
+    res.status(500).send("Internal Server Error");
+  }
+
 });
 
 // same inspiration as above, this one returns all student vendors for cross validation
@@ -465,12 +594,12 @@ app.post("/CustomerTopVendors", CustomerTopVendors);
 const CustomerViewCart = async (req, res) => {
   //Hassan Ali
   console.log(req.body);
-  console.log("view cart: ");
+  // console.log("view cart: ");
   const customerEmail = req.body.customerEmail;
   try {
     // If email is null or undefined, assign a default value, Used during initial testing
     const cartItems = await Carts.find({ customer_email: customerEmail });
-    console.log(cartItems);
+    // console.log(cartItems);
     res.json(cartItems);
   } catch (error) {
     console.error("Error fetching items:", error);
@@ -479,6 +608,25 @@ const CustomerViewCart = async (req, res) => {
 };
 
 app.post("/CustomerViewCart", CustomerViewCart);
+
+
+const CustomerCurrentOrder = async (req, res) => {
+  //Hassan Ali
+  console.log(req.body);
+  // console.log("view cart: ");
+  const customerEmail = req.body.customerEmail;
+  try {
+    // If email is null or undefined, assign a default value, Used during initial testing
+    const cartItems = await Order.find({ clientEmail: customerEmail, $or: [{ status: "New" },{ status: "In Progress" }] });
+    // console.log(cartItems);
+    res.json(cartItems);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+app.post("/CustomerCurrentOrder", CustomerCurrentOrder);
 
 //below three api are of talha tariq
 

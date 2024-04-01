@@ -272,6 +272,7 @@ app.post("/placeOrder", async (request, response) => {
         customer_email,
         quantity,
         item_name,
+        item_id,
         price,
         total,
         imglink,
@@ -282,6 +283,7 @@ app.post("/placeOrder", async (request, response) => {
         customer_email,
         quantity,
         item_name,
+        item_id,
         price,
         total,
         image: imglink,
@@ -311,6 +313,109 @@ app.post("/selfpickup", async (request, response) => {
         customername,
         quantity,
         item_name,
+        item_id,
+        clientAddr,
+        vendorAddr,
+        price,
+        total,
+        status,
+        itemId,
+      } = request.body;
+      console.log("request body: ", request.body);
+      const newOrder = new Order({
+        vendorEmail: vendor_email,
+        clientEmail: customer_email,
+        vendor: vendorname,
+        client: customername,
+        quantity,
+        item_name,
+        price,
+        total,
+        client_addr: clientAddr,
+        vendor_addr: vendorAddr,
+        delivery: false,
+        status,
+        item_id: itemId,
+      });
+      const savedOrder = await newOrder.save();
+      console.log("Order placed:", savedOrder);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  }
+});
+
+app.post("/selfpickupCart", async (request, response) => {
+  if (
+    request.body.type === "selfpickup" &&
+    request.body.usertype === "customer"
+  ) {
+    console.log("selfpicking order");
+    try {
+      const {
+        vendor_email,
+        vendorname,
+        customer_email,
+        customername,
+        quantity,
+        item_name,
+        clientAddr,
+        vendorAddr,
+        price,
+        total,
+        status,
+        itemId,
+      } = request.body;
+      console.log("request body: ", request.body);
+      const newOrder = new Order({
+        vendorEmail: vendor_email,
+        clientEmail: customer_email,
+        vendor: vendorname,
+        client: customername,
+        quantity,
+        item_name,
+        price,
+        total,
+        client_addr: clientAddr,
+        vendor_addr: vendorAddr,
+        delivery: false,
+        status,
+        item_id: itemId,
+      });
+      try {
+        const deletedCart = await Carts.deleteOne({ customer_email });
+        console.log("Deleted cart:", deletedCart);
+        response.status(200).json({ message: "Cart deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting cart:", error);
+        response.status(500).json({ error: "An error occurred while deleting cart" });
+      }
+      const savedOrder = await newOrder.save();
+      console.log("Order placed:", savedOrder);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
+  }
+});
+
+
+app.post("/customerDelivery", async (request, response) => {
+  if (
+    request.body.type === "delivery" &&
+    request.body.usertype === "customer"
+  ) {
+    console.log("selfpicking order");
+    try {
+      const {
+        vendor_email,
+        vendorname,
+        customer_email,
+        customername,
+        quantity,
+        item_name,
+        item_id,
         clientAddr,
         vendorAddr,
         price,
@@ -473,6 +578,7 @@ app.post("/customerDeliveryCart", async (request, response) => {
         client: customername,
         quantity,
         item_name,
+        item_id,
         client_addr: clientAddr,
         vendor_addr: vendorAddr,
         price,
@@ -631,7 +737,7 @@ app.post("/CustomerCurrentOrder", CustomerCurrentOrder);
 //below three api are of talha tariq
 
 //fetch orders for couriers
-app.get("/order", async (req, res) => {
+app.get("/courierorder", async (req, res) => {
   try {
     const orders = await Order.find();
     res.json(orders);
@@ -645,7 +751,7 @@ app.put("/order/update", async (req, res) => {
   const { orderId, newStatus } = req.body;
 
   try {
-    const order = await Order.findOne({ id: orderId }).exec();
+    const order = await Order.findOne({ _id: orderId }).exec();
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }

@@ -25,9 +25,12 @@ import CustomerCurrentOrder from "./components/customer/CustomerCurrentOrder";
 import StudentVendorHome from "./components/StudentVendorHome";
 import VendorHome from "./components/vendor/VendorHome";
 import AddItem from "./components/vendor/AddItem";
-import CourierHome from "./components/courier/CourierHome";
-import SeeOrders from "./components/SeeOrders";
 import ViewCustomersReviews from "./components/vendor/ViewCustomerReviews";
+
+// courier imports
+import CourierHome from "./components/courier/CourierHome";
+import SeeOrders from "./components/courier/SeeOrders";
+import CourierAnalytics from "./components/courier/courierAnalytics";
 
 //admin imports
 import AdminHome from "./components/admin/AdminHome";
@@ -106,6 +109,14 @@ function App() {
               element={
                 // <ProtectedRoute allowedRoles={["Admin"]}>
                 <SeeOrders />
+                // </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/CourierAnalytics"
+              element={
+                // <ProtectedRoute allowedRoles={["Admin"]}>
+                <CourierAnalytics />
                 // </ProtectedRoute>
               }
             />

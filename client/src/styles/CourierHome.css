@@ -8,6 +8,7 @@
 
 body {
   background: linear-gradient(90deg, #fb37ff, #18b2de);
+  color:#fff;
 }
 
 .sub-button-Home {
@@ -26,6 +27,7 @@ h1 {
   text-align: center;
   margin-top: 1px;
   font-weight: bold;
+  color:#0b0000
 }
 
 ::placeholder {

@@ -1,25 +1,39 @@
 // SeeOrders.js
 //page author: Talha Tariq
-import '../styles/SeeOrders.css'
-
+import '../../styles/SeeOrders.css'
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; 
+import axios from 'axios';
 
 const SeeOrders = () => {
-  // State for storing orders and item information
   const [orders, setOrders] = useState([]);
-  const [itemInfo, setItemInfo] = useState({});
 
-  // Function to handle the status change of an order
   const handleStatusChange = async (orderId, newStatus) => {
     try {
+      // Display confirmation pop-up based on the newStatus
+      if (newStatus === 'InProgress') {
+        if (window.confirm('Have you picked up the order?')) {
+          // If the user confirms, proceed with the status change
+          updateOrderStatus(orderId, newStatus);
+        }
+      } else if (newStatus === 'Completed') {
+        window.confirm('The order has been delivered')
+        }
+    } catch (error) {
+      console.error('Error updating order status:', error.message);
+    }
+  };
+
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
       const response = await axios.put(`http://localhost:3001/order/update`, {
-        orderId,
-        newStatus
+        orderId: orderId,
+        newStatus: newStatus
       });
 
       if (response.status === 200) {
         console.log('Order status updated successfully:', response.data.updatedOrder);
+        // If you want to update the UI after status change, you can refetch orders here
+        // Refetching orders can be done by calling fetchOrders()
       } else {
         console.error('Failed to update order status:', response.data.message);
       }
@@ -28,43 +42,16 @@ const SeeOrders = () => {
     }
   };
 
-  // Function to get the next status based on the current status
-  //took syntactical help from: https://www.geeksforgeeks.org
   const getNextStatus = (currentStatus) => {
     return currentStatus === 'New' ? 'InProgress' : currentStatus === 'InProgress' ? 'Completed' : 'Completed';
-};
-
-  // Function to fetch item information for a given item ID
-  const fetchItemInfo = async (itemId) => {
-    try {
-      const response = await axios.get(`http://localhost:3001/item/${itemId}`);
-
-      if (response.status === 200) {
-        // Update itemInfo state with the fetched item information
-        setItemInfo((prevItemInfo) => ({
-          ...prevItemInfo,
-          [itemId]: response.data
-        }));
-      } else {
-        console.error('Failed to fetch item information:', response.data.message);
-      }
-    } catch (error) {
-      console.error('Error fetching item information:', error.message);
-    }
   };
 
-  // useEffect to fetch orders and item information on component mount
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/order');
+        const response = await axios.get('http://localhost:3001/courierorder');
         if (response.status === 200) {
-          // Update orders state with fetched orders
           setOrders(response.data);
-          // Fetch item information for each order
-          response.data.forEach((orderItem) => {
-            fetchItemInfo(orderItem.item_id);
-          });
         } else {
           console.error('Failed to fetch orders:', await response.text());
         }
@@ -73,12 +60,9 @@ const SeeOrders = () => {
       }
     };
 
-    // Call fetchOrders function on component mount
     fetchOrders();
   }, []);
 
-  // JSX to render the component
-  //styling help from youtube and syntaxtical from gpt
   return (
     <div className="form-container">
       <h2>Customer orders</h2>
@@ -86,9 +70,9 @@ const SeeOrders = () => {
         <table className="table">
           <thead>
             <tr>
-              <th style={{ textAlign: 'center', padding: '15px' }}>Item</th>
+              <th style={{ textAlign: 'center', padding: '15px' }}>Vendor Name</th>
               <th style={{ textAlign: 'center', padding: '15px' }}>Pickup Address</th>
-              <th style={{ textAlign: 'center', padding: '15px' }}>Customer</th>
+              <th style={{ textAlign: 'center', padding: '15px' }}>Customer Name</th>
               <th style={{ textAlign: 'center', padding: '15px' }}>Delivery Address</th>
               <th style={{ textAlign: 'center', padding: '15px' }}>Status</th>
             </tr>
@@ -96,15 +80,11 @@ const SeeOrders = () => {
           <tbody>
             {orders.map((orderItem, index) => (
               <tr key={index}>
-                <td style={{ textAlign: 'center', padding: '15px' }}>
-                  {/* Display item name or 'Loading...' if not fetched */}
-                  {itemInfo[orderItem.item_id] ? itemInfo[orderItem.item_id].itemName : 'Loading...'}
-                </td>
+                <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.vendor}</td>
                 <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.vendor_addr}</td>
                 <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client}</td>
                 <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client_addr}</td>
                 <td style={{ textAlign: 'center', padding: '15px' }}>
-                  {/* Button to change order status */}
                   <button
                     style={{
                       backgroundColor:
@@ -119,7 +99,7 @@ const SeeOrders = () => {
                       padding: '5px 10px',
                       cursor: 'pointer',
                     }}
-                    onClick={() => handleStatusChange(orderItem.id, getNextStatus(orderItem.status))}
+                    onClick={() => handleStatusChange(orderItem._id, getNextStatus(orderItem.status))}
                   >
                     {orderItem.status}
                   </button>

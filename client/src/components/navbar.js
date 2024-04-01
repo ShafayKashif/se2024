@@ -59,9 +59,9 @@ const Navbar = () => {
             <button onClick={() => handleNavigate("/SeeOrders")}>
               See All Orders
             </button>
-            {/* <button onClick={() => handleNavigate("/view")}>
+            <button onClick={() => handleNavigate("/courierAnalytics")}>
               view analytics
-            </button> */}
+            </button>
           </>
         )}
       </div>

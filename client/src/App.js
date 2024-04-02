@@ -99,9 +99,9 @@ function App() {
             <Route
               path="/AdminHome"
               element={
-                <ProtectedRoute allowedRoles={["Admin"]}>
+                // <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminHome />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
             <Route
@@ -145,35 +145,35 @@ function App() {
               }
             />
             <Route
-              path="/admin/see-vendor-reviews"
+              path="/admin/seeVendorRatings"
               element={
-                <ProtectedRoute allowedRoles={["Admin"]}>
+                // <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeVendorReviews />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
             <Route
-              path="/admin/see-vendor-requests"
+              path="/admin/view-vendor-requests"
               element={
-                <ProtectedRoute allowedRoles={["Admin"]}>
+                // <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeVendorRequests />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
             <Route
-              path="/admin/ban-vendors"
+              path="/admin/banUser"
               element={
-                <ProtectedRoute allowedRoles={["Admin"]}>
+                // <ProtectedRoute allowedRoles={["admin"]}>
                   <BanVendors />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
             <Route
-              path="/admin/see-courier-requests"
+              path="/admin/view-courier-requests"
               element={
-                <ProtectedRoute allowedRoles={["Admin"]}>
+                // <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeCourierRequests />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
           </Route>

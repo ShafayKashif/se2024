@@ -56,16 +56,19 @@ const VendorHome = () => {
 
     // Initial calls to fetch items, check banned status, and application status
     fetchItems();
-    checkBannedStatus();
+    const interval = setInterval(() => {
+      checkBannedStatus();
+    }, 0) 
+    
     checkApplicationStatus();
 
     // Set interval to check application status every 5 seconds
-    const interval = setInterval(() => {
+    const interval2 = setInterval(() => {
       checkApplicationStatus();
     }, 5000);
 
     // Clear interval on component unmount
-    return () => clearInterval(interval);
+    return () => clearInterval(interval2) && clearInterval(interval);
   }, [email]);
 
   return (

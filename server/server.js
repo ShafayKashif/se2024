@@ -353,7 +353,7 @@ app.get("/getInfoForAdminHomePage", async (request, response) => {
     }
 
     // Find customer reviews for each vendor
-    const customerReviews = await CustomerReview.find({ vendor_email: { $in: topVendorEmails } });
+    const customerReviews = await CustomerReview.find();
 
     // Calculate average rating for each vendor
     const vendorAvgRatings = [];
@@ -415,10 +415,12 @@ app.post('/ban-vendor', async (request, response) => {
         }
         student_vendor.status = "banned" + ":" + description 
         await student_vendor.save()
+        await Items.deleteMany({ vendorEmail: email_to_ban });
       }
       else {
         vendor.status = "banned" + ":" + description
         await vendor.save()
+        await Items.deleteMany({ vendorEmail: email_to_ban });
       }
       
       return response.status(200).json({ message: "Vendor banned successfully" , valid: true})

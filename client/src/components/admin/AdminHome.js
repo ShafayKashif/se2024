@@ -104,7 +104,7 @@ const AdminHome = () => {
         <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
           {myCustomerReviews.map((review, index) => (
             <li key={index} style={{ display: "inline-block", margin: "0 10px" }}>
-              <p>Vendor Email: {review.vendor_email}</p>
+              <p>Customer Email: {review.customer_email}</p>
               <p>Rating: {review.rating}</p>
               <p>Comment: {review.comment}</p>
             </li>

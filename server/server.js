@@ -17,7 +17,6 @@ import Couriers from "./models/courierModel.js";
 import { Router } from "express";
 import Order from "./models/ordersModel.js";
 import Items from "./models/itemModel.js";
-import VendorItemsSold from "./models/vendorItemsSold.js";
 import CustomerReview from "./models/CustomerReviewModel.js";
 
 dotenv.config();
@@ -177,9 +176,9 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
 //Shehbaz
-app.post("/add_item", add_item );
-app.post("/showitems", showitems );
-app.post("/ViewCustomerReviews", ViewCustomerReviews );
+// app.post("/add_item", add_item );
+// app.post("/showitems", showitems );
+// app.post("/ViewCustomerReviews", ViewCustomerReviews );
 
 
 
@@ -412,6 +411,7 @@ app.get('/view-join-requests', async (request, response) => {
       allUsers = allUsers.concat(processing_couriers.map(courier => ({ ...courier.toObject(), userType: 'courier' })));
     }
 
+    // console.log("Users: ", allUsers)
     response.status(200).json({ allUsers });
   } catch (err) {
     console.log("Error while generating response:", err);
@@ -421,24 +421,27 @@ app.get('/view-join-requests', async (request, response) => {
 
 app.post('/application-decision', async (request, response) => {
 
-  const vendor_email = request.body.vendorEmail
+  const vendor_email = request.body.userEmail
   const decision = request.body.decision
+  // console.log("Vendor with email: ", vendor_email, " with decision: ", decision)
   try {
-    const vendor = await Vendors.findOne({ email: requestedEmail })
+    const vendor = await Vendors.findOne({ email: vendor_email })
 
     if (vendor) {
       vendor.application = decision
       await vendor.save()
+      // console.log("Saved decision")
+      // console.log("APplication: ", vendor.application)
     }
     else {
-      const student_vendor = await studentVendors.findOne({email: requestedEmail})
+      const student_vendor = await studentVendors.findOne({email: vendor_email})
   
       if (student_vendor) {
         student_vendor.application = decision
         await student_vendor.save()
       }
       else {
-        const courier = await Couriers.findOne({email: requestedEmail})
+        const courier = await Couriers.findOne({email: vendor_email})
 
         if (courier) {
           courier.application = decision

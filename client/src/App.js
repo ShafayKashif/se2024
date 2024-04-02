@@ -153,7 +153,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/view-vendor-requests"
+              path="/admin/joinRequests"
               element={
                 // <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeVendorRequests />

@@ -5,13 +5,10 @@ const SeeVendorRequests = () => {
   const [vendorRequests, setVendorRequests] = useState([]);
   const [courierRequests, setCourierRequests] = useState([]);
 
-  useEffect(() => {
-    seeRequests(); // Fetch requests when component mounts
-  }, []); // Empty dependency array ensures the effect runs only once
-
   const seeRequests = async () => {
     try {
       const my_requests = await axios.get("http://localhost:3001/view-join-requests");
+      console.log("Requests: ", my_requests)
       const allUsers = my_requests.data.allUsers;
 
       // Filter requests based on user type
@@ -25,15 +22,28 @@ const SeeVendorRequests = () => {
     }
   };
 
-  const handleDecision = async (vendorEmail, decision) => {
+  useEffect(() => {
+    // Call seeRequests initially and then every 5 seconds
+    seeRequests();
+
+    const interval = setInterval(() => {
+      seeRequests();
+    }, 5000); // 5 seconds
+
+    // Clear the interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleDecision = async (userEmail, decision) => {
     try {
-      await axios.post("http://localhost:3000/application-decision", {
-        vendorEmail,
+      // console.log("Email: ", userEmail)
+      await axios.post("http://localhost:3001/application-decision", {
+        userEmail,
         decision
       });
       // Remove the request from the UI
-      setVendorRequests(prevRequests => prevRequests.filter(vendor => vendor.email !== vendorEmail));
-      setCourierRequests(prevRequests => prevRequests.filter(courier => courier.email !== vendorEmail)); // Remove from courier requests if it exists
+      setVendorRequests(prevRequests => prevRequests.filter(user => user.email !== userEmail));
+      setCourierRequests(prevRequests => prevRequests.filter(user => user.email !== userEmail)); // Remove from courier requests if it exists
     } catch (err) {
       console.log("Error while sending application decision:", err);
     }
@@ -41,8 +51,7 @@ const SeeVendorRequests = () => {
 
   return (
     <div>
-      <h1>Vendor Requests</h1>
-      <button onClick={seeRequests}>See Requests</button>
+      <h1>See Requests</h1>
 
       {/* Vendor Requests */}
       <h2>Vendor Requests</h2>

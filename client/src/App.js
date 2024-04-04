@@ -26,6 +26,8 @@ import StudentVendorHome from "./components/StudentVendorHome";
 import VendorHome from "./components/vendor/VendorHome";
 import AddItem from "./components/vendor/AddItem";
 import ViewCustomersReviews from "./components/vendor/ViewCustomerReviews";
+import VendorProfile from "./components/vendor/vendorProfile";
+import VendorOrders from "./components/vendor/VendorOrders";
 
 // courier imports
 import CourierHome from "./components/courier/CourierHome";
@@ -62,7 +64,8 @@ function App() {
             {/* Protected Routes with Navbar */}
             <Route path="/VendorHome" element={<VendorHome />} />
             <Route path="/AddItem" element={<AddItem />} />
-            <Route path="/Additem" element={<AddItem />} />
+            <Route path="/VendorProfile" element={<VendorProfile />} />
+            <Route path="/VendorOrders" element={<VendorOrders />} />
             <Route
               path="/ViewCustomersReviews"
               element={<ViewCustomersReviews />}

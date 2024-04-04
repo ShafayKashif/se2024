@@ -31,7 +31,7 @@
 /* Style for item image */
 .item-image {
   max-width: 70%; /* Ensures image doesn't exceed its container */
-  height: 70%; /* Ensures square dimensions */
+  height: 100px; /* Ensures square dimensions */
   object-fit: cover; /* Ensures the image covers the entire container */
 }
 

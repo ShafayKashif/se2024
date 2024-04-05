@@ -8,7 +8,6 @@ function Reviews() {
     const [isBanned, setIsBanned] = useState(false);
     const navigate = useNavigate();
     const vendorEmail = window.localStorage.getItem('vendorEmail');
-    //const navigate = useNavigate();
 
     useEffect(() => {
         const checkBannedStatus = async () => {
@@ -25,19 +24,11 @@ function Reviews() {
 
         // Check banned status on component mount
         checkBannedStatus();
-
-        // Set interval to check banned status every 0 seconds
-        const interval = setInterval(() => {
-            checkBannedStatus();
-        }, 0);
-
-        // Clear interval on component unmount
-        return () => clearInterval(interval);
-    }, [vendorEmail]);
+    }, [vendorEmail]); // Add vendorEmail to the dependency array
 
     const getReviews = async () => {
         try {
-            const response = await axios.post('http://localhost:3001/ViewCustomerReviews', { vendorEmail }); 
+            const response = await axios.post('http://localhost:3001/ViewCustomerReviews', { vendorEmail });
             setReviews(response.data);
         } catch (error) {
             console.error('Error fetching reviews:', error);

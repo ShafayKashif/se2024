@@ -1,32 +1,26 @@
-// Shehbaz
-import '../../styles/vendorCss/vendorHome.css'
+import '../../styles/vendorCss/vendorHome.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-
-
 const VendorHome = () => {
   const navigate = useNavigate();
-  //const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [isBanned, setIsBanned] = useState(false);
   const [banDescription, setBanDescription] = useState('');
   const [applicationStatus, setApplicationStatus] = useState('');
-  const email = window.sessionStorage.getItem('email');
+  const email = window.localStorage.getItem('vendorEmail');
 
   useEffect(() => {
-    // Function to fetch items
     const fetchItems = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/items', { email });
-        setItems(response.data); // Server returns items being sold by the vendor
+        const response = await axios.post('http://localhost:3001/showitems', { vendorEmail: email });
+        setItems(response.data);
       } catch (error) {
         console.error('Error fetching items:', error);
       }
     };
 
-    // Function to check if the vendor is banned
     const checkBannedStatus = async () => {
       try {
         const response = await axios.post('http://localhost:3001/is-vendor-banned', { email });
@@ -39,19 +33,15 @@ const VendorHome = () => {
       }
     };
 
-    // Function to check application status
     const checkApplicationStatus = async () => {
       try {
         const response = await axios.post('http://localhost:3001/is-application-approved', { email, user_role: 'vendor' });
         const status = response.data.decision;
         if (status === 'approved') {
-          // Application approved, render functionality
           fetchItems();
         } else if (status === 'declined') {
-          // Application declined, alert the user
           alert('Your application has been declined.');
         } else {
-          // Application still processing, set status
           setApplicationStatus('processing');
         }
       } catch (error) {
@@ -60,47 +50,27 @@ const VendorHome = () => {
     };
 
     // Initial calls to fetch items, check banned status, and application status
-    fetchItems();
     const interval = setInterval(() => {
       checkBannedStatus();
-    }, 0) 
-    
-    checkApplicationStatus();
-
-    // Set interval to check application status every 5 seconds
-    const interval2 = setInterval(() => {
       checkApplicationStatus();
     }, 5000);
 
-    // Clear interval on component unmount
-    return () => clearInterval(interval2) && clearInterval(interval);
+    // Cleanup function to clear interval
+    return () => clearInterval(interval);
   }, [email]);
 
-  const temp =() =>{
-    console.log("HERE")
-  }
-
   const updateStock = async (itemId, newStock) => {
-    
     try {
       await axios.post('http://localhost:3001/updateStockVendor', { itemId, newStock });
-      // Update local state with the new stock value
-      
-      const index = items.findIndex(item => item.itemId === itemId);
-      temp()
-      
-      // If the item exists, update its stock
-      if (index !== -1) {
-        
-        const updatedItems = [...items]; // Create a copy of the items array
-        updatedItems[index].stock = newStock; // Update the stock of the item at the found index
-        setItems(updatedItems); // Update the state with the modified items array
-      }
-      window.location.reload();
+      const updatedItems = items.map(item =>
+        item.itemId === itemId ? { ...item, stock: newStock } : item
+      );
+      setItems(updatedItems);
     } catch (error) {
       console.error('Error updating stock:', error);
     }
   };
+
   return (
     <div>
       {isBanned ? (
@@ -108,7 +78,7 @@ const VendorHome = () => {
           <h1>You have been banned!</h1>
           <p>{banDescription}</p>
         </div>
-      ) : applicationStatus === 'processin' ? (
+      ) : applicationStatus === 'processing' ? (
         <div>
           <h1>Application Processing</h1>
           <p>Your application is currently being processed. Please wait for approval.</p>
@@ -123,19 +93,8 @@ const VendorHome = () => {
                 <p>Category: {item.category}</p>
                 <p>Stock: {item.stock}</p>
                 <div>
-                  <button onClick={() => {
-                    updateStock(item.itemId, item.stock - 1);
-                    navigate("/VendorHome");
-                  }}>
-                    -
-                  </button>
-  
-                  <button onClick={() => {
-                    updateStock(item.itemId, item.stock + 1);
-                    navigate("/VendorHome");
-                  }}>
-                    +
-                  </button>
+                  <button onClick={() => updateStock(item.itemId, item.stock - 1)}>-</button>
+                  <button onClick={() => updateStock(item.itemId, item.stock + 1)}>+</button>
                 </div>
                 <img src={item.image} alt={item.itemName} className="item-image" />
               </div>
@@ -145,7 +104,6 @@ const VendorHome = () => {
       )}
     </div>
   );
-  
-                }
+};
 
 export default VendorHome;

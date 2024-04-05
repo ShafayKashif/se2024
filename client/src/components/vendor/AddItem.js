@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/vendorCss/addItemCustom.css';
 
 const AddItem = () => {
   const navigate = useNavigate();
-  const vendorEmail = window.sessionStorage.getItem('email');
+  const vendorEmail = window.localStorage.getItem('vendorEmail');
   const [isBanned, setIsBanned] = useState(false);
 
   useEffect(() => {
@@ -24,10 +24,10 @@ const AddItem = () => {
     // Check banned status on component mount
     checkBannedStatus();
 
-    // Set interval to check banned status every 0 seconds
+    // Set interval to check banned status every 10 seconds
     const interval = setInterval(() => {
       checkBannedStatus();
-    }, 0);
+    }, 10000);
 
     // Clear interval on component unmount
     return () => clearInterval(interval);
@@ -116,7 +116,42 @@ const AddItem = () => {
         </div>
         {/* Other input fields */}
         <div>
-          {/* Add other input fields similarly */}
+        <div>
+          <input
+            className="item-inp"
+            type="text"
+            placeholder="Category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
+        </div>
+        <div>
+          <input
+            className="item-inp"
+            type="number"
+            placeholder="Stock"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+          />
+        </div>
+        <div>
+          <input
+            className="item-inp"
+            type="number"
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
+        <div>
+          <input
+            className="item-inp"
+            type="number"
+            placeholder="Calories"
+            value={calories}
+            onChange={(e) => setCalories(e.target.value)}
+          />
+        </div>
         </div>
         {/* Image upload field */}
         <div>

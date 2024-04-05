@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-<<<<<<< Updated upstream
-import { useNavigate } from 'react-router-dom';
-import '../../styles/addItemCustom.css';
-=======
 import { useNavigate} from 'react-router-dom';
 import '../../styles/vendorCss/addItemCustom.css';
->>>>>>> Stashed changes
 
 const AddItem = () => {
   const navigate = useNavigate();

@@ -17,14 +17,11 @@ import Couriers from "./models/courierModel.js";
 import { Router } from "express";
 import Order from "./models/ordersModel.js";
 import Items from "./models/itemModel.js";
-<<<<<<< Updated upstream
 import CustomerReview from "./models/CustomerReviewModel.js";
-=======
 import Carts from "./models/cartsModel.js";  
 
 //controllers
 import { showitems , add_item , ViewCustomerReviews, updateStockVendor,getNewOrders,vendorAnalytics} from "./controllers/vendorController.js";
->>>>>>> Stashed changes
 
 dotenv.config();
 
@@ -183,19 +180,12 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
 //Shehbaz
-<<<<<<< Updated upstream
-// app.post("/add_item", add_item );
-// app.post("/showitems", showitems );
-// app.post("/ViewCustomerReviews", ViewCustomerReviews );
-
-=======
 app.post("/add_item", add_item );
 app.post("/showitems", showitems );
 app.post("/ViewCustomerReviews", ViewCustomerReviews );
 app.post("/updateStockVendor",updateStockVendor);
 app.post("/getNewOrders",getNewOrders);
 app.post("/vendorAnalytics",vendorAnalytics);
->>>>>>> Stashed changes
 
 
 

@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/vendorCss/ViewCustomerReviews.css';
 
 function Reviews() {
     const [reviews, setReviews] = useState([]);
-<<<<<<< Updated upstream
     const [isBanned, setIsBanned] = useState(false);
-    const vendorEmail = window.sessionStorage.getItem('email');
     const navigate = useNavigate();
-=======
     const vendorEmail = window.localStorage.getItem('vendorEmail');
     //const navigate = useNavigate();
->>>>>>> Stashed changes
 
     useEffect(() => {
         const checkBannedStatus = async () => {

@@ -998,7 +998,7 @@ app.get("/courierorder", async (req, res) => {
 });
 // Update order status from courier side, New->InProgress->Completed
 app.put("/order/update", async (req, res) => {
-  const { orderId, newStatus } = req.body;
+  const { orderId, newStatus, delivered_by } = req.body;
 
   try {
     const order = await Order.findOne({ _id: orderId }).exec();
@@ -1006,6 +1006,7 @@ app.put("/order/update", async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
     order.status = newStatus;
+    order.delivered_by = delivered_by;
 
     await order.save();
 
@@ -1018,17 +1019,44 @@ app.put("/order/update", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-// Fetch item information provided the itemId from courier Page
-app.get("/item/:itemId", async (req, res) => {
+app.get('/orders/count/:courierEmail', async (req, res) => {
+  const courierEmail = req.params.courierEmail;
+
   try {
-    const itemId = req.params.itemId;
-    const itemInfo = await Items.findOne({ itemId }).select("itemName image");
-    if (!itemInfo) {
-      return res.status(404).json({ message: "Item not found" });
-    }
-    res.status(200).json(itemInfo);
+    // Count the number of orders where delivered_by matches the courier's email
+    const completedOrdersCount = await Order.countDocuments({ delivered_by: courierEmail, status: 'Completed' });
+
+    res.status(200).json({ completedOrdersCount });
   } catch (error) {
-    console.error("Error fetching item information:", error);
+    console.error('Error counting completed orders:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+app.get("/courier/earnings/:courierEmail", async (req, res) => {
+  const courierEmail = req.params.courierEmail;
+
+  try {
+    const totalEarnings = await Order.aggregate([
+      {
+        $match: {
+          delivered_by: courierEmail
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalEarnings: { $sum: "$total" }
+        }
+      }
+    ]);
+
+    // If there are no orders for the courier, return 0 earnings
+    const earnings = totalEarnings.length > 0 ? totalEarnings[0].totalEarnings : 0;
+
+    res.status(200).json({ earnings });
+  } catch (error) {
+    console.error("Error fetching total earnings:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+

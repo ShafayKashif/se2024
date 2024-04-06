@@ -15,25 +15,48 @@ const SeeOrders = () => {
           // If the user confirms, proceed with the status change
           updateOrderStatus(orderId, newStatus);
         }
-      } else if (newStatus === 'Completed') {
-        window.confirm('The order has been delivered')
+      } else {
+        if (window.confirm('Order Completed?')) {
+          // If the user confirms, proceed with the status change
+          updateOrderStatus(orderId, newStatus);
         }
+      }
     } catch (error) {
       console.error('Error updating order status:', error.message);
     }
   };
-
+  const getNextStatus = (currentStatus) => {
+    return currentStatus === 'New' ? 'InProgress' : currentStatus === 'InProgress' ? 'Completed' : 'Completed';
+  };
+  const getCourierEmail = () => {
+    // Retrieve the courier's email from local storage
+    const email = window.localStorage.getItem('CourierEmail');
+    // Return the courier's email
+    return email;
+  };
+  
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
+      // Retrieve the courier's email from the authentication token or session
+      const courierEmail = getCourierEmail(); // Implement this function to get the courier's email
+      
       const response = await axios.put(`http://localhost:3001/order/update`, {
         orderId: orderId,
-        newStatus: newStatus
+        newStatus: newStatus,
+        delivered_by: courierEmail // Include the courier's email in the request
       });
-
+      
       if (response.status === 200) {
+        // Update the local state with modified order data
+        const updatedOrders = orders.map(order => {
+          if (order._id === orderId) {
+            return { ...order, status: newStatus };
+          }
+          return order;
+        });
+        setOrders(updatedOrders);
+  
         console.log('Order status updated successfully:', response.data.updatedOrder);
-        // If you want to update the UI after status change, you can refetch orders here
-        // Refetching orders can be done by calling fetchOrders()
       } else {
         console.error('Failed to update order status:', response.data.message);
       }
@@ -41,17 +64,16 @@ const SeeOrders = () => {
       console.error('Error updating order status:', error.message);
     }
   };
-
-  const getNextStatus = (currentStatus) => {
-    return currentStatus === 'New' ? 'InProgress' : currentStatus === 'InProgress' ? 'Completed' : 'Completed';
-  };
+  
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get('http://localhost:3001/courierorder');
         if (response.status === 200) {
-          setOrders(response.data);
+          // Filter orders to include only those with delivery attribute set to true
+          const filteredOrders = response.data.filter(order => order.delivery === true);
+          setOrders(filteredOrders);
         } else {
           console.error('Failed to fetch orders:', await response.text());
         }
@@ -59,14 +81,14 @@ const SeeOrders = () => {
         console.error('Error fetching orders:', error.message);
       }
     };
-
+  
     fetchOrders();
   }, []);
 
   return (
     <div className="form-container">
       <h2>Customer orders</h2>
-      <form>
+      <div className="table-container">
         <table className="table">
           <thead>
             <tr>
@@ -108,7 +130,7 @@ const SeeOrders = () => {
             ))}
           </tbody>
         </table>
-      </form>
+      </div>
     </div>
   );
 };

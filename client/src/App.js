@@ -26,6 +26,8 @@ import StudentVendorHome from "./components/StudentVendorHome";
 import VendorHome from "./components/vendor/VendorHome";
 import AddItem from "./components/vendor/AddItem";
 import ViewCustomersReviews from "./components/vendor/ViewCustomerReviews";
+import VendorProfile from "./components/vendor/vendorProfile";
+import VendorOrders from "./components/vendor/VendorOrders";
 
 // courier imports
 import CourierHome from "./components/courier/CourierHome";
@@ -62,7 +64,8 @@ function App() {
             {/* Protected Routes with Navbar */}
             <Route path="/VendorHome" element={<VendorHome />} />
             <Route path="/AddItem" element={<AddItem />} />
-            <Route path="/Additem" element={<AddItem />} />
+            <Route path="/VendorProfile" element={<VendorProfile />} />
+            <Route path="/VendorOrders" element={<VendorOrders />} />
             <Route
               path="/ViewCustomersReviews"
               element={<ViewCustomersReviews />}
@@ -99,9 +102,9 @@ function App() {
             <Route
               path="/AdminHome"
               element={
-                <ProtectedRoute allowedRoles={["Admin"]}>
+                // <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminHome />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
             <Route
@@ -145,35 +148,35 @@ function App() {
               }
             />
             <Route
-              path="/admin/see-vendor-reviews"
+              path="/admin/seeVendorRatings"
               element={
-                <ProtectedRoute allowedRoles={["Admin"]}>
+                // <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeVendorReviews />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
             <Route
-              path="/admin/see-vendor-requests"
+              path="/admin/joinRequests"
               element={
-                <ProtectedRoute allowedRoles={["Admin"]}>
+                // <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeVendorRequests />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
             <Route
-              path="/admin/ban-vendors"
+              path="/admin/banUser"
               element={
-                <ProtectedRoute allowedRoles={["Admin"]}>
+                // <ProtectedRoute allowedRoles={["admin"]}>
                   <BanVendors />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
             <Route
-              path="/admin/see-courier-requests"
+              path="/admin/view-courier-requests"
               element={
-                <ProtectedRoute allowedRoles={["Admin"]}>
+                // <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeCourierRequests />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
             />
           </Route>

@@ -346,6 +346,58 @@ app.post("/selfpickup", async (request, response) => {
   }
 });
 
+app.post("/UpdateQuantity", async (request, response) => {
+    console.log("Update Quantity");
+    try {
+      const { vendorEmail, itemId, quantity } = request.body;
+      console.log("request body: ", request.body);
+      const updatedCart = await Items.updateOne(
+        { vendorEmail, itemId },
+        { stock: quantity }
+      );
+      console.log("Cart updated:", updatedCart);
+      response.status(200).json({ isAuthenticated: true });
+    } catch (error) {
+      console.error("Error updating cart:", error);
+    }
+});
+
+const CustomergetNewOrders = async (req, res) => {
+  console.log("HERE", req.body);
+  try {
+      let customerEmail = req.body.CustomerEmail;
+      console.log("customerEmail is: ", customerEmail);
+      // Get all orders matching vendor email and not delivered
+      const orders = await Order.find({ clientEmail: customerEmail, $or: [{ status: "New" },{ status: "InProgress" }] });
+      // Extract itemIds from orders
+      console.log("orders: ", orders);
+      const itemIds = orders.map(orders => orders.item_id);
+      console.log("itemIds: ", itemIds);
+      
+      // Find items matching the extracted itemIds
+      const items = await Items.find({ itemId: { $in: itemIds } });
+      console.log("items: ", items);
+      
+      // Join orders and items where vendor email matches
+      const joinedData = orders.map(order => {
+        const matchingItem = items.find(item => item.itemId === order.item_id);
+        if (matchingItem) {
+          return { ...order.toObject(), ...matchingItem.toObject() };
+        }
+        return null; // If no match found
+      }).filter(item => item !== null);
+      
+      console.log(joinedData);
+      res.json(joinedData);
+
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+app.post("/CustomergetNewOrders",CustomergetNewOrders);
+
 app.post("/selfpickupCart", async (request, response) => {
   if (
     request.body.type === "selfpickup" &&
@@ -578,7 +630,7 @@ app.post("/customerDeliveryCart", async (request, response) => {
         client: customername,
         quantity,
         item_name,
-        item_id,
+        item_id: itemId,
         client_addr: clientAddr,
         vendor_addr: vendorAddr,
         price,
@@ -720,7 +772,7 @@ const CustomerCurrentOrder = async (req, res) => {
   //Hassan Ali
   console.log(req.body);
   // console.log("view cart: ");
-  const customerEmail = req.body.customerEmail;
+  const customerEmail = req.body.CustomerEmail;
   try {
     // If email is null or undefined, assign a default value, Used during initial testing
     const cartItems = await Order.find({ clientEmail: customerEmail, $or: [{ status: "New" },{ status: "In Progress" }] });

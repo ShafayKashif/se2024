@@ -33,6 +33,7 @@ const CustomerPlaceOrder = (props) => {
     let imglink = "";
     let price;
     let itemID;
+    let itemQuantity;
     // using this variable to check against both student vendors and vendors (room for refactoring)
     let vendorFound = false;
 
@@ -147,6 +148,8 @@ const CustomerPlaceOrder = (props) => {
           price = item.price;
           imglink = item.image;
           itemID = item.itemId;
+          itemQuantity = item.stock;
+
         }
       } else {
         console.error('Failed to fetch items:', await response.text());
@@ -154,6 +157,10 @@ const CustomerPlaceOrder = (props) => {
     }
     catch (error) {
       console.error('Error fetching items:', error.message);
+    }
+    if (quantity > itemQuantity) {
+      alert("Quantity exceeds the available stock, please reconfirm from \"view menu tab\".");
+      return;
     }
     let total = price * quantity;
     try {
@@ -172,12 +179,27 @@ const CustomerPlaceOrder = (props) => {
       if (response.status === 200) {
         // if successful, log the order and redirect to customer home
         console.log("order logged!");
-        navigate('/CustomerHome');
+        
       } else {
         console.error("order log failed:", await response.text());
       }
     } catch (error) {
       console.error("error logging order::", error.message);
+    }
+    try {
+      const response = await axios.post("http://localhost:3001/UpdateQuantity", {
+        itemId: itemID,
+        vendorEmail: vendor_email,
+        quantity: itemQuantity - quantity,
+      });
+      if (response.status === 200) {
+        console.log("item quantity updated!");
+        navigate('/CustomerHome');
+      } else {
+        console.error("item quantity update failed:", await response.text());
+      }
+    } catch (error) {
+      console.error("error updating item quantity::", error.message);
     }
   };
 
@@ -200,6 +222,7 @@ const CustomerPlaceOrder = (props) => {
     let price;
     let vendorFound = false;
     let itemId;
+    let itemQuantity;
 
     try {
       const response = await axios.get('http://localhost:3001/studentvendors');
@@ -301,6 +324,7 @@ const CustomerPlaceOrder = (props) => {
         } else {
           price = item.price;
           itemId = item.itemId;
+          itemQuantity = item.stock;
         }
       }
       else {
@@ -333,13 +357,28 @@ const CustomerPlaceOrder = (props) => {
       });
       if (response.status === 200) {
         console.log("order logged!");
-        navigate('/CustomerHome');
+        // navigate('/CustomerHome');
       } else {
         console.error("order log failed:", await response.text());
       }
     }
     catch (error) {
       console.error("error logging order::", error.message);
+    }
+    try {
+      const response = await axios.post("http://localhost:3001/UpdateQuantity", {
+        itemId,
+        vendorEmail: vendor_email,
+        quantity: itemQuantity - quantity,
+      });
+      if (response.status === 200) {
+        console.log("item quantity updated!");
+        navigate('/CustomerHome');
+      } else {
+        console.error("item quantity update failed:", await response.text());
+      }
+    } catch (error) {
+      console.error("error updating item quantity::", error.message);
     }
   }
 
@@ -361,6 +400,7 @@ const CustomerPlaceOrder = (props) => {
     let price;
     let vendorFound = false;
     let itemId;
+    let itemQuantity;
 
     try {
       const response = await axios.get('http://localhost:3001/studentvendors');
@@ -462,6 +502,7 @@ const CustomerPlaceOrder = (props) => {
         } else {
           price = item.price;
           itemId = item.itemId;
+          itemQuantity = item.stock;
         }
       }
       else {
@@ -494,13 +535,28 @@ const CustomerPlaceOrder = (props) => {
       });
       if (response.status === 200) {
         console.log("order logged!");
-        navigate('/CustomerHome');
+        // navigate('/CustomerHome');
       } else {
         console.error("order log failed:", await response.text());
       }
     }
     catch (error) {
       console.error("error logging order::", error.message);
+    }
+    try {
+      const response = await axios.post("http://localhost:3001/UpdateQuantity", {
+        itemId,
+        vendorEmail: vendor_email,
+        quantity: itemQuantity - quantity,
+      });
+      if (response.status === 200) {
+        console.log("item quantity updated!");
+        navigate('/CustomerHome');
+      } else {
+        console.error("item quantity update failed:", await response.text());
+      }
+    } catch (error) {
+      console.error("error updating item quantity::", error.message);
     }
   }
 

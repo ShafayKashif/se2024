@@ -1,51 +1,46 @@
-// CustomerCurrentOrder.js
-//page author: Hassan Ali
 import '../../styles/CustomerHome.css'
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; 
+import axios from 'axios';
 
 const CustomerCurrentOrder = () => {
-  // State for storing orders and item information
   const [orders, setOrders] = useState([]);
-  const [items, setItems] = useState([]);
-
-
-
-
-  // useEffect to fetch orders and item information on component mount
+  const CustomerEmail = window.localStorage.getItem('CustomerEmail');
+  const fetchOrders = async () => {
+    try {
+      // Fetch orders from your backend API
+      const response = await axios.post('http://localhost:3001/Customergetneworders',{ CustomerEmail });
+      setOrders(response.data); // Assuming your API returns orders in JSON format
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
   useEffect(() => {
-    const fetchItems = async () => {
-        try {
-            let customerEmail = localStorage.getItem('CustomerEmail');
-            const response = await axios.post('http://localhost:3001/CustomerCurrentOrder', { customerEmail });
-            setItems(response.data);//Server returns items being sold by he vendor
-        } catch (error) {
-            console.error('Error fetching items:', error);
-        }
-    };
-    fetchItems();
+    fetchOrders();
+    const interval = setInterval(() => {
+      fetchOrders();
+    }, 2000); // 5 seconds
+
+    // Clear the interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
-  // JSX to render the component
-  //styling help from youtube and syntaxtical from gpt
   return (
-
-    <div className="maindiv">
-        <div className="items-container1">
-                {items.map(item => (
-                    <div key={item.item_id} className="item-card1">
-                        <h6>{item.item_id}</h6>
-                        <p>Vendor: {item.vendorEmail}</p>
-                        <p>Quantity: {item.quantity}</p>
-                        <p>Price: {item.price}</p>
-                        <p>Total: {item.total}</p>
-                        <p>Status: {item.status}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-
-   
+    <div className='maindiv'>
+      <h3>Your orders placed:</h3>
+      <div className="items-container1">
+        {orders.map(order => (
+          <div key={order.itemId} className="item-card1">
+            <h6>Item: {order.itemName}</h6>
+            <p>Vendor name: {order.vendor} </p>
+            <p>quantity: {order.quantity} </p>
+            <p>Order Total: {order.price} </p>
+            <p>Order Status: {order.status} </p>
+            <p>being delivered by: {order.delivered_by}</p>
+            <img src={order.image}  className="item-image1" />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

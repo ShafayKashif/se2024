@@ -34,21 +34,22 @@ const CustomerHome = () => {
         }
     }
 
-    return (      
-        <div>
-            <h1>
-                Hello, welcome to CampusCuisine, use the navbar to navigate since home page isnt implemented yet
-            </h1>
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const response = await axios.post('http://localhost:3001/CustomerTopVendors');
+                setItems(response.data);//Server returns items being sold by he vendor
+            } catch (error) {
+                console.error('Error fetching items:', error);
+            }
+        };
+        fetchItems();
+    }, []);
+
+
+    return (
+        <div className='maindiv'>
             <form onSubmit={handleSearchSubmit}>
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={handleSearchInputChange}
-                />
-                <button type="submit">Search</button>
-            </form>
-            {/* <form onSubmit={handleSearchSubmit}>
                 <input
                     type="text"
                     placeholder="Search..."

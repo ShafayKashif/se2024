@@ -10,6 +10,11 @@ body {
   background: linear-gradient(90deg, #fb37ff, #18b2de);
 }
 
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
+
 .sub-button-Home {
   margin-top: 10px;
   width: 48%;
@@ -28,6 +33,54 @@ h1 {
   font-weight: bold;
 }
 
-::placeholder {
-  color: #fff;
+.section {
+  margin-bottom: 20px;
+}
+
+.reviews-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.review-item {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+/* Add styles for the pie chart */
+.chart-container {
+  position: relative;
+  width: 80%; /* Adjust the width as needed */
+  margin: auto;
+}
+
+/* Customize the appearance of the chart legend */
+.chart-legend {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.chart-legend-color {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.chart-legend-label {
+  font-size: 14px;
+}
+.customer-reviews {
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 100%;
+  margin-bottom: 20px;
 }

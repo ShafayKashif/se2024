@@ -30,12 +30,12 @@ body::before {
   z-index: -1;
 }
 .form-container {
-  background-color: rgba(7, 0, 0, 0.5);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-height: 800px;
+  margin-top: 50px; /* Adjust this value based on your navbar height */
+}
+
+.table-container {
   overflow-y: auto;
+  max-height: calc(100vh - 150px); /* Adjust this value based on your navbar and other layout heights */
 }
 .sub-button-Home {
   margin-top: 10px;

@@ -50,16 +50,21 @@ const Login = () => {
           case "vendor":
             navigate("/VendorHome");
             window.localStorage.setItem("vendorEmail", email);
+            window.sessionStorage.setItem("email", email);
             break;
           case "customer":
             window.localStorage.setItem("CustomerEmail", email);
+            window.sessionStorage.setItem("email", email);
             console.log("set item customer: ", email);
             navigate("/CustomerHome");
             break;
           case "courier":
+            window.localStorage.setItem("CourierEmail", email);
             navigate("/CourierHome");
             break;
-          case "Admin":
+          case "admin":
+            window.localStorage.setItem("AdminEmail", email);
+            window.sessionStorage.setItem("email", email);
             navigate("/AdminHome");
             break;
           default:

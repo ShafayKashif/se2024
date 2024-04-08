@@ -41,17 +41,20 @@ const Navbar = () => {
         )}
         {role === "vendor" && (
           <>
-            <button onClick={() => handleNavigate("/VendorHome")}>
-              Homepage
-            </button>
-            <button onClick={() => handleNavigate("/AddItem")}>Add Item</button>
-            <button onClick={() => handleNavigate("/ViewCurrentOrders")}>
-              View Current Orders
-            </button>
-            <button onClick={() => handleNavigate("/ViewCustomersReviews")}>
-              View Customer Reviews
-            </button>
-          </>
+          <button onClick={() => handleNavigate("/VendorHome")}>
+            Homepage
+          </button>
+          <button onClick={() => handleNavigate("/AddItem")}>Add Item</button>
+          <button onClick={() => handleNavigate("/VendorOrders")}>
+            View Current Orders
+          </button>
+          <button onClick={() => handleNavigate("/ViewCustomersReviews")}>
+            View Customer Reviews
+          </button>
+          <button onClick={() => handleNavigate("/VendorProfile")}>
+            Profile & Analytics
+          </button>
+        </>
         )}
         {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECSES */}
         {role === "courier" && (

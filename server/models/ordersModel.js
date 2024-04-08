@@ -40,11 +40,11 @@ const ordersSchema = new Schema({
     },
     price: {
         type: Number,
-        required: false
+        required: true
     },
     total: {
         type: Number,
-        required: false
+        required: true
     },
     status: {
         type: String,
@@ -62,4 +62,3 @@ const ordersSchema = new Schema({
 
 const Order = mongoose.model('Order', ordersSchema);
 export default Order;
-

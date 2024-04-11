@@ -37,6 +37,12 @@ const Navbar = () => {
             <button onClick={() => handleNavigate("/CustomerReview")}>
               Leave Review
             </button>
+            <button onClick={() => handleNavigate("/CustomerViewMenu")}>
+               View menu
+            </button>
+            <button onClick={()=> handleNavigate("/CustomerUpdateInfo")} className="settings-button">
+               <img src={settingImage} alt="Settings" />
+            </button>
           </>
         )}
         {role === "vendor" && (
@@ -68,9 +74,9 @@ const Navbar = () => {
           </>
         )}
       </div>
-      <button className="settings-button">
+      {/* <button className="settings-button">
         <img src={settingImage} alt="Settings" />
-      </button>
+      </button> */}
     </nav>
   );
 };

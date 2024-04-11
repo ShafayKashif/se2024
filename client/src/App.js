@@ -20,6 +20,8 @@ import SearchResultsPage from "./components/customer/SearchResultsPage";
 import CustomerPlaceOrder from "./components/customer/CustomerPlaceOrder";
 import CustomerViewCart from "./components/customer/CustomerViewCart";
 import CustomerCurrentOrder from "./components/customer/CustomerCurrentOrder";
+import CustomerViewMenu from "./components/customer/CustomerViewMenu";
+import CustomerUpdateInfo from "./components/customer/CustomerUpdateInfo";
 
 // vender imports
 import StudentVendorHome from "./components/StudentVendorHome";
@@ -82,6 +84,8 @@ function App() {
             <Route path="/PlaceOrder" element={<CustomerPlaceOrder />} />
             <Route path="/ViewCart" element={<CustomerViewCart />} />
             <Route path="/CurrentOrder" element={<CustomerCurrentOrder />} />
+            <Route path="/CustomerViewMenu" element={<CustomerViewMenu />} />
+            <Route path="/CustomerUpdateInfo" element={<CustomerUpdateInfo />} />
             <Route
               path="/CourierHome"
               element={

@@ -989,16 +989,16 @@ const CustomerTopVendors = async (req, res) => {
   console.log("Top vendors: ");
   try {
     // If email is null or undefined, assign a default value, Used during initial testing
-    const items = await Order.find();
+    const items = await Order.find().sort({createdAt: -1}).limit(15);
     console.log(items);
-    let vendorEmails = [];
+    const itemIds = [];
     items.forEach((item) => {
-      vendorEmails.push(item.vendorEmail);
+      itemIds.push(item.item_id);
     });
-    console.log("printing vendor emails " + vendorEmails);
-    const vendors = await Items.find({ vendorEmail: { $in: vendorEmails } });
-    console.log(vendors);
-    res.json(vendors);
+    console.log("printing item ids: " + itemIds);
+    const itemz = await Items.find({ itemId: { $in: itemIds } });
+    console.log(itemz);
+    res.json(itemz);
   } catch (error) {
     console.error("Error fetching items:", error);
     res.status(500).json({ error: "Server error" });
@@ -1007,6 +1007,42 @@ const CustomerTopVendors = async (req, res) => {
 
 app.post("/CustomerTopVendors", CustomerTopVendors);
 
+app.post("/CustomerLastOrder", async (req, res) => {
+  const customerEmail = req.body.clientEmail;
+  try {
+    const lastOrder = await Order.find({ clientEmail: customerEmail }).sort({ createdAt: -1 }).limit(1);
+    console.log("last order: ", lastOrder[0])
+    const itemId1 = lastOrder[0].item_id;
+    console.log("itemid1 is: ", itemId1);
+    const itemz = await Items.find({ itemId: itemId1 });
+    console.log("itemz: ", itemz);
+    res.json(itemz);
+  } catch (error) {
+    console.error("Error fetching last order:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/CustomerReOrder", async (req, res) => {
+  const customerEmail = req.body.clientEmail;
+  try {
+    const lastOrder = await Order.find({ clientEmail: customerEmail }).sort({ createdAt: -1 }).limit(1);
+    console.log("last order: ", lastOrder[0])
+    const newOrderData = {
+      ...lastOrder[0].toObject(),
+      _id: undefined,
+      status: "New",
+      delivered_by: ""
+    };
+    const newOrder = new Order(newOrderData);
+    const savedOrder = await newOrder.save();
+    console.log("Order placed:", savedOrder);
+    res.status(200).json(lastOrder[0]);
+  } catch (error) {
+    console.error("Error fetching last order:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
 const CustomerViewCart = async (req, res) => {
   //Hassan Ali
@@ -1026,6 +1062,55 @@ const CustomerViewCart = async (req, res) => {
 
 app.post("/CustomerViewCart", CustomerViewCart);
 
+app.post("/CustomerCalAndAmount", async (req, res) => {
+  const clientEmail = req.body.clientEmail;
+  try {
+    const customerOrders = await Order.find({ clientEmail: clientEmail });
+    let totalAmount = 0;
+    let itemIds = [];
+    let totalCalories = 0;
+    customerOrders.forEach((order) => {
+      totalAmount += order.total;
+      itemIds.push(order.item_id);
+    });
+    const items = await Items.find({ itemId: { $in: itemIds } });
+    items.forEach((item) => {
+      totalCalories += item.calories;
+    });
+    res.json({ totalAmount, totalCalories });
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).json({ error: "Server error" });
+
+  }
+});
+
+app.post("/CustomerFullMenu", async (req, res) => {
+  try {
+    const items = await Items.find();
+    res.json(items);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+app.post("/CustomerUpdateInfo" , async (req, res) => {
+  const { field, value, customer_email} = req.body;
+  try {
+    const customer = await Customers.findOne({ email: customer_email });
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    customer[field] = value;
+    await customer.save();
+    res.status(200).json({ message: "Customer updated successfully" });
+  } catch (error) {
+    console.error("Error updating customer:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 const CustomerCurrentOrder = async (req, res) => {
   //Hassan Ali

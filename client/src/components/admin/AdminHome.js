@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/CourierHome.css";
 import axios from 'axios';
-import { Chart } from "react-google-charts";
+// import { Chart } from "react-google-charts";
 import { useNavigate } from 'react-router-dom';
 
 const AdminHome = () => {

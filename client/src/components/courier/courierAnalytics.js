@@ -4,7 +4,7 @@ import '../../styles/courierAnalytics.css';
 
 const CourierAnalytics = () => {
   const [completedOrdersCount, setCompletedOrdersCount] = useState(0);
-  const [totalEarnings, setTotalEarnings] = useState(0);
+  const [completedOrders, setCompletedOrders] = useState([]);
   const courierEmail = getCourierEmail();
 
   function getCourierEmail() {
@@ -13,32 +13,25 @@ const CourierAnalytics = () => {
   }
 
   useEffect(() => {
-    const fetchCompletedOrdersCount = async () => {
+    const fetchCompletedOrders = async () => {
       try {
-        const orderCountResponse = await axios.get(`http://localhost:3001/orders/count/${courierEmail}`);
-        if (orderCountResponse.status === 200) {
-          setCompletedOrdersCount(orderCountResponse.data.completedOrdersCount);
+        const response = await axios.get(`http://localhost:3001/orders/completed/${courierEmail}`);
+        if (response.status === 200) {
+          setCompletedOrders(response.data.completedOrders);
+          setCompletedOrdersCount(response.data.completedOrders.length);
         } else {
-          console.error('Failed to fetch completed orders count:', await orderCountResponse.text());
-        }
-
-        const earningsResponse = await axios.get(`http://localhost:3001/courier/earnings/${courierEmail}`);
-        if (earningsResponse.status === 200) {
-          setTotalEarnings(earningsResponse.data.earnings);
-        } else {
-          console.error('Failed to fetch total earnings:', await earningsResponse.text());
+          console.error('Failed to fetch completed orders:', await response.text());
         }
       } catch (error) {
-        console.error('Error fetching data:', error.message);
+        console.error('Error fetching completed orders:', error.message);
       }
     };
 
-    fetchCompletedOrdersCount();
+    fetchCompletedOrders();
   }, [courierEmail]);
 
   return (
     <div>
-      
       <h1>Welcome {courierEmail}</h1>
       <div className="container">
         <div className="stats-container">
@@ -48,8 +41,37 @@ const CourierAnalytics = () => {
           </div>
           <div className="stat-box">
             <h2>Total Earnings</h2>
-            <p className="stat-value">{totalEarnings}</p>
+            <p className="stat-value">{completedOrdersCount * 50}</p>
           </div>
+        </div>
+      </div>
+      <div className="form-container">
+        <h2>Completed Orders</h2>
+        <div className="table-container">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Vendor Name</th>
+                <th>Pickup Address</th>
+                <th>Customer Name</th>
+                <th>Delivery Address</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody style={{ maxHeight: '300px', overflowY: 'auto' }}> {/* Add inline styles */}
+              {completedOrders.map((order, index) => (
+                <tr key={index}>
+                  <td>{order.order_id}</td>
+                  <td>{order.vendor}</td>
+                  <td>{order.vendor_addr}</td>
+                  <td>{order.client}</td>
+                  <td>{order.client_addr}</td>
+                  <td>{order.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

@@ -99,34 +99,37 @@ const SeeOrders = () => {
               <th style={{ textAlign: 'center', padding: '15px' }}>Status</th>
             </tr>
           </thead>
-          <tbody>
+            <tbody>
             {orders.map((orderItem, index) => (
-              <tr key={index}>
-                <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.vendor}</td>
-                <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.vendor_addr}</td>
-                <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client}</td>
-                <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client_addr}</td>
-                <td style={{ textAlign: 'center', padding: '15px' }}>
-                  <button
-                    style={{
-                      backgroundColor:
-                        orderItem.status === 'New'
-                          ? 'red'
-                          : orderItem.status === 'InProgress'
-                          ? 'yellow'
-                          : 'green',
-                      color: 'Black',
-                      border: 'none',
-                      borderRadius: '10px',
-                      padding: '5px 10px',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => handleStatusChange(orderItem._id, getNextStatus(orderItem.status))}
-                  >
-                    {orderItem.status}
-                  </button>
-                </td>
-              </tr>
+              // Render only if the order status is not "Completed"
+              orderItem.status !== 'Completed' && (
+                <tr key={index}>
+                  <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.vendor}</td>
+                  <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.vendor_addr}</td>
+                  <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client}</td>
+                  <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client_addr}</td>
+                  <td style={{ textAlign: 'center', padding: '15px' }}>
+                    <button
+                      style={{
+                        backgroundColor:
+                          orderItem.status === 'New'
+                            ? 'red'
+                            : orderItem.status === 'InProgress'
+                            ? 'yellow'
+                            : 'green',
+                        color: 'Black',
+                        border: 'none',
+                        borderRadius: '10px',
+                        padding: '5px 10px',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => handleStatusChange(orderItem._id, getNextStatus(orderItem.status))}
+                    >
+                      {orderItem.status}
+                    </button>
+                  </td>
+                </tr>
+              )
             ))}
           </tbody>
         </table>

@@ -1084,31 +1084,21 @@ app.get('/orders/count/:courierEmail', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
-app.get("/courier/earnings/:courierEmail", async (req, res) => {
+app.get("/orders/completed/:courierEmail", async (req, res) => {
   const courierEmail = req.params.courierEmail;
 
   try {
-    const totalEarnings = await Order.aggregate([
-      {
-        $match: {
-          delivered_by: courierEmail
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          totalEarnings: { $sum: "$total" }
-        }
-      }
-    ]);
+    // Find completed orders for the courier
+    const completedOrders = await Order.find({
+      delivered_by: courierEmail,
+      status: "Completed"
+    });
 
-    // If there are no orders for the courier, return 0 earnings
-    const earnings = totalEarnings.length > 0 ? totalEarnings[0].totalEarnings : 0;
-
-    res.status(200).json({ earnings });
+    res.status(200).json({ completedOrders });
   } catch (error) {
-    console.error("Error fetching total earnings:", error);
+    console.error("Error fetching completed orders:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
 

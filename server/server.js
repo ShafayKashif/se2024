@@ -243,9 +243,12 @@ app.post("/query", async (request, response) => {
 });
 
 // GPT to speed up the process
-
+// **************************************************
+// **************************************************
 // ********************ADMIN*************************
 // **************************************************
+// **************************************************
+
 app.get("/getInfoForAdminHomePage", async (request, response) => {
   try {
     const orders = await Order.find();
@@ -253,16 +256,19 @@ app.get("/getInfoForAdminHomePage", async (request, response) => {
     // Group orders by vendor email and calculate total quantity and sales for each vendor
     const vendorSalesInfo = {};
     orders.forEach(order => {
-      if (!vendorSalesInfo[order.vendorEmail]) {
-        vendorSalesInfo[order.vendorEmail] = {
-          totalItemsSold: 0,
-          totalPriceOfItemsSold: 0,
-          orderCount: 0  // Initialize order count
-        };
+      if (order.status=="Completed") //add to sales info only if order is completed
+      {  
+        if (!vendorSalesInfo[order.vendorEmail]) {
+          vendorSalesInfo[order.vendorEmail] = {
+            totalItemsSold: 0,
+            totalPriceOfItemsSold: 0,
+            orderCount: 0  // Initialize order count
+          };
+        }
+        vendorSalesInfo[order.vendorEmail].totalItemsSold += order.quantity;
+        vendorSalesInfo[order.vendorEmail].totalPriceOfItemsSold += order.total;
+        vendorSalesInfo[order.vendorEmail].orderCount++;  // Increment order count
       }
-      vendorSalesInfo[order.vendorEmail].totalItemsSold += order.quantity;
-      vendorSalesInfo[order.vendorEmail].totalPriceOfItemsSold += order.total;
-      vendorSalesInfo[order.vendorEmail].orderCount++;  // Increment order count
     });
 
     // Get email addresses
@@ -341,7 +347,7 @@ app.post('/ban-vendor', async (request, response) => {
   if (request.body && request.body.type === 'ban-vendor'){
     try{
       const email_to_ban = request.body.email_to_ban
-      const description = request.body.description
+      const description = request.body.reason
       // console.log("Email: ", queried_email)
       
       const vendor = await Vendors.findOne({ email: email_to_ban })
@@ -354,13 +360,13 @@ app.post('/ban-vendor', async (request, response) => {
         student_vendor.status = "banned" + ":" + description 
         await student_vendor.save()
         await Items.deleteMany({ vendorEmail: email_to_ban });
-        await Order.deleteMany({ vendorEmail: email_to_ban });
+        // await Order.deleteMany({ vendorEmail: email_to_ban });
       }
       else {
         vendor.status = "banned" + ":" + description
         await vendor.save()
         await Items.deleteMany({ vendorEmail: email_to_ban });
-        await Order.deleteMany({ vendorEmail: email_to_ban });
+        // await Order.deleteMany({ vendorEmail: email_to_ban });
       }
       
       return response.status(200).json({ message: "Vendor banned successfully" , valid: true})
@@ -483,6 +489,9 @@ app.post('/is-application-approved', async (request, response) => {
   
 });
 
+// ***************************************************
+// ***************************************************
+// ***************************************************
 // ***************************************************
 // ***************************************************
 

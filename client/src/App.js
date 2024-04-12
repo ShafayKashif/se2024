@@ -148,7 +148,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/seeVendorRatings"
+              path="/seeVendorRatings"
               element={
                 // <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeVendorReviews />
@@ -156,7 +156,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/joinRequests"
+              path="/joinRequests"
               element={
                 // <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeVendorRequests />
@@ -164,7 +164,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/banUser"
+              path="/banUser"
               element={
                 // <ProtectedRoute allowedRoles={["admin"]}>
                   <BanVendors />
@@ -172,7 +172,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/view-courier-requests"
+              path="/view-courier-requests"
               element={
                 // <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeCourierRequests />

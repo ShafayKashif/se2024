@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import "../../styles/CourierHome.css";
+import "../../styles/AdminHome.css";
 import axios from 'axios';
 import { Chart } from "react-google-charts";
-import { useNavigate } from 'react-router-dom';
 
 const AdminHome = () => {
-  const navigate = useNavigate();
   const [topVendors, setTopVendors] = useState([]);
   const [allVendors, setAllVendors] = useState([]);
   const [myCustomerReviews, setMyCustomerReviews] = useState([]);
@@ -19,7 +16,7 @@ const AdminHome = () => {
 
         let temp = vendorsInfo;
         // Sort the vendorsInfo array based on totalPriceOfItemsSold in descending order
-        temp.sort((a, b) => b.totalPriceOfItemsSold - a.totalPriceOfItemsSold);
+        temp.sort((a, b) => b.totalPriceOfItemsSold - a.totalPriceOfItemsSold).slice(0,2);
 
         // Set vendors state
         setTopVendors(temp);
@@ -33,62 +30,30 @@ const AdminHome = () => {
     fetchData();
   }, []);
 
-  const handleVendorReviewsClick = () => {
-    navigate('/seeVendorRatings')
-  }
-
-  const handleBanUserClick = () => {
-    navigate('/banUser')
-  }
-
-  const handleJoinRequests = () => {
-    navigate('/joinRequests')
-  }
-
   // Transform topVendors data into the format expected by Chart component
-  const chartData = topVendors.map(vendor => [vendor.name, vendor.orderCount]);
+  const chartData = allVendors.map(vendor => [vendor.name, vendor.orderCount]);
 
   const options = {
     title: "Vendors Order Count",
   };
 
   return (
-    <div className='container' style={{ maxWidth: "1200px", margin: "0 auto"}}>
-      {/* Navigation links */}
-      <div>
-      <h1>Admin Dashboard</h1>
-      <nav>
-        <Link className="sub-button-Home" to="/admin/seeVendorRatings" onClick={handleVendorReviewsClick}>
-          See Vendor Ratings
-        </Link>{" "}
-        <br />
-        <Link className="sub-button-Home" to="/admin/joinRequests" onClick={handleJoinRequests}>
-          View Join Requests
-        </Link>{" "}
-        <br />
-        <Link className="sub-button-Home" to="/admin/banUser" onClick={handleBanUserClick}>
-          Ban User
-        </Link>
-        <br />
-      </nav>
-      </div>
-
+    // <div className="container">
+    <div>
       {/* Display top vendors */}
-      <div>
-        <h2>Top Vendors</h2>
-        <ul>
-          {topVendors?.map((vendor, index) => (
-            <li key={index}>
-              <p>Name: {vendor.name}</p>
-              <p>Price Range: ${vendor.minPrice} - ${vendor.maxPrice}</p>
-            </li>
-          ))}
-        </ul>
+      <div className="most-popular-sellers">
+        <h1 className="title">Most Popular Sellers:</h1>
+        {topVendors.map((vendor, index) => (
+          <div className="vendor-card" key={index}>
+            <p className="vendor-name">{vendor.name}</p>
+            <p>Price Range: ${vendor.minPrice} - ${vendor.maxPrice}</p>
+          </div>
+        ))}
       </div>
 
       {/* Display pie chart */}
-      {/* <div>
-        <h2>Vendors Order Count</h2>
+      <div className="pie-chart">
+        <h2 className="title">Number of Orders at Each Restaurant:</h2>
         <Chart
           chartType="PieChart"
           data={[["Name", "Order Count"], ...chartData]} // Include header row
@@ -96,11 +61,11 @@ const AdminHome = () => {
           width={"100%"}
           height={"400px"}
         />
-      </div> */}
+      </div>
 
       {/* Display reviews sidebar */}
-      {/* <div className='customer-reviews' style={{ overflowX: "auto", whiteSpace: "nowrap", maxWidth: "100%", marginBottom: "20px" }}>
-        <h2>Customer Reviews</h2>
+      <div className='customer-reviews' style={{ overflowX: "auto", whiteSpace: "nowrap"}}>
+        <h2 className="review-title">Most recent reviews:</h2>
         <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
           {myCustomerReviews.map((review, index) => (
             <li key={index} style={{ display: "inline-block", margin: "0 10px" }}>
@@ -110,7 +75,7 @@ const AdminHome = () => {
             </li>
           ))}
         </ul>
-      </div> */}
+      </div>
     </div>
   );
 };

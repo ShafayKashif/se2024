@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const SeeOrders = () => {
+  const [errorMessage, setErrorMessage] = useState('');
   const [orders, setOrders] = useState([]);
 
   const handleStatusChange = async (orderId, newStatus) => {
@@ -18,6 +19,18 @@ const SeeOrders = () => {
       } else {
         if (window.confirm('Order Completed?')) {
           // If the user confirms, proceed with the status change
+          const courierEmail = getCourierEmail();
+
+          // Fetch the order details
+          const orderDetails = await axios.get(`http://localhost:3001/order/${orderId}`);
+
+          // Extract the email stored in the delivered_by attribute of the order
+          const orderCourierEmail = orderDetails.data.delivered_by;
+
+          // Verify if the courier's email matches the email stored in the delivered_by attribute
+          if (courierEmail !== orderCourierEmail) {
+            setErrorMessage('Unauthorized access: You are not authorized to update this order.');            return;
+          }
           updateOrderStatus(orderId, newStatus);
         }
       }
@@ -88,6 +101,7 @@ const SeeOrders = () => {
   return (
     <div className="form-container">
       <h2>Customer orders</h2>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
       <div className="table-container">
         <table className="table">
           <thead>

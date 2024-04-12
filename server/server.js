@@ -1109,5 +1109,24 @@ app.get("/orders/completed/:courierEmail", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+app.get('/order/:orderId', async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
 
+    // Find the order by orderId
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      // If order is not found, return 404 status code and message
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // If order is found, return it in the response
+    res.status(200).json(order);
+  } catch (error) {
+    console.error('Error fetching order details:', error);
+    // If any error occurs, return 500 status code and message
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 

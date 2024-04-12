@@ -21,10 +21,6 @@ const couriersSchema = new Schema({
     password: {
         type: String,
         required: true
-    },
-    application: {
-        type: String,
-        required: false
     }
 },{timestamps: true})
 

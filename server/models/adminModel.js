@@ -12,7 +12,7 @@ const adminsSchema = new Schema({
     }
 },{timestamps: true})
 
-adminsSchema.methods.comparePassword = function(candidatePassword) {
+UsersSchema.methods.comparePassword = function(candidatePassword) {
     // compare hash of the passwords
     return this.password === candidatePassword;
   };

@@ -38,20 +38,8 @@ const ordersSchema = new Schema({
         type: Number,
         required: false
     },
-    price: {
-        type: Number,
-        required: true
-    },
-    total: {
-        type: Number,
-        required: true
-    },
     status: {
         type: String,
-        required: false
-    },
-    delivery: {
-        type: Boolean,
         required: false
     },
     delivered_by: {
@@ -62,3 +50,4 @@ const ordersSchema = new Schema({
 
 const Order = mongoose.model('Order', ordersSchema);
 export default Order;
+

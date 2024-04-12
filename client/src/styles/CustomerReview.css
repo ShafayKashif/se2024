@@ -3,16 +3,17 @@
 * {
   margin: 0;
   padding: 0;
+  /* box-sizing: border-box; */
   font-family: "Poppins", sans-serif;
 }
 
 body {
-  background: linear-gradient(90deg, #fb37ff, #18b2de);
+  background: linear-gradient(90deg, #FB37FF, #18B2DE);
 }
 
 .sub-button-Home {
-  margin-top: 10px;
-  width: 48%;
+  margin-top: 10px; /* Adjusted margin */
+  width: 48%; /* Changed width to fit side by side */
   height: 50px;
   background-color: #fff;
   outline: none;
@@ -25,7 +26,7 @@ body {
 h1 {
   text-align: center;
   margin-top: 1px;
-  font-weight: bold;
+  font-weight: bold; 
 }
 
 ::placeholder {

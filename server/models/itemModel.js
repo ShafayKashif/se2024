@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ItemsSchema = new Schema({
     itemId: {
-        type: Number,
+        type: String,
         required: true
     },
     itemName: {
@@ -23,7 +23,7 @@ const ItemsSchema = new Schema({
         required: true
     },
     image: {
-        type: String,
+        type: Buffer,
         required: true
     },
     calories: {

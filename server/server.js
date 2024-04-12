@@ -3,217 +3,47 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import multer from "multer";
-
-// Import models
 import Users from "./models/userModel.js";
 import studentVendors from "./models/studentVendorModel.js";
 import Vendors from "./models/vendorModel.js";
 import Customers from "./models/customerModel.js";
 import Couriers from "./models/courierModel.js";
-
-// import CustomerReviews from "./models/CustomerReviewModel.js";
+import CustomerReviews from "./models/CustomerReviewModel.js";
 import { Router } from "express";
 import Order from "./models/ordersModel.js";
 import Items from "./models/itemModel.js";
-import CustomerReview from "./models/CustomerReviewModel.js";
-import Carts from "./models/cartsModel.js";  
+import Carts from "./models/cartsModel.js";
 
-//controllers
-import { showitems , add_item , ViewCustomerReviews, updateStockVendor,getNewOrders,vendorAnalytics} from "./controllers/vendorController.js";
+
+import multer from "multer";
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
 app.use(express.json());
 
+app.use(cors());
 mongoose
-  .connect(process.env.MONG_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  .connect(process.env.MONG_URI)
+  .then(() => {
+    app.listen(process.env.PORT, () => {
+      console.log(`listening on port ${process.env.PORT}`);
+      console.log("Connected to Database");
+    });
   })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error(err));
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-// Token implmentaion learned by https://www.freecodecamp.org/news/how-to-secure-your-mern-stack-application/ and through chatgpt
-//JWT Token Generation
-const generateToken = (user) => {
-  return jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: "1h" }
-  );
-};
-
-// JWT Verification Middleware
-const verifyToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-
-  if (!token)
-    return res
-      .status(401)
-      .send({ message: "Access denied. No token provided." });
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(400).send({ message: "Invalid token." });
-  }
-};
-
-// Unified Signup Route
-app.post("/signup", upload.single("image"), async (req, res) => {
-  const {
-    email,
-    password,
-    usertype,
-    name,
-    phone_Number,
-    roll_Number,
-    room_Number,
-    hostel,
-  } = req.body;
-  let Model = Users;
-  let newUser;
-
-  let user = await Users.findOne({ email });
-  if (user) return res.status(400).json({ msg: "User already exists" });
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  switch (usertype) {
-    case "student_vendor":
-      Model = studentVendors;
-      newUser = {
-        email,
-        roll_Number,
-        room_Number,
-        hostel,
-        name,
-        phone_Number,
-        password: hashedPassword,
-        application: 'processing'
-      };
-      break;
-    case "vendor":
-      Model = Vendors;
-      newUser = { email, name, phone_Number, password: hashedPassword, application: 'processing'};
-      break;
-    case "courier":
-      Model = Couriers;
-      newUser = {
-        email,
-        roll_Number,
-        name,
-        phone_Number,
-        password: hashedPassword,
-        application: 'processing'
-      };
-      break;
-    case "customer":
-      Model = Customers;
-      newUser = {
-        email,
-        roll_Number,
-        room_Number,
-        hostel,
-        name,
-        phone_Number,
-        password: hashedPassword,
-      };
-      break;
-    default:
-      return res.status(400).send("Invalid user type");
-  }
-
-  try {
-    const savedUser = new Model(newUser);
-    await savedUser.save();
-
-    await new Users({ email, password: hashedPassword, role: usertype }).save();
-
-    const token = generateToken(savedUser);
-    res.status(201).json({ token });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
-  }
-});
-
-// Login Route
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    let user = await Users.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "User not found" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
-
-    // token generation
-    const token = generateToken(user);
-    console.log("User Role:", user.role);
-    res.json({ token, role: user.role });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
-  }
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
-
-
-//Shehbaz
-app.post("/add_item", add_item );
-app.post("/showitems", showitems );
-app.post("/ViewCustomerReviews", ViewCustomerReviews );
-app.post("/updateStockVendor",updateStockVendor);
-app.post("/getNewOrders",getNewOrders);
-app.post("/vendorAnalytics",vendorAnalytics);
-
-
-
-// Source: Chat GPT
-// Function to calculate Jaccard similarity between two strings
-function jaccardSimilarity(str1, str2) {
-  const set1 = new Set(str1);
-  const set2 = new Set(str2);
-
-  // Calculate intersection size
-  let intersectionSize = 0;
-  set1.forEach((element) => {
-    if (set2.has(element)) {
-      intersectionSize++;
-    }
+  .catch((error) => {
+    console.log(error);
   });
 
-  // Calculate union size
-  const unionSize = set1.size + set2.size - intersectionSize;
+const storage = multer.memoryStorage(); // Store file in memory
+const upload = multer({ storage: storage });
 
-  // Calculate Jaccard similarity
-  if (unionSize === 0) {
-    return 0; // If union is empty, return 0 to avoid division by zero
-  } else {
-    return intersectionSize / unionSize;
-  }
-}
+//Make your API calls for every usecase here
+app.post("/", upload.single("image"), async (request, response) => {
+  console.log("Post request received: ", request.body);
 
+<<<<<<< HEAD
 app.post("/query", async (request, response) => {
   if (request.body.type && request.body.type === "food-search") {
     console.log("Request: ", request.body.query);
@@ -325,7 +155,6 @@ app.get("/getInfoForAdminHomePage", async (request, response) => {
 app.post("/view-vendor-ratings", async (request, response) => {
   if (request.body && request.body.type === 'view-vendor-ratings'){
     try{
-      
       const queried_email = request.body.query
       // console.log("Email: ", queried_email)
       const vendorReviews = await CustomerReview.find({ vendor_email: queried_email })
@@ -491,9 +320,16 @@ app.post('/is-application-approved', async (request, response) => {
 //below is an "API call" i presume, mostly inspired by the initial login and signup designes we did, i think those were by shehbaz. i just changed the body.type to review and usertype to customer as an identifier (also this if exists because initially, we used the same api.post("/") call and redirected using if conditions) anyways, a pretty self explanatory function, extracts vendor, customer email, rating and comment from request body and saves it in the database and sends 200 status code as a response, if successful (later used to redirect on the front end side)
 app.post("/logreview", async (request, response) => {
   if (request.body.type === "review" && request.body.usertype === "customer") {
+=======
+  if (
+    request.body.type === "review" &&
+    request.body.usertype === "customer"
+  ) {
+>>>>>>> parent of 6e193b9d (Merge branch 'Hassan-Ali' of https://github.com/ShafayKashif/se2024 into Hassan-Ali)
     console.log("Review of customer received");
     try {
       const { vendor_email, customer_email, rating, comment } = request.body;
+
       const newReview = new CustomerReviews({
         vendor_email,
         customer_email,
@@ -507,86 +343,18 @@ app.post("/logreview", async (request, response) => {
       console.error("Error submitting review:", error);
     }
   }
-});
 
-//places order on database (cartitems table) received from front end, this p much isnt available to others, later used in view cart functionality (not implemented yet) (this and below ones (by hassan) inspired by the leave a review function)
-
-app.post("/placeOrder", async (request, response) => {
-  if (
-    request.body.type === "placeOrder" &&
-    request.body.usertype === "customer"
-  ) {
+  if (request.body.type === "placeOrder" && request.body.usertype === "customer") {
     console.log("Placing order");
     try {
-      const {
-        vendor_email,
-        customer_email,
-        quantity,
-        item_name,
-        item_id,
-        price,
-        total,
-        imglink,
-        itemId,
-      } = request.body;
+      const { vendor_email, customer_email, quantity, item_name, price, total } = request.body;
       const newOrder = new Carts({
         vendor_email,
         customer_email,
         quantity,
         item_name,
-        item_id,
         price,
         total,
-        image: imglink,
-        itemId,
-      });
-      const savedOrder = await newOrder.save();
-      console.log("Order placed:", savedOrder);
-      response.status(200).json({ isAuthenticated: true });
-    } catch (error) {
-      console.error("Error placing order:", error)
-    }
-  }
-});
-
-// [EXPERIMENTAL] puts the order data into orders table, as in its an official order now which everyone can access
-app.post("/selfpickup", async (request, response) => {
-  if (
-    request.body.type === "selfpickup" &&
-    request.body.usertype === "customer"
-  ) {
-    console.log("selfpicking order");
-    try {
-      const {
-        vendor_email,
-        vendorname,
-        customer_email,
-        customername,
-        quantity,
-        item_name,
-        item_id,
-        clientAddr,
-        vendorAddr,
-        price,
-        total,
-        status,
-        itemId,
-      } = request.body;
-      console.log("request body: ", request.body);
-      const newOrder = new Order({
-        vendorEmail: vendor_email,
-        clientEmail: customer_email,
-        vendor: vendorname,
-        client: customername,
-        quantity,
-        item_name,
-        price,
-        total,
-        client_addr: clientAddr,
-        vendor_addr: vendorAddr,
-        delivery: false,
-        status,
-        item_id: itemId,
       });
       const savedOrder = await newOrder.save();
       console.log("Order placed:", savedOrder);
@@ -595,321 +363,407 @@ app.post("/selfpickup", async (request, response) => {
       console.error("Error placing order:", error);
     }
   }
-});
 
-app.post("/UpdateQuantity", async (request, response) => {
-    console.log("Update Quantity");
+
+  if (request.body.type === "selfpickup" && request.body.usertype === "customer") {
+    console.log("selfpicking order");
     try {
-      const { vendorEmail, itemId, quantity } = request.body;
-      console.log("request body: ", request.body);
-      const updatedCart = await Items.updateOne(
-        { vendorEmail, itemId },
-        { stock: quantity }
-      );
-      console.log("Cart updated:", updatedCart);
+      const { vendor_email, vendorname, customer_email, customername,  quantity, item_name, clientAddr, vendorAddr, status, } = request.body;
+      const newOrder = new Order({
+        vendorEmail: vendor_email,
+        clientEmail: customer_email,
+        vendor: vendorname,
+        client: customername,
+        quantity,
+        item_name,
+        client_addr: clientAddr,
+        vendor_addr: vendorAddr,
+        status,
+      });
+      const savedOrder = await newOrder.save();
+      console.log("Order placed:", savedOrder);
       response.status(200).json({ isAuthenticated: true });
     } catch (error) {
-      console.error("Error updating cart:", error);
+      console.error("Error placing order:", error);
     }
-});
+  }
 
-const CustomergetNewOrders = async (req, res) => {
-  console.log("HERE", req.body);
-  try {
-      let customerEmail = req.body.CustomerEmail;
-      console.log("customerEmail is: ", customerEmail);
-      // Get all orders matching vendor email and not delivered
-      const orders = await Order.find({ clientEmail: customerEmail, $or: [{ status: "New" },{ status: "InProgress" }] });
-      // Extract itemIds from orders
-      console.log("orders: ", orders);
-      const itemIds = orders.map(orders => orders.item_id);
-      console.log("itemIds: ", itemIds);
-      
-      // Find items matching the extracted itemIds
-      const items = await Items.find({ itemId: { $in: itemIds } });
-      console.log("items: ", items);
-      
-      // Join orders and items where vendor email matches
-      const joinedData = orders.map(order => {
-        const matchingItem = items.find(item => item.itemId === order.item_id);
-        if (matchingItem) {
-          return { ...order.toObject(), ...matchingItem.toObject() };
+
+
+
+  if (
+    request.body.type === "signup" &&
+    request.body.usertype === "customer"
+  ) {
+    console.log("Signing up as customer");
+    try {
+      const {
+        email,
+        roll_Number,
+        room_Number,
+        hostel,
+        name,
+        phone_Number,
+        password,
+      } = request.body;
+
+      const existingUser = await Customers.findOne({ email });
+
+      if (existingUser) {
+        console.log("email already exists. Cannot sign up.");
+        response.send({ isAuthenticated: false });
+      } else {
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = new Customers({
+          email,
+          roll_Number,
+          room_Number,
+          hostel,
+          name,
+          phone_Number,
+          password: hashedPassword,
+        });
+
+        const savedUser = await newUser.save();
+        //login table redirection code
+        let role = "Customer";
+        const newUser2 = new Users({
+          email,
+          password: hashedPassword,
+          role,
+        });
+        const savedUser2 = await newUser2.save();
+        console.log("User signed up in customer database:", savedUser);
+        console.log("User data stored in users database", savedUser2);
+        response.status(200).json({ isAuthenticated: true });
+      }
+    } catch (error) {
+      console.error("Error signing up user:", error);
+    }
+  }
+
+
+
+  if (request.body.type === "login") {
+    console.log("logging in");
+    try {
+      const { email, password } = request.body;
+
+      const existingUser = await Users.findOne({ email });
+      console.log(existingUser);
+
+      if (!existingUser) {
+        return response.status(404).json({ message: "User doesn't exist" });
+      }
+
+      bcrypt.compare(password, existingUser.password, function (err, result) {
+        if (err) {
+          return response
+            .status(402)
+            .json({ message: "Invalid credentials" });
         }
-        return null; // If no match found
-      }).filter(item => item !== null);
-      
-      console.log(joinedData);
-      res.json(joinedData);
+        if (result) {
+          let role = existingUser.role;
+          response.status(200).json({ message: role });
+        }
+      });
 
-  } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      // if (existingUser.password !== hashedPassword) {
+      //   return response.status(402).json({ message: "Invalid credentials" });
+      // }
+      // let role = existingUser.role;
+      // response.status(200).json({ message: role });
+    } catch (error) {
+      console.error("Error signing up user:", error);
+    }
   }
-}
+  
 
-app.post("/CustomergetNewOrders",CustomergetNewOrders);
 
-app.post("/selfpickupCart", async (request, response) => {
   if (
-    request.body.type === "selfpickup" &&
-    request.body.usertype === "customer"
+    request.body.type === "signup" &&
+    request.body.usertype === "student_vendor"
   ) {
-    console.log("selfpicking order");
+    console.log("Post malone");
     try {
       const {
-        vendor_email,
-        vendorname,
-        customer_email,
-        customername,
-        quantity,
-        item_name,
-        clientAddr,
-        vendorAddr,
-        price,
-        total,
-        status,
-        itemId,
+        email,
+        roll_Number,
+        room_Number,
+        hostel,
+        name,
+        phone_Number,
+        password,
       } = request.body;
-      console.log("request body: ", request.body);
-      const newOrder = new Order({
-        vendorEmail: vendor_email,
-        clientEmail: customer_email,
-        vendor: vendorname,
-        client: customername,
-        quantity,
-        item_name,
-        price,
-        total,
-        client_addr: clientAddr,
-        vendor_addr: vendorAddr,
-        delivery: false,
-        status,
-        item_id: itemId,
-      });
-      try {
-        const deletedCart = await Carts.deleteOne({ customer_email });
-        console.log("Deleted cart:", deletedCart);
-        response.status(200).json({ message: "Cart deleted successfully" });
-      } catch (error) {
-        console.error("Error deleting cart:", error);
-        response.status(500).json({ error: "An error occurred while deleting cart" });
+
+      const existingUser = await studentVendors.findOne({ name });
+
+      if (existingUser) {
+        console.log("username already exists. Cannot sign up.");
+        response.send({ isAuthenticated: false });
+      } else {
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = new studentVendors({
+          email,
+          roll_Number,
+          room_Number,
+          hostel,
+          name,
+          phone_Number,
+          password: hashedPassword,
+        });
+
+        const savedUser = await newUser.save();
+        console.log("User signed up:", savedUser);
+        response.status(200).json({ isAuthenticated: true });
       }
-      const savedOrder = await newOrder.save();
-      console.log("Order placed:", savedOrder);
-      response.status(200).json({ isAuthenticated: true });
     } catch (error) {
-      console.error("Error placing order:", error);
+      console.error("Error signing up user:", error);
+      response
+        .status(500)
+        .json({ isAuthenticated: false, error: "Internal server error." });
     }
   }
-});
+
+  //Make your API calls for every usecase here
+  app.post("/", async (request, response) => {
+    console.log("Post request received: ", request.body);
 
 
-app.post("/customerDelivery", async (request, response) => {
-  if (
-    request.body.type === "delivery" &&
-    request.body.usertype === "customer"
-  ) {
-    console.log("selfpicking order");
-    try {
-      const {
-        vendor_email,
-        vendorname,
-        customer_email,
-        customername,
-        quantity,
-        item_name,
-        item_id,
-        clientAddr,
-        vendorAddr,
-        price,
-        total,
-        status,
-        itemId,
-      } = request.body;
-      console.log("request body: ", request.body);
-      const newOrder = new Order({
-        vendorEmail: vendor_email,
-        clientEmail: customer_email,
-        vendor: vendorname,
-        client: customername,
-        quantity,
-        item_name,
-        price,
-        total,
-        client_addr: clientAddr,
-        vendor_addr: vendorAddr,
-        delivery: false,
-        status,
-        item_id: itemId,
-      });
-      const savedOrder = await newOrder.save();
-      console.log("Order placed:", savedOrder);
-      response.status(200).json({ isAuthenticated: true });
-    } catch (error) {
-      console.error("Error placing order:", error);
+    if (
+      request.body.type === "signup" &&
+      request.body.usertype === "student_vendor"
+    ) {
+      signUpStudentVendor(request, response);
     }
-  }
-});
 
-app.post("/selfpickupCart", async (request, response) => {
-  if (
-    request.body.type === "selfpickup" &&
-    request.body.usertype === "customer"
-  ) {
-    console.log("selfpicking order");
-    try {
-      const {
-        vendor_email,
-        vendorname,
-        customer_email,
-        customername,
-        quantity,
-        item_name,
-        clientAddr,
-        vendorAddr,
-        price,
-        total,
-        status,
-        itemId,
-      } = request.body;
-      console.log("request body: ", request.body);
-      const newOrder = new Order({
-        vendorEmail: vendor_email,
-        clientEmail: customer_email,
-        vendor: vendorname,
-        client: customername,
-        quantity,
-        item_name,
-        price,
-        total,
-        client_addr: clientAddr,
-        vendor_addr: vendorAddr,
-        delivery: false,
-        status,
-        item_id: itemId,
-      });
+    if (request.body.type === "signup" && request.body.usertype === "vendor") {
+      console.log("signing up as vendor");
       try {
-        const deletedCart = await Carts.deleteOne({ customer_email });
-        console.log("Deleted cart:", deletedCart);
-        response.status(200).json({ message: "Cart deleted successfully" });
+        const { email, name, phone_Number, password } = request.body;
+
+        const existingUser = await Vendors.findOne({ email });
+
+        if (existingUser) {
+          console.log("email already exists. Cannot sign up.");
+          response.send({ isAuthenticated: false });
+        } else {
+          const hashedPassword = await bcrypt.hash(password, 10);
+
+          const newUser = new Vendors({
+            email,
+            name,
+            phone_Number,
+            password: hashedPassword,
+          });
+
+          const savedUser = await newUser.save();
+
+          //login table redirection code
+          let role = "Vendor";
+          const newUser2 = new Users({
+            email,
+            password: hashedPassword,
+            role,
+          });
+          const savedUser2 = await newUser2.save();
+          console.log("User signed up in vendor database:", savedUser);
+          console.log("User data stored in users database", savedUser2);
+
+          response.status(200).json({ isAuthenticated: true });
+        }
       } catch (error) {
-        console.error("Error deleting cart:", error);
-        response.status(500).json({ error: "An error occurred while deleting cart" });
+        console.error("Error signing up user:", error);
       }
-      const savedOrder = await newOrder.save();
-      console.log("Order placed:", savedOrder);
-      response.status(200).json({ isAuthenticated: true });
-    } catch (error) {
-      console.error("Error placing order:", error);
     }
-  }
-});
 
-
-app.post("/customerDelivery", async (request, response) => {
-  if (
-    request.body.type === "delivery" &&
-    request.body.usertype === "customer"
-  ) {
-    console.log("selfpicking order");
-    try {
-      const {
-        vendor_email,
-        vendorname,
-        customer_email,
-        customername,
-        quantity,
-        item_name,
-        clientAddr,
-        vendorAddr,
-        price,
-        total,
-        status,
-        itemId,
-      } = request.body;
-      const newOrder = new Order({
-        vendorEmail: vendor_email,
-        clientEmail: customer_email,
-        vendor: vendorname,
-        client: customername,
-        quantity,
-        item_name,
-        client_addr: clientAddr,
-        vendor_addr: vendorAddr,
-        price,
-        total,
-        delivery: true,
-        status,
-        item_id: itemId,
-      });
-      
-      const savedOrder = await newOrder.save();
-      console.log("Order placed:", savedOrder);
-      response.status(200).json({ isAuthenticated: true });
-    } catch (error) {
-      console.error("Error placing order:", error);
-    }
-  }
-});
-
-
-app.post("/customerDeliveryCart", async (request, response) => {
-  if (
-    request.body.type === "delivery" &&
-    request.body.usertype === "customer"
-  ) {
-    console.log("delivery cart order");
-    try {
-      const {
-        vendor_email,
-        vendorname,
-        customer_email,
-        customername,
-        quantity,
-        item_name,
-        clientAddr,
-        vendorAddr,
-        price,
-        total,
-        status,
-        itemId,
-      } = request.body;
-      const newOrder = new Order({
-        vendorEmail: vendor_email,
-        clientEmail: customer_email,
-        vendor: vendorname,
-        client: customername,
-        quantity,
-        item_name,
-        item_id: itemId,
-        client_addr: clientAddr,
-        vendor_addr: vendorAddr,
-        price,
-        total,
-        delivery: true,
-        status,
-        item_id: itemId,
-      });
+    if (request.body.type === "signup" && request.body.usertype === "courier") {
+      console.log("Signing up as courier man");
       try {
-        const deletedCart = await Carts.deleteOne({ customer_email });
-        console.log("Deleted cart:", deletedCart);
-        response.status(200).json({ message: "Cart deleted successfully" });
+        const { email, roll_Number, name, phone_Number, password } =
+          request.body;
+
+        const existingUser = await Couriers.findOne({ email });
+
+        if (existingUser) {
+          console.log("email already exists. Cannot sign up.");
+          response.send({ isAuthenticated: false });
+        } else {
+          const hashedPassword = await bcrypt.hash(password, 10);
+          const newUser = new Couriers({
+            email,
+            roll_Number,
+            name,
+            phone_Number,
+            password: hashedPassword,
+          });
+
+          const savedUser = await newUser.save();
+          //login table redirection code
+          let role = "Courier";
+          const newUser2 = new Users({
+            email,
+            password: hashedPassword,
+            role,
+          });
+          const savedUser2 = await newUser2.save();
+          console.log("User signed up in courier database:", savedUser);
+          console.log("User data stored in users database", savedUser2);
+          response.status(200).json({ isAuthenticated: true });
+        }
       } catch (error) {
-        console.error("Error deleting cart:", error);
-        response.status(500).json({ error: "An error occurred while deleting cart" });
+        console.error("Error signing up user:", error);
       }
-      const savedOrder = await newOrder.save();
-      console.log("Order placed:", savedOrder);
-      response.status(200).json({ isAuthenticated: true });
-    } catch (error) {
-      console.error("Error placing order:", error);
     }
-  }
+
+    
+
+    if (request.body.type === "add_item") {
+      console.log("adding item");
+      try {
+        const { itemName, category, stock, price, vendorEmail } = request.body;
+
+        // Create a new item in the database
+        const newItem = new Items({
+          itemName,
+          category,
+          stock,
+          price,
+          image: request.file.buffer,
+          vendorEmail,
+        });
+
+        const savedItem = await newItem.save();
+
+        console.log("Item added successfully:", savedItem);
+        response.status(200).json({ message: "Item added successfully" });
+      } catch (error) {
+        console.error("Error adding item:", error);
+        response
+          .status(500)
+          .json({ message: "Failed to add item. Please try again." });
+      }
+    }
+
+    if (request.body.type === "login") {
+      console.log("logging in");
+      try {
+        const { email, password } = request.body;
+
+        const existingUser = await Users.findOne({ email });
+        console.log(existingUser);
+
+        if (!existingUser) {
+          return response.status(404).json({ message: "User doesn't exist" });
+        }
+
+        bcrypt.compare(password, existingUser.password, function (err, result) {
+          if (err) {
+            return response
+              .status(402)
+              .json({ message: "Invalid credentials" });
+          }
+          if (result) {
+            let role = existingUser.role;
+            response.status(200).json({ message: role });
+          }
+        });
+
+        // if (existingUser.password !== hashedPassword) {
+        //   return response.status(402).json({ message: "Invalid credentials" });
+        // }
+        // let role = existingUser.role;
+        // response.status(200).json({ message: role });
+      } catch (error) {
+        console.error("Error signing up user:", error);
+      }
+    }
+
+    if (
+      request.body.type === "review" &&
+      request.body.usertype === "customer"
+    ) {
+      console.log("Review of customer received");
+      try {
+        const { vendor, rating, description } = request.body;
+
+        const newReview = new CustomerReviews({
+          vendor,
+          rating,
+          description,
+        });
+        const savedReview = await newReview.save();
+        console.log("Review submitted:", savedReview);
+        response.status(200).json({ isAuthenticated: true });
+      } catch (error) {
+        console.error("Error submitting review:", error);
+      }
+    }
+  });
+
+  // Create a new router instance
+  const router = Router();
+
+  // Define a route for food item search
+  router.get("/food-search", async (request, response) => {
+    const { q } = request.query;
+
+    try {
+      // Perform a text search for food items
+      const results = await FoodItems.find({
+        $text: { $search: q },
+      });
+
+      response.status(200).json(results);
+    } catch (error) {
+      console.error("Error searching for food items:", error);
+      response.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Mount the router on the app
+  app.use("/api", router);
 });
 
+// Admin endpoints
 
+// Fetch Vendor Reviews
+app.get("/api/admin/see-vendor-reviews", (req, res) => {
+  res.json([
+    { vendor: "Vendor 1", rating: 5, description: "Great service!" },
+    {
+      vendor: "Vendor 2",
+      rating: 4,
+      description: "Good, but room for improvement.",
+    },
+  ]);
+});
 
-// this function is inspired by the one talha wrote in his branch for fetching orders for his courier page, this one primarily is used to get all order details so cross verification can be done whether the customer reviewing a vendor ordered from them or not
+// Fetch Vendor Requests
+app.get("/api/admin/see-vendor-requests", (req, res) => {
+  // Placeholder
+  res.json([{ vendorName: "New Vendor Request 1", requestDate: "2024-02-10" }]);
+});
+
+// Ban Vendors - Listing for now
+app.get("/api/admin/vendors", (req, res) => {
+  res.json([
+    { name: "Vendor 1", id: "v1" },
+    { name: "Vendor 2", id: "v2" },
+  ]);
+});
+
+// Fetch Courier Requests
+app.get("/api/admin/see-courier-requests", (req, res) => {
+  // Placeholder
+  res.json([
+    { courierName: "New Courier Request 1", requestDate: "2024-02-10" },
+    // Add more mock
+  ]);
+});
+
 app.get("/order", async (req, res) => {
   try {
     const orders = await Order.find();
@@ -920,18 +774,6 @@ app.get("/order", async (req, res) => {
   }
 });
 
-app.get("/customerCart", async (req, res) => {
-  try {
-    const carts = await Carts.find();
-    res.json(carts);
-  } catch (error) {
-    console.error("Error fetching carts:", error);
-    res.status(500).send("Internal Server Error");
-  }
-
-});
-
-// same inspiration as above, this one returns all student vendors for cross validation
 app.get("/studentvendors", async (req, res) => {
   try {
     const vendors = await studentVendors.find();
@@ -942,7 +784,6 @@ app.get("/studentvendors", async (req, res) => {
   }
 });
 
-//same inspiration as above, this one returns all vendors for cross validation
 app.get("/vendors", async (req, res) => {
   try {
     const vendors = await Vendors.find();
@@ -953,7 +794,6 @@ app.get("/vendors", async (req, res) => {
   }
 });
 
-//same inspiration as above, this one returns all customers for cross validation
 app.get("/customers", async (req, res) => {
   try {
     const customers = await Customers.find();
@@ -964,7 +804,6 @@ app.get("/customers", async (req, res) => {
   }
 });
 
-//same inspiration as above, this one returns all items for cross validation
 app.get("/items", async (req, res) => {
   try {
     const items = await Items.find();
@@ -974,6 +813,7 @@ app.get("/items", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+<<<<<<< HEAD
 
 const CustomerTopVendors = async (req, res) => {
   //Hassan Ali
@@ -981,16 +821,16 @@ const CustomerTopVendors = async (req, res) => {
   console.log("Top vendors: ");
   try {
     // If email is null or undefined, assign a default value, Used during initial testing
-    const items = await Order.find().sort({createdAt: -1}).limit(15);
+    const items = await Order.find();
     console.log(items);
-    const itemIds = [];
+    let vendorEmails = [];
     items.forEach((item) => {
-      itemIds.push(item.item_id);
+      vendorEmails.push(item.vendorEmail);
     });
-    console.log("printing item ids: " + itemIds);
-    const itemz = await Items.find({ itemId: { $in: itemIds } });
-    console.log(itemz);
-    res.json(itemz);
+    console.log("printing vendor emails " + vendorEmails);
+    const vendors = await Items.find({ vendorEmail: { $in: vendorEmails } });
+    console.log(vendors);
+    res.json(vendors);
   } catch (error) {
     console.error("Error fetching items:", error);
     res.status(500).json({ error: "Server error" });
@@ -999,43 +839,6 @@ const CustomerTopVendors = async (req, res) => {
 
 app.post("/CustomerTopVendors", CustomerTopVendors);
 
-
-app.post("/CustomerLastOrder", async (req, res) => {
-  const customerEmail = req.body.clientEmail;
-  try {
-    const lastOrder = await Order.find({ clientEmail: customerEmail }).sort({ createdAt: -1 }).limit(1);
-    console.log("last order: ", lastOrder[0])
-    const itemId1 = lastOrder[0].item_id;
-    console.log("itemid1 is: ", itemId1);
-    const itemz = await Items.find({ itemId: itemId1 });
-    console.log("itemz: ", itemz);
-    res.json(itemz);
-  } catch (error) {
-    console.error("Error fetching last order:", error);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-app.post("/CustomerReOrder", async (req, res) => {
-  const customerEmail = req.body.clientEmail;
-  try {
-    const lastOrder = await Order.find({ clientEmail: customerEmail }).sort({ createdAt: -1 }).limit(1);
-    console.log("last order: ", lastOrder[0])
-    const newOrderData = {
-      ...lastOrder[0].toObject(),
-      _id: undefined,
-      status: "New",
-      delivered_by: ""
-    };
-    const newOrder = new Order(newOrderData);
-    const savedOrder = await newOrder.save();
-    console.log("Order placed:", savedOrder);
-    res.status(200).json(lastOrder[0]);
-  } catch (error) {
-    console.error("Error fetching last order:", error);
-    res.status(500).json({ error: "Server error" });
-  }
-});
 
 const CustomerViewCart = async (req, res) => {
   //Hassan Ali
@@ -1055,55 +858,6 @@ const CustomerViewCart = async (req, res) => {
 
 app.post("/CustomerViewCart", CustomerViewCart);
 
-app.post("/CustomerCalAndAmount", async (req, res) => {
-  const clientEmail = req.body.clientEmail;
-  try {
-    const customerOrders = await Order.find({ clientEmail: clientEmail });
-    let totalAmount = 0;
-    let itemIds = [];
-    let totalCalories = 0;
-    customerOrders.forEach((order) => {
-      totalAmount += order.total;
-      itemIds.push(order.item_id);
-    });
-    const items = await Items.find({ itemId: { $in: itemIds } });
-    items.forEach((item) => {
-      totalCalories += item.calories;
-    });
-    res.json({ totalAmount, totalCalories });
-  } catch (error) {
-    console.error("Error fetching items:", error);
-    res.status(500).json({ error: "Server error" });
-
-  }
-});
-
-app.post("/CustomerFullMenu", async (req, res) => {
-  try {
-    const items = await Items.find();
-    res.json(items);
-  } catch (error) {
-    console.error("Error fetching items:", error);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-
-app.post("/CustomerUpdateInfo" , async (req, res) => {
-  const { field, value, customer_email} = req.body;
-  try {
-    const customer = await Customers.findOne({ email: customer_email });
-    if (!customer) {
-      return res.status(404).json({ message: "Customer not found" });
-    }
-    customer[field] = value;
-    await customer.save();
-    res.status(200).json({ message: "Customer updated successfully" });
-  } catch (error) {
-    console.error("Error updating customer:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 
 const CustomerCurrentOrder = async (req, res) => {
   //Hassan Ali
@@ -1199,3 +953,5 @@ app.get("/courier/earnings/:courierEmail", async (req, res) => {
   }
 });
 
+=======
+>>>>>>> parent of 6e193b9d (Merge branch 'Hassan-Ali' of https://github.com/ShafayKashif/se2024 into Hassan-Ali)

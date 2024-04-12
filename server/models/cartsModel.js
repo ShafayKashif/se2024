@@ -6,6 +6,10 @@ const cartsSchema = new Schema({
         type: Number,
         required: false 
     },
+    itemId: {
+        type: Number,
+        required: false 
+    },
     customer_email: {
         type: String,
         required: true
@@ -22,12 +26,20 @@ const cartsSchema = new Schema({
         type: String,
         required: false
     },
+    item_id: {
+        type: String,
+        required: false
+    },
     price: {
         type: Number,
         required: false
     },
     total: {
         type: Number,
+        required: false
+    },
+    image: {
+        type: String,
         required: false
     },
 },{timestamps: true})

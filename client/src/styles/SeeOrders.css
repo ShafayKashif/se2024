@@ -32,7 +32,11 @@ body::before {
 .form-container {
   margin-top: 50px; /* Adjust this value based on your navbar height */
 }
-
+.error-message {
+  font-size: 18px; /* Adjust the font size as needed */
+  color: red; /* Optional: Change the color of the error message */
+  background-color: #fff;
+}
 .table-container {
   overflow-y: auto;
   max-height: calc(100vh - 150px); /* Adjust this value based on your navbar and other layout heights */

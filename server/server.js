@@ -221,7 +221,7 @@ app.post("/query", async (request, response) => {
     try {
       const query = request.body.query;
       const results = await Items.find(); // retrieve all food items
-      console.log("Results: ", results);
+      // console.log("Results: ", results);
 
       // Filter items based on similarity of their names
       const filteredItems = results.filter((item) => {
@@ -234,7 +234,7 @@ app.post("/query", async (request, response) => {
       });
 
       response.status(200).json(filteredItems);
-      console.log("Filtered Food items list: ", filteredItems);
+      // console.log("Filtered Food items list: ", filteredItems);
     } catch (error) {
       console.error("Error searching for food items:", error);
       response.status(500).json({ error: "Internal server error" });
@@ -375,7 +375,7 @@ app.post('/ban-vendor', async (request, response) => {
       response.status(500).json({ error: "Internal server error" })
     }
   }
-})
+});
 
 // ping to vendor for ban or unbanned
 app.post('/is-vendor-banned', async (request, response) => {
@@ -465,7 +465,7 @@ app.post('/application-decision', async (request, response) => {
   } catch(err) {
     console.log("Error while decision being made")
   }
-})
+});
 
 app.post('/is-application-approved', async (request, response) => {
   const requestedEmail = request.body.email
@@ -986,18 +986,18 @@ app.get("/items", async (req, res) => {
 const CustomerTopVendors = async (req, res) => {
   //Hassan Ali
   console.log(req.body);
-  console.log("Top vendors: ");
+  // console.log("Top vendors: ");
   try {
     // If email is null or undefined, assign a default value, Used during initial testing
     const items = await Order.find().sort({createdAt: -1}).limit(15);
-    console.log(items);
+    // console.log(items);
     const itemIds = [];
     items.forEach((item) => {
       itemIds.push(item.item_id);
     });
-    console.log("printing item ids: " + itemIds);
+    // console.log("printing item ids: " + itemIds);
     const itemz = await Items.find({ itemId: { $in: itemIds } });
-    console.log(itemz);
+    // console.log(itemz);
     res.json(itemz);
   } catch (error) {
     console.error("Error fetching items:", error);
@@ -1011,11 +1011,11 @@ app.post("/CustomerLastOrder", async (req, res) => {
   const customerEmail = req.body.clientEmail;
   try {
     const lastOrder = await Order.find({ clientEmail: customerEmail }).sort({ createdAt: -1 }).limit(1);
-    console.log("last order: ", lastOrder[0])
+    // console.log("last order: ", lastOrder[0])
     const itemId1 = lastOrder[0].item_id;
-    console.log("itemid1 is: ", itemId1);
+    // console.log("itemid1 is: ", itemId1);
     const itemz = await Items.find({ itemId: itemId1 });
-    console.log("itemz: ", itemz);
+    // console.log("itemz: ", itemz);
     res.json(itemz);
   } catch (error) {
     console.error("Error fetching last order:", error);
@@ -1206,3 +1206,31 @@ app.get("/courier/earnings/:courierEmail", async (req, res) => {
   }
 });
 
+
+// Customer Bilal's additions:
+app.post('/items-for-search', async (req, res) => {
+  // console.log("here")
+  try {
+    const itemName = req.body.query;
+    const items = await Items.find({ itemName: { $regex: itemName, $options: 'i' } });
+    res.status(200).json(items);
+  } catch (error) {
+    console.error('Error searching for items:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/get-vendor-emails-for-customer-place-order', async (req, res) => {
+  
+  try {
+    const itemName = req.body.query;
+    console.log("Query: ", itemName)
+    const items = await Items.find({ itemName: itemName });
+    const vendorEmails = items.map((item) => item.vendorEmail);
+    console.log("VendorS: ", vendorEmails)
+    res.status(200).json(vendorEmails);
+  } catch (error) {
+    console.error('Error searching for items:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});

@@ -1,7 +1,7 @@
 // Page author: Hassan Ali
-import "../../styles/CustomerReview.css";
+import "../../styles/CustomerPlaceOrder.css";
 // usestate to store the input values, learnt from: https://www.youtube.com/watch?v=5e9_hp0nh1Q
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // axios to make get requests to the server, learnt from: https://www.youtube.com/watch?v=RQM5UyDrNDc
 import axios from 'axios';
 // use navigate to redirect to another page, learnt from: https://www.youtube.com/watch?v=162Lm52CTBM
@@ -13,9 +13,72 @@ const CustomerPlaceOrder = (props) => {
   const [vendor_email, setVendor] = useState("");
   const [quantity, setQuantity] = useState("");
   const [item_name, setitemname] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [vendorEmails, setVendorEmails] = useState([]);
+  const [selectedVendorEmail, setSelectedVendorEmail] = useState("");
+  
+  // useEffect(() => {
+  //   fetchVendorEmails();
+  // }, [item_name]);
+
+  // *****GET VENDOR EMAILS*************
+  const fetchVendorEmails = async (itemName) => {
+    try {
+      const response = await axios.post(`http://localhost:3001/get-vendor-emails-for-customer-place-order`, {
+        query: itemName
+      });
+      setVendorEmails(response.data.map(vendor => vendor));
+      console.log("vendors: ", vendorEmails)
+    } catch (error) {
+      console.error("Error fetching vendor emails:", error.message);
+    }
+  };
+
+  const handleVendorSelect = (e) => {
+    setSelectedVendorEmail(e.target.value);
+    setVendor(e.target.value) // maintain Hasan's code
+  }
+
+  // ************************************
+
+  const handleInputChange = (e) => { // do pattern matching and get the specific items which match pattern
+    console.log("Inside handle: ", e.target.value)
+    setitemname(e.target.value); // Update item_name state
+    handleSearch(e.target.value); // Trigger search functionality
+    fetchVendorEmails(e.target.value);
+  };
+
+  const handleSearchClick = (item) => { // if customer clicks on one of the searches that pop-up, make these searches disappear
+    console.log("Inside handle: ", item)
+    setitemname(item); // Update item_name state
+    setSearchResults([]);
+    fetchVendorEmails(item);
+  }
+
+  const handleSearch = async (itemName) => {
+    try {
+      console.log("Item name inside search: ", itemName)
+      const response = await axios.post(`http://localhost:3001/items-for-search`, {
+        query: itemName,
+      });
+      if (response.data.length === 1){
+        setSearchResults([])
+      }
+      else {
+        setSearchResults(response.data);
+      }
+    } catch (error) {
+      console.error("Error searching for items:", error.message);
+    }
+  };
 
   const handleAddToCart = async (event) => {
     event.preventDefault();
+
+    if (quantity <= 0) {
+      alert("Quantity must be greater than 0.");
+      return;
+    }
     if (!vendor_email || !quantity || !item_name) { // check if all fields are filled
       alert("Please fill in all required fields.");
       return;
@@ -576,8 +639,18 @@ const CustomerPlaceOrder = (props) => {
             type="text"
             placeholder="Item Name"
             value={item_name}
-            onChange={(e) => setitemname(e.target.value)}
+            onChange={handleInputChange}
           />
+          
+        </div>
+        {/* Render search results */}
+        <div className="search-results">
+          {searchResults.map((item) => (
+            <div className="search-results-item" key={item.itemId}>
+              <p onClick={() => handleSearchClick(item.itemName)}>{item.itemName}</p>
+              {/* Render other item details */}
+            </div>
+          ))}
         </div>
         <div>
           <input
@@ -589,13 +662,14 @@ const CustomerPlaceOrder = (props) => {
           />
         </div>
         <div>
-          <input
-            className="user-inp"
-            type="text"
-            placeholder="Vendor Email"
-            value={vendor_email}
-            onChange={(e) => setVendor(e.target.value)}
-          />
+          <select className="user-inp" onChange={handleVendorSelect}>
+            <option value="">Select Vendor</option>
+            {vendorEmails.map((vendor) => (
+              <option key={vendor} value={vendor} className="vendor-render">
+                {vendor}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <button className="sub-button" type="submit" onClick={handleAddToCart}>

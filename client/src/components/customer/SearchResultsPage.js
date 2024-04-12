@@ -14,8 +14,18 @@ const SearchResultsPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch additional data or perform other actions as needed
+      // Load cart information from localStorage when the component mounts
+      const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
+      if (savedCartItems) {
+          setCartItems(savedCartItems);
+      }
     }, []);
+
+    const updateCartItems = (updatedCartItems) => {
+        // Update cart items state and also save it to localStorage
+        setCartItems(updatedCartItems);
+        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+    };
 
     const handleSearchSubmit = async (event) => {
         event.preventDefault();
@@ -40,7 +50,44 @@ const SearchResultsPage = () => {
     };
 
     const handleAddToCart = (item) => {
-        setCartItems([...cartItems, item]);
+      // Check if the item is already in the cart
+      const existingItemIndex = cartItems.findIndex(cartItem => cartItem.itemId === item.itemId);
+      console.log("Item: ", item.itemName, " with item id: ", item.itemId)
+      if (existingItemIndex !== -1) {
+          // If the item already exists in the cart, update its quantity
+          const updatedCartItems = [...cartItems];
+          updatedCartItems[existingItemIndex].quantity += 1;
+          updateCartItems(updatedCartItems);
+      } else {
+          // If the item is not in the cart, add it with quantity 1
+          updateCartItems([...cartItems, { ...item, quantity: 1 }]);
+      }
+    };
+    
+    const handleRemoveFromCart = (itemId) => {
+      // Remove item from cartItems
+      const updatedCartItems = cartItems.filter(item => item.itemId !== itemId);
+      updateCartItems(updatedCartItems);
+    };
+
+    const handleIncreaseQuantity = (itemId) => {
+      const updatedCartItems = cartItems.map(item => {
+          if (item.itemId === itemId) {
+              return { ...item, quantity: item.quantity + 1 };
+          }
+          return item;
+      });
+      updateCartItems(updatedCartItems);
+    };
+
+    const handleDecreaseQuantity = (itemId) => {
+      const updatedCartItems = cartItems.map(item => {
+          if (item.itemId === itemId && item.quantity > 1) {
+              return { ...item, quantity: item.quantity - 1 };
+          }
+          return item;
+      });
+      updateCartItems(updatedCartItems.filter(item => item.quantity > 0));
     };
 
     const handleCheckout = async () => {
@@ -112,9 +159,14 @@ const SearchResultsPage = () => {
             <div className="cart-container">
               <h2 className="cart-title">Cart</h2>
               <ul className="cart-list">
-                {cartItems.map((item, index) => (
-                  <li key={index} className="cart-item">{item.itemName}</li>
-                ))}
+                    {cartItems.map((item, index) => (
+                      <li key={index} className="cart-item">
+                          {item.itemName} - Quantity: {item.quantity}
+                          <button onClick={() => handleIncreaseQuantity(item.itemId)}>+</button>
+                          <button onClick={() => handleDecreaseQuantity(item.itemId)}>-</button>
+                          <button onClick={() => handleRemoveFromCart(item.itemId)}>Remove</button>
+                      </li>
+                  ))}
               </ul>
               <button onClick={handleCheckout} className="checkout-button">Checkout</button>
             </div>

@@ -1,86 +1,64 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
-
-* {
-  margin: 0;
-  padding: 0;
-  font-family: "Poppins", sans-serif;
-}
-
-body {
-  background: linear-gradient(90deg, #fb37ff, #18b2de);
-}
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap");
 
 .container {
-  width: 1200px;
+  /* display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 20px; */
+  /* position: relative;
+  top: 100px; */
 }
 
-.sub-button-Home {
-  margin-top: 10px;
-  width: 48%;
-  height: 50px;
+.most-popular-sellers {
+  position: absolute;
+  width: 45%;
+  left: 50px;
+  top: 100px;
+  width: 450px;
+  height: 80px;
+  /* transform: scale(0.9); */
+}
+
+.vendor-card {
   background-color: #fff;
-  outline: none;
-  border: solid #fff;
-  border-radius: 40px;
-  font-size: 16px;
-  color: #000;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-h1 {
-  text-align: center;
-  margin-top: 1px;
-  font-weight: bold;
+.vendor-name {
+  color: red;
+  font-family: 'Libre Baskerville', serif;
 }
 
-.section {
-  margin-bottom: 20px;
+.pie-chart {
+  width: 30%;
+  position: absolute;
+  right: 80px;
+  top: 100px;
+  width: 400px;
+  height: 50px;
 }
 
-.reviews-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.review-item {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-/* Add styles for the pie chart */
-.chart-container {
-  position: relative;
-  width: 80%; /* Adjust the width as needed */
-  margin: auto;
-}
-
-/* Customize the appearance of the chart legend */
-.chart-legend {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  padding: 0;
-}
-
-.chart-legend-item {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-}
-
-.chart-legend-color {
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
-}
-
-.chart-legend-label {
-  font-size: 14px;
-}
 .customer-reviews {
-  overflow-x: auto;
-  white-space: nowrap;
-  max-width: 100%;
-  margin-bottom: 20px;
+  width: 100%;
+  position: absolute;
+  top: 400px;
+  left: 20px;
+  width: 500px;
+  height: 200px;
 }
+
+.title {
+  font-family: 'Kadwa', serif;
+}
+
+.review-title {
+  font-family: 'Kadwa', serif;
+}
+
+/* Additional styles */

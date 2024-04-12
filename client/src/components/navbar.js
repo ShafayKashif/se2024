@@ -9,6 +9,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { authState } = useAuth();
   const { role } = authState;
+  console.log("Role: ", role)
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -64,6 +65,22 @@ const Navbar = () => {
             </button>
             <button onClick={() => handleNavigate("/courierAnalytics")}>
               view analytics
+            </button>
+          </>
+        )}
+        {role === "admin" && (
+          <>
+          <button onClick={() => handleNavigate("/AdminHome")}>
+              Home
+            </button>
+            <button onClick={() => handleNavigate("/seeVendorRatings")}>
+              See All Orders
+            </button>
+            <button onClick={() => handleNavigate("/joinRequests")}>
+            View Join Requests
+            </button>
+            <button onClick={() => handleNavigate("/banUser")}>
+            Ban User
             </button>
           </>
         )}

@@ -137,7 +137,7 @@ const SearchResultsPage = () => {
             
             // Clear the cart after successful checkout
             setCartItems([]);
-            alert("Items added to cart and sent for checkout!");
+            alert("Added to cart!");
         } catch (error) {
             console.error("Error during checkout:", error.message);
             alert("Error during checkout. Please try again later.");

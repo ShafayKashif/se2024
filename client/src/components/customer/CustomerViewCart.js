@@ -420,13 +420,15 @@ const CustomerHome = () => {
 
     const handleDecreaseQuantity = async (itemId) => {
         try {
-            const updatedItems = items.filter(item => {
+            const updatedItems = items.filter(async (item) => {
+                console.log("Item: ", item)
                 if (item.itemId === itemId) {
                     if (item.quantity > 1) {
                         item.quantity--;
                         item.stock++;
                         return true;
                     } else {
+                            await handleRemoveItem(item.itemId)
                         return false;
                     }
                 }
@@ -436,6 +438,26 @@ const CustomerHome = () => {
             await updateCartItems(updatedItems);
         } catch (error) {
             console.error('Error decreasing quantity:', error);
+        }
+    };
+
+    const handleRemoveItem = async (itemId) => {
+        try {
+            const updatedItems = items.filter(item => item.itemId !== itemId);
+            const itemToRemove = items.find(item => item.itemId === itemId);
+            await axios.post("http://localhost:3001/UpdateQuantity", {
+                itemId,
+                vendorEmail: itemToRemove.vendorEmail,
+                quantity: itemToRemove.stock + itemToRemove.quantity, // Increment stock by quantity since we're removing the item
+            });
+            await axios.post("http://localhost:3001/remove-from-cart", {
+                itemId,
+                customer_email: itemToRemove.customer_email,
+            });
+            setItems(updatedItems);
+            await updateCartItems(updatedItems);
+        } catch (error) {
+            console.error('Error removing item from cart:', error);
         }
     };
 
@@ -466,6 +488,7 @@ const CustomerHome = () => {
                         <div>
                             <button onClick={() => handleIncreaseQuantity(item.itemId)}>+</button>
                             <button onClick={() => handleDecreaseQuantity(item.itemId)}>-</button>
+                            <button onClick={() => handleRemoveItem(item.itemId)}>Remove</button>
                         </div>
                     </div>
                 ))}

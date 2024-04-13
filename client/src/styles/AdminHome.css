@@ -10,8 +10,28 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px; */
-  /* position: relative;
-  top: 100px; */
+  /* position: relative; */
+  /*top: 100px; */
+}
+
+.grey-tape {
+  background-color: rgb(111, 111, 111, 0.5); /* Set background color to black */
+  color: white; /* Set text color to white */
+  padding: 10px 20px;
+  position: relative;
+  width: 1340px;
+  left: 0px;
+}
+
+.popular-sellers-title {
+  font-family: 'Kadwa', serif;
+  margin: 0;
+  height: 20px;
+  position: relative;
+  bottom: 8px;
+  right: 500px;
+  font-weight: 550;
+  font-size: 24px;
 }
 
 .most-popular-sellers {
@@ -25,29 +45,82 @@
 }
 
 .vendor-card {
-  background-color: #fff;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 10px;
   margin-bottom: 10px;
+  border-radius: 20px; 
+  height: 85px;
+  width: 250px;
+  top: 50px;
+}
+
+.vendor-price-range {
+  color: black; /* Change text color to black */
+  font-family: 'Inter', sans-serif; /* Apply Inter font */
+  font-weight: 600;
+}
+
+.vendor-average-rating {
+  position: absolute; /* Make the rating position absolute */
+  bottom: 20px; /* Adjust the distance from the bottom */
+  right: 25px; /* Position the rating to the right */
+  color: black; /* Change text color to black */
+  font-family: 'Inter', sans-serif; /* Apply Inter font */
+  font-weight: 600;
+}
+
+.star-logo-2 {
+  background-image: url('star.png');
+  background-size: cover; /* Ensure the star logo covers the div */
+  display: inline-block; /* Make the div inline-block to appear next to the rating */
+  vertical-align: middle; /* Align the div vertically with the text */
+  position: absolute;
+  top: 55px;
+  right: 16px;
+  width: 9px;
+  height: 9px;
+}
+
+.dollar-logo {
+  background-image: url('dollar.png');
+  background-size: cover; 
+  display: inline-block; /* Make the div inline-block to appear next to the rating */
+  vertical-align: middle; /* Align the div vertically with the text */
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  top: 41px;
+  right: 138px;
 }
 
 .vendor-name {
   color: red;
   font-family: 'Libre Baskerville', serif;
+  font-size: 25px;
+  font-weight: 600;
 }
 
 .pie-chart {
-  width: 30%;
+  /* width: 30%; */
   position: absolute;
   right: 80px;
   top: 100px;
-  width: 400px;
+  width: 500px;
   height: 50px;
+}
+
+.pie-chart-diagram {
+
+  width:75%;
+  height:auto;
+  
 }
 
 .customer-reviews {
   width: 100%;
   position: absolute;
-  top: 400px;
+  top: 435px;
   left: 20px;
   width: 500px;
   height: 200px;
@@ -57,8 +130,87 @@
   font-family: 'Kadwa', serif;
 }
 
-.review-title {
+.pie-chart-title {
   font-family: 'Kadwa', serif;
+  color:black;
 }
 
-/* Additional styles */
+.review-title {
+  font-family: 'Kadwa', serif;
+  margin: 0;
+  height: 20px;
+  position: relative;
+  bottom: 8px;
+  right: 0px;
+  font-weight: 550;
+  font-size: 24px;
+}
+
+.second-grey-tape {
+  background-color: rgb(111, 111, 111, 0.5); /* Set background color to black */
+  color: rgb(0, 0, 0);
+  padding: 10px 20px;
+  position: relative;
+  width: 500px;
+  left: 0px;
+}
+
+.review-list-container {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent list items from wrapping */
+}
+
+.review-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  /* Additional styling for list items */
+}
+
+.review-list li {
+  background-color: rgb(255, 255, 255, 0.8);
+  padding: 10px;
+  margin: 10px;
+  border-radius: 15px;
+  height: 85px;
+  width: 400px;
+  display: inline-block; /* Display list items inline */
+  position: relative;
+}
+
+
+.vendor-review-name {
+  color: black;
+  font-family: 'Kadwa';
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.vendor-review-rating {
+  color: black;
+  font-family: 'Inter';
+  font-size: 20px;
+  font-weight: 600;
+  position: absolute;
+  right: 50px;
+  top: 25px;
+}
+
+.star-logo {
+  width: 20px; /* Adjust the size of the star logo as needed */
+  height: 20px; /* Adjust the size of the star logo as needed */
+  background-image: url('star.png');
+  background-size: cover; /* Ensure the star logo covers the div */
+  display: inline-block; /* Make the div inline-block to appear next to the rating */
+  vertical-align: middle; /* Align the div vertically with the text */
+  position: absolute;
+  top: 26px;
+  right: 30px;
+}
+
+.vendor-review-comment {
+  color: black;
+  font-family: 'Inter';
+  font-size: 12px;
+  font-weight: 450;
+}

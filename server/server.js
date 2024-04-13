@@ -509,8 +509,19 @@ app.post("/logreview", async (request, response) => {
     console.log("Review of customer received");
     try {
       const { vendor_email, customer_email, rating, comment } = request.body;
-      const newReview = new CustomerReviews({
+
+      const vendor = await Vendors.findOne({ email: vendor_email });
+      if (!vendor) {
+        // Handle case where vendor is not found
+        return response.status(404).json({ error: "Vendor not found" });
+      }
+
+      // Extract the vendor name from the found vendor document
+      const vendorName = vendor.name;
+
+      const newReview = new CustomerReview({
         vendor_email,
+        vendor_name: vendorName,
         customer_email,
         rating,
         comment,
@@ -725,14 +736,14 @@ app.post("/selfpickupCart", async (request, response) => {
       try {
         const deletedCart = await Carts.deleteOne({ customer_email });
         console.log("Deleted cart:", deletedCart);
-        response.status(200).json({ message: "Cart deleted successfully" });
+        response.json({ message: "Cart deleted successfully" });
       } catch (error) {
         console.error("Error deleting cart:", error);
-        response.status(500).json({ error: "An error occurred while deleting cart" });
+        response.json({ error: "An error occurred while deleting cart" });
       }
       const savedOrder = await newOrder.save();
       console.log("Order placed:", savedOrder);
-      response.status(200).json({ isAuthenticated: true });
+      response.json({ isAuthenticated: true });
     } catch (error) {
       console.error("Error placing order in self-pickupcart:", error);
     }
@@ -937,7 +948,7 @@ app.post("/CustomerLastOrder", async (req, res) => {
   try {
     const lastOrder = await Order.find({ clientEmail: customerEmail }).sort({ createdAt: -1 }).limit(1);
 
-    if (!lastOrder || lastOrder == [] || !lastOrder.itemName){
+    if (!lastOrder || lastOrder == [] || (!lastOrder[0] && !lastOrder[0].itemName)){
       res.json({msg: 'No last order'})
       return
     }
@@ -1223,6 +1234,21 @@ app.post('/updateCartItems', async (req, res) => {
   } catch (error) {
     console.error('Error updating cart items:', error);
     res.status(500).send("Internal server error");
+  }
+});
+
+
+// remove an item from the cart table given customer email and itemId 
+app.post('/remove-from-cart', async (req, res) => {
+  try {
+      const { customer_email, itemId } = req.body;
+
+      await Carts.deleteOne({ customer_email, itemId });
+
+      res.status(200).send("Item removed from cart successfully");
+  } catch (error) {
+      console.error('Error removing item from cart:', error);
+      res.status(500).send("Internal server error");
   }
 });
 

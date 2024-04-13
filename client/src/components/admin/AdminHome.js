@@ -34,7 +34,13 @@ const AdminHome = () => {
   const chartData = allVendors.map(vendor => [vendor.name, vendor.orderCount]);
 
   const options = {
-    title: "Vendors Order Count",
+    title: "",
+    backgroundColor: 'transparent',
+    legend: {
+      textStyle: {
+        fontSize: 14,
+      },
+    },
   };
 
   return (
@@ -42,39 +48,55 @@ const AdminHome = () => {
     <div>
       {/* Display top vendors */}
       <div className="most-popular-sellers">
-        <h1 className="title">Most Popular Sellers:</h1>
+        <div className="grey-tape">
+        <h1 className="popular-sellers-title">Most Popular Sellers:</h1>
+        </div>
         {topVendors.map((vendor, index) => (
           <div className="vendor-card" key={index}>
             <p className="vendor-name">{vendor.name}</p>
-            <p>Price Range: ${vendor.minPrice} - ${vendor.maxPrice}</p>
+            <div className="price-range-container">
+              <p className="vendor-price-range">Price Range: {vendor.minPrice} - {vendor.maxPrice}</p>
+              <div className="dollar-logo"></div>
+            </div>
+            <div className="review-rating-container-2">
+              <p className="vendor-average-rating">Rating: {Math.round(vendor.avgRating)}</p>
+              <div className="star-logo-2"></div>
+            </div>
           </div>
         ))}
       </div>
 
       {/* Display pie chart */}
       <div className="pie-chart">
-        <h2 className="title">Number of Orders at Each Restaurant:</h2>
-        <Chart
+        <h2 className="pie-chart-title">Number of Orders at Each Restaurant:</h2>
+        <Chart className="pie-chart-diagram"
           chartType="PieChart"
           data={[["Name", "Order Count"], ...chartData]} // Include header row
           options={options}
-          width={"100%"}
-          height={"400px"}
+          // width={"100%"}
+          // height={"400px"}
         />
       </div>
 
       {/* Display reviews sidebar */}
       <div className='customer-reviews' style={{ overflowX: "auto", whiteSpace: "nowrap"}}>
+      <div className="second-grey-tape">
         <h2 className="review-title">Most recent reviews:</h2>
-        <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
-          {myCustomerReviews.map((review, index) => (
-            <li key={index} style={{ display: "inline-block", margin: "0 10px" }}>
-              <p>Customer Email: {review.customer_email}</p>
-              <p>Rating: {review.rating}</p>
-              <p>Comment: {review.comment}</p>
-            </li>
-          ))}
-        </ul>
+        </div>
+        <div className="review-list-container">
+            <ul className="review-list">
+              {myCustomerReviews.map((review, index) => (
+                <li key={index}>
+                  <p className="vendor-review-name">{review.vendor_name}</p>
+                  <div className="review-rating-container">
+                    <p className="vendor-review-rating">{review.rating}</p>
+                    <div className="star-logo"></div> {/* This div will contain the star logo */}
+                  </div>
+                  <p className="vendor-review-comment">{review.comment}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
       </div>
     </div>
   );

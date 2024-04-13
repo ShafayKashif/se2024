@@ -33,8 +33,9 @@ const SearchResultsPage = () => {
             const response = await axios.post("http://localhost:3001/query", {     
                 type: "food-search",
                 query: newSearchQuery,
+                // vendor email,customer email,quantity,item_name, // itemId,// item_id,// price,total,imglink,
+       
             }); 
-    
             navigate(`/search`, { state: { searchResults: response.data } });
         } catch(error) {
             console.error("Error during search:", error.message);
@@ -93,9 +94,47 @@ const SearchResultsPage = () => {
     const handleCheckout = async () => {
         try {
             // Send the selected items to the backend for checkout
-            await axios.post("http://localhost:3001/ViewCart", {
-                items: cartItems,
-            });
+            for (let item of cartItems){
+              if (item.quantity > item.stock){
+                alert("Quantity selected for ", item.itemName," exceeds the available stock!")
+                return
+              }
+              const total = item.quantity * item.price
+              const customerEmail = window.localStorage.getItem('CustomerEmail');
+              try{
+                    await axios.post("http://localhost:3001/placeOrder", {
+                    type: "placeOrder",
+                    usertype: "customer",
+                    vendor_email: item.vendorEmail,
+                    customer_email: customerEmail,
+                    quantity: item.quantity,
+                    item_name: item.itemName,
+                    itemID: item.itemId,
+                    price: item.price,
+                    total: total,
+                    imglink: item.image,
+                    stock: item.stock
+                });
+              } catch(err){
+                console.log("Error while adding to cart from frontend: ", err)
+              }
+              try {
+                const response = await axios.post("http://localhost:3001/UpdateQuantity", {
+                  itemId: item.itemID,
+                  vendorEmail: item.vendorEmail,
+                  quantity: item.stock-item.quantity,
+                });
+                if (response.status === 200) {
+                  console.log("item quantity updated!");
+                  navigate('/CustomerHome');
+                } else {
+                  console.error("item quantity update failed:", await response.text());
+                }
+              } catch (error) {
+                console.error("error updating item quantity::", error.message);
+              }
+            }
+            
             // Clear the cart after successful checkout
             setCartItems([]);
             alert("Items added to cart and sent for checkout!");

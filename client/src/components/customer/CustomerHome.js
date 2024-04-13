@@ -56,7 +56,13 @@ const CustomerHome = () => {
         const fetchLastOrder = async () => {
             try {
                 const response = await axios.post('http://localhost:3001/CustomerLastOrder', {clientEmail: localStorage.getItem('CustomerEmail')});
-                setLastOrder(response.data);//Server returns items being sold by he vendor
+                if (response.data.msg && response.data.msg === 'No last order')
+                {
+                    setLastOrder([]);
+                }
+                else{
+                    setLastOrder(response.data);//Server returns items being sold by he vendor
+                }
             } catch (error) {
                 console.error('Error fetching items:', error);
             }

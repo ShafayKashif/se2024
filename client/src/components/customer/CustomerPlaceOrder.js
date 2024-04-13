@@ -61,12 +61,9 @@ const CustomerPlaceOrder = (props) => {
       const response = await axios.post(`http://localhost:3001/items-for-search`, {
         query: itemName,
       });
-      if (response.data.length === 1){
-        setSearchResults([])
-      }
-      else {
-        setSearchResults(response.data);
-      }
+
+      setSearchResults(response.data);
+
     } catch (error) {
       console.error("Error searching for items:", error.message);
     }
@@ -97,68 +94,32 @@ const CustomerPlaceOrder = (props) => {
     let price;
     let itemID;
     let itemQuantity;
-    // using this variable to check against both student vendors and vendors (room for refactoring)
     let vendorFound = false;
 
     try {
-      // get the student vendors from the server for cross validation
-      const response = await axios.get('http://localhost:3001/studentvendors');
+      const response = await axios.get('http://localhost:3001/vendors');
       if (response.status === 200) {
         console.log("vendors fetched!");
         const vendors = response.data;
         console.log("vendors", vendors);
-        // find the vendor with the input email
-        const vendor = vendors.find(vendor => vendor.email == vendor_email);
-        console.log("vendor", vendor.email);
-        console.log("vendor_email", vendor_email);
+        const vendor = vendors.find(vendor => vendor.email === vendor_email);
         console.log("found the single vendor: ", vendor);
-        // if the vendor doesnt exist, then give warning accordingly
         if (!vendor) {
           alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
           return;
         } else {
-          // if the vendor exists, then store the details in the variables
           vendorname = vendor.name;
-          vendorhostel = vendor.hostel;
-          vendorroom = vendor.room_Number;
+          vendorhostel = "LUMS";
+          vendorroom = "LUMS";
           vendorFound = true;
         }
       } else {
-        console.error('Failed to fetch student vendors:', await response.text());
-
+        console.error('Failed to fetch vendors:', await response.text());
       }
     } catch (error) {
-      // alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-      console.error('Error fetching student vendors:', error.message);
-      // return;
+      console.error('Error fetching vendors:', error.message);
     }
 
-    // if the vendor is not found in the student vendors, then check in the vendors
-    if (vendorFound == false) {
-      try {
-        const response = await axios.get('http://localhost:3001/vendors');
-        if (response.status === 200) {
-          console.log("vendors fetched!");
-          const vendors = response.data;
-          console.log("vendors", vendors);
-          const vendor = vendors.find(vendor => vendor.email === vendor_email);
-          console.log("found the single vendor: ", vendor);
-          if (!vendor) {
-            alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-            return;
-          } else {
-            vendorname = vendor.name;
-            vendorhostel = "LUMS";
-            vendorroom = "LUMS";
-            vendorFound = true;
-          }
-        } else {
-          console.error('Failed to fetch vendors:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error fetching vendors:', error.message);
-      }
-    }
 
     // if the vendor is not found in the vendors, then give the warning accordingly
     if (vendorFound == false) {
@@ -227,6 +188,7 @@ const CustomerPlaceOrder = (props) => {
     }
     let total = price * quantity;
     try {
+      const itemId = itemID
       const response = await axios.post("http://localhost:3001/placeOrder", {
         vendor_email,
         customer_email,
@@ -235,7 +197,8 @@ const CustomerPlaceOrder = (props) => {
         price,
         total,
         imglink,
-        itemID,
+        itemId,
+        stock: itemQuantity,
         type: "placeOrder",
         usertype: "customer",
       });

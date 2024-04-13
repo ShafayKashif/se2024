@@ -80,7 +80,7 @@ const Navbar = () => {
               Home
             </button>
             <button onClick={() => handleNavigate("/seeVendorRatings")}>
-              See All Orders
+              View Vendor Reviews
             </button>
             <button onClick={() => handleNavigate("/joinRequests")}>
             View Join Requests

@@ -7,15 +7,15 @@ import Order from "../models/ordersModel.js";
 
 const showitems = async (req, res) => {
   //Shehbaz
-  console.log(req.body);
-  console.log("Showing Items");
+  // console.log(req.body);
+  // console.log("Showing Items");
   try {
     let { vendorEmail } = req.body;
     // If email is null or undefined, assign a default value, Used during initial testing
     vendorEmail = vendorEmail || "default@email.com";
     console.log(vendorEmail);
     const items = await Items.find({ vendorEmail: vendorEmail });
-    console.log(items);
+    // console.log(items);
     res.json(items);
   } catch (error) {
     console.error("Error fetching items:", error);

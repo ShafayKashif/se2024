@@ -191,9 +191,16 @@ app.post("/vendorAnalytics",vendorAnalytics);
 
 // Source: Chat GPT
 // Function to calculate Jaccard similarity between two strings
-function jaccardSimilarity(str1, str2) {
+function jaccardSimilarity(str1, str2, isLenient = false) {
+  if (isLenient) {
+    // Check if the sequence of characters in str1 completely matches the sequence in str2
+    if (str2.includes(str1)) {
+      return 1; // If completely matched, return similarity of 1
+    }
+  }
   const set1 = new Set(str1);
   const set2 = new Set(str2);
+  // console.log("Set1: ", set1)
 
   // Calculate intersection size
   let intersectionSize = 0;
@@ -220,8 +227,8 @@ app.post("/query", async (request, response) => {
 
     try {
       const query = request.body.query;
-      const results = await Items.find(); // retrieve all food items
-      console.log("Results: ", results);
+      const results = await Items.find({ stock: { $gt: 0 } }); // retrieve all food items
+      // console.log("Results: ", results);
 
       // Filter items based on similarity of their names
       const filteredItems = results.filter((item) => {
@@ -234,7 +241,7 @@ app.post("/query", async (request, response) => {
       });
 
       response.status(200).json(filteredItems);
-      console.log("Filtered Food items list: ", filteredItems);
+      // console.log("Filtered Food items list: ", filteredItems);
     } catch (error) {
       console.error("Error searching for food items:", error);
       response.status(500).json({ error: "Internal server error" });
@@ -375,7 +382,7 @@ app.post('/ban-vendor', async (request, response) => {
       response.status(500).json({ error: "Internal server error" })
     }
   }
-})
+});
 
 // ping to vendor for ban or unbanned
 app.post('/is-vendor-banned', async (request, response) => {
@@ -465,7 +472,7 @@ app.post('/application-decision', async (request, response) => {
   } catch(err) {
     console.log("Error while decision being made")
   }
-})
+});
 
 app.post('/is-application-approved', async (request, response) => {
   const requestedEmail = request.body.email
@@ -536,26 +543,47 @@ app.post("/placeOrder", async (request, response) => {
         total,
         imglink,
         itemId,
+        stock,
       } = request.body;
-      const newOrder = new Carts({
-        vendor_email,
-        customer_email,
-        quantity,
-        item_name,
-        item_id,
-        price,
-        total,
-        image: imglink,
-        itemId,
+
+      // Check if the item is already in the cart for the specified customer
+      console.log("request:", request.body)
+      const existingCartItem = await Carts.findOne({
+        customer_email: customer_email,
+        itemId: itemId
       });
-      const savedOrder = await newOrder.save();
-      console.log("Order placed:", savedOrder);
-      response.status(200).json({ isAuthenticated: true });
+
+      if (existingCartItem) {
+        // If the item already exists, update its quantity
+        existingCartItem.quantity = parseInt(existingCartItem.quantity, 10) + parseInt(quantity, 10);
+        const savedCartItem = await existingCartItem.save();
+        console.log("Existing item in cart updated:", savedCartItem);
+        response.status(200).json({ isAuthenticated: true });
+      } else {
+        // If the item doesn't exist, add a new entry to the cart
+        const newOrder = new Carts({
+          vendor_email,
+          customer_email,
+          quantity,
+          item_name,
+          item_id,
+          price,
+          total,
+          image: imglink,
+          itemId,
+          stock: stock,
+        });
+        const savedOrder = await newOrder.save();
+        console.log("New item added to cart:", savedOrder);
+        response.status(200).json({ isAuthenticated: true });
+      }
     } catch (error) {
-      console.error("Error placing order:", error)
+      console.error("Error placing order in place-order:", error);
+      response.status(500).json({ error: "Internal server error" });
     }
   }
 });
+
 
 // [EXPERIMENTAL] puts the order data into orders table, as in its an official order now which everyone can access
 app.post("/selfpickup", async (request, response) => {
@@ -600,7 +628,7 @@ app.post("/selfpickup", async (request, response) => {
       console.log("Order placed:", savedOrder);
       response.status(200).json({ isAuthenticated: true });
     } catch (error) {
-      console.error("Error placing order:", error);
+      console.error("Error placing order in self-pickup:", error);
     }
   }
 });
@@ -706,113 +734,10 @@ app.post("/selfpickupCart", async (request, response) => {
       console.log("Order placed:", savedOrder);
       response.status(200).json({ isAuthenticated: true });
     } catch (error) {
-      console.error("Error placing order:", error);
+      console.error("Error placing order in self-pickupcart:", error);
     }
   }
 });
-
-
-app.post("/customerDelivery", async (request, response) => {
-  if (
-    request.body.type === "delivery" &&
-    request.body.usertype === "customer"
-  ) {
-    console.log("selfpicking order");
-    try {
-      const {
-        vendor_email,
-        vendorname,
-        customer_email,
-        customername,
-        quantity,
-        item_name,
-        item_id,
-        clientAddr,
-        vendorAddr,
-        price,
-        total,
-        status,
-        itemId,
-      } = request.body;
-      console.log("request body: ", request.body);
-      const newOrder = new Order({
-        vendorEmail: vendor_email,
-        clientEmail: customer_email,
-        vendor: vendorname,
-        client: customername,
-        quantity,
-        item_name,
-        price,
-        total,
-        client_addr: clientAddr,
-        vendor_addr: vendorAddr,
-        delivery: false,
-        status,
-        item_id: itemId,
-      });
-      const savedOrder = await newOrder.save();
-      console.log("Order placed:", savedOrder);
-      response.status(200).json({ isAuthenticated: true });
-    } catch (error) {
-      console.error("Error placing order:", error);
-    }
-  }
-});
-
-app.post("/selfpickupCart", async (request, response) => {
-  if (
-    request.body.type === "selfpickup" &&
-    request.body.usertype === "customer"
-  ) {
-    console.log("selfpicking order");
-    try {
-      const {
-        vendor_email,
-        vendorname,
-        customer_email,
-        customername,
-        quantity,
-        item_name,
-        clientAddr,
-        vendorAddr,
-        price,
-        total,
-        status,
-        itemId,
-      } = request.body;
-      console.log("request body: ", request.body);
-      const newOrder = new Order({
-        vendorEmail: vendor_email,
-        clientEmail: customer_email,
-        vendor: vendorname,
-        client: customername,
-        quantity,
-        item_name,
-        price,
-        total,
-        client_addr: clientAddr,
-        vendor_addr: vendorAddr,
-        delivery: false,
-        status,
-        item_id: itemId,
-      });
-      try {
-        const deletedCart = await Carts.deleteOne({ customer_email });
-        console.log("Deleted cart:", deletedCart);
-        response.status(200).json({ message: "Cart deleted successfully" });
-      } catch (error) {
-        console.error("Error deleting cart:", error);
-        response.status(500).json({ error: "An error occurred while deleting cart" });
-      }
-      const savedOrder = await newOrder.save();
-      console.log("Order placed:", savedOrder);
-      response.status(200).json({ isAuthenticated: true });
-    } catch (error) {
-      console.error("Error placing order:", error);
-    }
-  }
-});
-
 
 app.post("/customerDelivery", async (request, response) => {
   if (
@@ -855,7 +780,7 @@ app.post("/customerDelivery", async (request, response) => {
       console.log("Order placed:", savedOrder);
       response.status(200).json({ isAuthenticated: true });
     } catch (error) {
-      console.error("Error placing order:", error);
+      console.error("Error placing order in customerDelivery:", error);
     }
   }
 });
@@ -986,18 +911,18 @@ app.get("/items", async (req, res) => {
 const CustomerTopVendors = async (req, res) => {
   //Hassan Ali
   console.log(req.body);
-  console.log("Top vendors: ");
+  // console.log("Top vendors: ");
   try {
     // If email is null or undefined, assign a default value, Used during initial testing
     const items = await Order.find().sort({createdAt: -1}).limit(15);
-    console.log(items);
+    // console.log(items);
     const itemIds = [];
     items.forEach((item) => {
       itemIds.push(item.item_id);
     });
-    console.log("printing item ids: " + itemIds);
+    // console.log("printing item ids: " + itemIds);
     const itemz = await Items.find({ itemId: { $in: itemIds } });
-    console.log(itemz);
+    // console.log(itemz);
     res.json(itemz);
   } catch (error) {
     console.error("Error fetching items:", error);
@@ -1011,11 +936,15 @@ app.post("/CustomerLastOrder", async (req, res) => {
   const customerEmail = req.body.clientEmail;
   try {
     const lastOrder = await Order.find({ clientEmail: customerEmail }).sort({ createdAt: -1 }).limit(1);
-    console.log("last order: ", lastOrder[0])
+
+    if (!lastOrder || lastOrder == [] || !lastOrder.itemName){
+      res.json({msg: 'No last order'})
+      return
+    }
     const itemId1 = lastOrder[0].item_id;
-    console.log("itemid1 is: ", itemId1);
+    // console.log("itemid1 is: ", itemId1);
     const itemz = await Items.find({ itemId: itemId1 });
-    console.log("itemz: ", itemz);
+    // console.log("itemz: ", itemz);
     res.json(itemz);
   } catch (error) {
     console.error("Error fetching last order:", error);
@@ -1212,6 +1141,88 @@ app.get('/order/:orderId', async (req, res) => {
     console.error('Error fetching order details:', error);
     // If any error occurs, return 500 status code and message
     res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+// Customer Bilal's additions:
+app.post('/items-for-search', async (req, res) => {
+  try {
+    const query = req.body.query.toLowerCase();
+    const items = await Items.find();
+    // console.log("Items: ", items)
+    const results = [];
+
+    // Iterate through each item and calculate Jaccard similarity
+    items.forEach((item) => {
+      const itemName = item.itemName.toLowerCase();
+      const similarity = jaccardSimilarity(query, itemName, true);
+      // console.log("Similarity with item: ", itemName, " is ", similarity)
+
+      let threshold = 0.3
+      if (similarity > threshold) {
+        results.push({ item, similarity });
+      }
+    });
+
+    // Sort results by similarity score in descending order
+    results.sort((a, b) => b.similarity - a.similarity);
+
+    // Extract only items from results
+    const matchedItems = results.map((result) => result.item);
+    // console.log("Matched items: ", matchedItems)
+    res.status(200).json(matchedItems);
+  } catch (error) {
+    console.error('Error searching for items:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/get-vendor-emails-for-customer-place-order', async (req, res) => {
+  
+  try {
+    const itemName = req.body.query;
+    console.log("Query: ", itemName)
+    const items = await Items.find({ itemName: itemName });
+    const vendorEmails = items.map((item) => item.vendorEmail);
+    console.log("VendorS: ", vendorEmails)
+    res.status(200).json(vendorEmails);
+  } catch (error) {
+    console.error('Error searching for items:', error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/updateCartItems', async (req, res) => {
+  try {
+    const customer_email = req.body.customerEmail;
+    const updated_cart_items = req.body.items;
+    console.log("Updated cart items: ", updated_cart_items)
+    // Retrieve the cart items for the specified customer
+    const cart_items = await Carts.find({ customerEmail: customer_email });
+
+    // Update the quantity of each item in the cart
+    updated_cart_items.forEach(updated_item => {
+      const cart_item = cart_items.find(item => item.itemId === updated_item.itemId);
+      if (cart_item) {
+        cart_item.quantity = updated_item.quantity;
+        cart_item.total = updated_item.quantity * updated_item.price
+        cart_item.stock = updated_item.stock
+      }
+    });
+
+    await Promise.all(updated_cart_items.map(async updated_item => {
+      const item = await Items.findOne({ itemId: updated_item.itemId });
+      if (item) {
+        item.stock = updated_item.stock;
+        await item.save();
+      }
+    }));
+
+    res.status(200).send("Cart items updated successfully");
+  } catch (error) {
+    console.error('Error updating cart items:', error);
+    res.status(500).send("Internal server error");
   }
 });
 

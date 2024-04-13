@@ -1,6 +1,7 @@
 /* Search Results Page */
 .search-results-page {
     padding-top: 60px; /* Adjust according to navbar height */
+    position: relative;
   }
   
   .search-sort-container {
@@ -146,7 +147,13 @@
   
   /* Cart Container */
   .cart-container {
-    margin-top: 20px;
+    position: absolute;
+    top: 700px;
+    right: 325px;
+    width: 500px; /* Adjust as needed */
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   /* Cart Title */

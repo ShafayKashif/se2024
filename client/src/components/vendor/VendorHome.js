@@ -12,6 +12,10 @@ const VendorHome = () => {
   const email = window.localStorage.getItem('vendorEmail');
 
   useEffect(() => {
+    if (applicationStatus === 'denied'){
+      alert("Your application has been declined.")
+      return;
+    }
     const fetchItems = async () => {
       try {
         const response = await axios.post('http://localhost:3001/showitems', { vendorEmail: email });
@@ -41,6 +45,7 @@ const VendorHome = () => {
           fetchItems();
         } else if (status === 'declined') {
           alert('Your application has been declined.');
+          setApplicationStatus('declined')
         } else {
           setApplicationStatus('processing');
         }

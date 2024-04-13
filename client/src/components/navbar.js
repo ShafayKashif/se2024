@@ -91,9 +91,6 @@ const Navbar = () => {
           </>
         )}
       </div>
-      <button className="settings-button">
-        <img src={settingImage} alt="Settings" />
-      </button>
     </nav>
   );
 };

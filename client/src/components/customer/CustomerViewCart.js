@@ -8,6 +8,10 @@ const CustomerHome = () => {
     const navigate = useNavigate();
     const [items, setItems] = useState([]);
 
+    useEffect(() => {
+        fetchItems();
+    }, []);
+
     const handleSelfPickup = async (event) => {
         let vendor_email = ""
         let quantity = 0
@@ -17,24 +21,22 @@ const CustomerHome = () => {
         const customer_email = window.localStorage.getItem('CustomerEmail');
         console.log("customer_email", customer_email);
         const response = await axios.get('http://localhost:3001/CustomerCart');
-        console.log("response", response);
+        // console.log("response", response);
         if (response.status === 200) {
-            console.log("cart fetched!");
+            // console.log("cart fetched!");
             const cart = response.data;
-            console.log("cart", cart);
+            // console.log("cart", cart);
             const items = cart.filter(item => item.customer_email === customer_email);
-            console.log("items", items);
+            // console.log("items", items);
             if (items.length === 0) {
                 alert("Cart is empty, please add items to cart from \"view menu tab\".");
                 return;
             } else {
                 numItems = items.length;
-
             }
         } else {
             console.error('Failed to fetch cart:', await response.text());
         }
-
 
         for (let i = 0; i < numItems; i++) {
             vendor_email = items[i].vendor_email;
@@ -52,58 +54,27 @@ const CustomerHome = () => {
             let itemQuantity;
 
             try {
-                const response = await axios.get('http://localhost:3001/studentvendors');
+                const response = await axios.get('http://localhost:3001/vendors');
                 if (response.status === 200) {
-                    console.log("vendors fetched!");
+                    // console.log("vendors fetched!");
                     const vendors = response.data;
-                    console.log("vendors", vendors);
-                    const vendor = vendors.find(vendor => vendor.email == vendor_email);
-                    console.log("vendor", vendor.email);
-                    console.log("vendor_email", vendor_email);
-                    console.log("found the single vendor: ", vendor);
+                    // console.log("vendors", vendors);
+                    const vendor = vendors.find(vendor => vendor.email === vendor_email);
+                    // console.log("found the single vendor: ", vendor);
                     if (!vendor) {
                         alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
                         return;
                     } else {
                         vendorname = vendor.name;
-                        vendorhostel = vendor.hostel;
-                        vendorroom = vendor.room_Number;
+                        vendorhostel = "LUMS";
+                        vendorroom = "LUMS";
                         vendorFound = true;
                     }
                 } else {
-                    console.error('Failed to fetch student vendors:', await response.text());
-
+                    console.error('Failed to fetch vendors:', await response.text());
                 }
             } catch (error) {
-                // alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-                console.error('Error fetching student vendors:', error.message);
-                // return;
-            }
-
-            if (vendorFound == false) {
-                try {
-                    const response = await axios.get('http://localhost:3001/vendors');
-                    if (response.status === 200) {
-                        console.log("vendors fetched!");
-                        const vendors = response.data;
-                        console.log("vendors", vendors);
-                        const vendor = vendors.find(vendor => vendor.email === vendor_email);
-                        console.log("found the single vendor: ", vendor);
-                        if (!vendor) {
-                            alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-                            return;
-                        } else {
-                            vendorname = vendor.name;
-                            vendorhostel = "LUMS";
-                            vendorroom = "LUMS";
-                            vendorFound = true;
-                        }
-                    } else {
-                        console.error('Failed to fetch vendors:', await response.text());
-                    }
-                } catch (error) {
-                    console.error('Error fetching vendors:', error.message);
-                }
+                console.error('Error fetching vendors:', error.message);
             }
 
             if (vendorFound == false) {
@@ -222,13 +193,13 @@ const CustomerHome = () => {
         const customer_email = window.localStorage.getItem('CustomerEmail');
         console.log("customer_email", customer_email);
         const response = await axios.get('http://localhost:3001/CustomerCart');
-        console.log("response", response);
+        // console.log("response", response);
         if (response.status === 200) {
             console.log("cart fetched!");
             const cart = response.data;
-            console.log("cart", cart);
+            // console.log("cart", cart);
             const items = cart.filter(item => item.customer_email === customer_email);
-            console.log("items", items);
+            // console.log("items", items);
             if (items.length === 0) {
                 alert("Cart is empty, please add items to cart from \"view menu tab\".");
                 return;
@@ -259,12 +230,12 @@ const CustomerHome = () => {
                 if (response.status === 200) {
                     console.log("vendors fetched!");
                     const vendors = response.data;
-                    console.log("vendors", vendors);
-                    console.log("vendor email has: ", vendor_email);
+                    // console.log("vendors", vendors);
+                    // console.log("vendor email has: ", vendor_email);
                     const vendor = vendors.find(vendor => vendor.email == vendor_email);
-                    console.log("vendor", vendor.email);
-                    console.log("vendor_email", vendor_email);
-                    console.log("found the single vendor: ", vendor);
+                    // console.log("vendor", vendor.email);
+                    // console.log("vendor_email", vendor_email);
+                    // console.log("found the single vendor: ", vendor);
                     if (!vendor) {
                         alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
                         return;
@@ -402,7 +373,7 @@ const CustomerHome = () => {
                   quantity: itemQuantity - quantity,
                 });
                 if (response.status === 200) {
-                  console.log("item quantity updated!");
+                //   console.log("item quantity updated!");
                   navigate('/CustomerHome');
                 } else {
                   console.error("item quantity update failed:", await response.text());
@@ -413,19 +384,69 @@ const CustomerHome = () => {
         }
     }
 
+    const fetchItems = async () => {
+        try {
+            let customerEmail = localStorage.getItem('CustomerEmail');
+            const response = await axios.post('http://localhost:3001/CustomerViewCart', { customerEmail });
+            setItems(response.data); // Server returns cart items for specified customer
+        } catch (error) {
+            console.error('Error fetching items:', error);
+        }
+    };
 
-    useEffect(() => {
-        const fetchItems = async () => {
-            try {
-                let customerEmail = localStorage.getItem('CustomerEmail');
-                const response = await axios.post('http://localhost:3001/CustomerViewCart', { customerEmail });
-                setItems(response.data);//Server returns items being sold by he vendor
-            } catch (error) {
-                console.error('Error fetching items:', error);
-            }
-        };
-        fetchItems();
-    }, []);
+    const handleIncreaseQuantity = async (itemId) => {
+        // console.log("Item id: ", itemId)
+        try {
+            const updatedItems = items.map(item => {
+                if (item.itemId === itemId) {
+                    if (item.stock > 0) {
+                        item.quantity++;
+                        item.stock--;
+                    }
+                    else{
+                        alert("Quantity maxed out for item: ", item.itemName)
+                    }
+                }
+                return item;
+            });
+            setItems(updatedItems);
+            // console.log("updated items: ", updatedItems)
+            await updateCartItems(updatedItems);
+            
+        } catch (error) {
+            console.error('Error increasing quantity:', error);
+        }
+    };
+
+    const handleDecreaseQuantity = async (itemId) => {
+        try {
+            const updatedItems = items.filter(item => {
+                if (item.itemId === itemId) {
+                    if (item.quantity > 1) {
+                        item.quantity--;
+                        item.stock++;
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+                return true;
+            });
+            setItems(updatedItems);
+            await updateCartItems(updatedItems);
+        } catch (error) {
+            console.error('Error decreasing quantity:', error);
+        }
+    };
+
+    const updateCartItems = async (updatedItems) => {
+        try {
+            let customerEmail = localStorage.getItem('CustomerEmail');
+            const response = await axios.post('http://localhost:3001/updateCartItems', { customerEmail, items: updatedItems });
+        } catch (error) {
+            console.error('Error updating cart items:', error);
+        }
+    };
 
 
     return (
@@ -442,6 +463,10 @@ const CustomerHome = () => {
                         <p>Quantity: {item.quantity}</p>
                         <p>Price: {item.price}</p>
                         <p>Total: {item.total}</p>
+                        <div>
+                            <button onClick={() => handleIncreaseQuantity(item.itemId)}>+</button>
+                            <button onClick={() => handleDecreaseQuantity(item.itemId)}>-</button>
+                        </div>
                     </div>
                 ))}
             </div>

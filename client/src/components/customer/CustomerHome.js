@@ -31,6 +31,7 @@ const CustomerHome = () => {
 
     const handleSearchSubmit = async (event) => {
         event.preventDefault();
+        setSearchQuery()
         try {
             const response = await axios.post("http://localhost:3001/query", {
                 type: "food-search",
@@ -55,7 +56,13 @@ const CustomerHome = () => {
         const fetchLastOrder = async () => {
             try {
                 const response = await axios.post('http://localhost:3001/CustomerLastOrder', {clientEmail: localStorage.getItem('CustomerEmail')});
-                setLastOrder(response.data);//Server returns items being sold by he vendor
+                if (response.data.msg && response.data.msg === 'No last order')
+                {
+                    setLastOrder([]);
+                }
+                else{
+                    setLastOrder(response.data);//Server returns items being sold by he vendor
+                }
             } catch (error) {
                 console.error('Error fetching items:', error);
             }
@@ -83,10 +90,10 @@ const CustomerHome = () => {
             <h1></h1>
             <h3></h3>
             <form onSubmit={handleSearchSubmit}>
-                <input
+                <input onChange={handleSearchInputChange}
                     type="text"
                     />
-                <button type="submit" className='SearchButton'>Search</button>
+                <button type="submit" className='SearchButton' onClick={handleSearchSubmit}>Search</button>
             </form>
             <h3 className='title1'>
                 People's pick of the day:

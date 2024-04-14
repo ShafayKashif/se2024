@@ -10,6 +10,8 @@ body {
   flex: 1;
   background: url("./lums_background.png") no-repeat center center;
   background-size: cover;
+  background-attachment: fixed;
+  /* opacity: 0.5; */
 }
 
 .maindiv {
@@ -20,6 +22,7 @@ body {
   padding: 10px; /* Reduce padding to decrease vertical space */
   width: 100vw; /* Set width to 100% of viewport width */
   height: 100vh; /* Set height to 100% of viewport height */
+  background: rgba(255, 255, 255, 0.7);
 }
 
 nav {

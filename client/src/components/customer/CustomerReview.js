@@ -86,7 +86,7 @@ const CustomerReview = (props) => {
     // using onsubmit to call handlereview when form submitted (i.e when the submit button is clicked)
     //using onchange to call the respective set function when the input value changes
     // using validate rating to ensure the rating is not greater than 5
-    <div className="review">
+    <div className='maindiv'>
       <h1 >
         Review your vendor
       </h1>

@@ -590,7 +590,7 @@ const CustomerPlaceOrder = (props) => {
 
 
   return (
-    <div className="review">
+    <div className='maindiv'>
       <h1 >
         Place order
       </h1>

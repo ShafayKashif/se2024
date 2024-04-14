@@ -668,9 +668,9 @@ const CustomergetNewOrders = async (req, res) => {
       // Get all orders matching vendor email and not delivered
       const orders = await Order.find({ clientEmail: customerEmail, $or: [{ status: "New" },{ status: "InProgress" }] });
       // Extract itemIds from orders
-      console.log("orders: ", orders);
+      // console.log("orders: ", orders);
       const itemIds = orders.map(orders => orders.item_id);
-      console.log("itemIds: ", itemIds);
+      // console.log("itemIds: ", itemIds);
       
       // Find items matching the extracted itemIds
       const items = await Items.find({ itemId: { $in: itemIds } });

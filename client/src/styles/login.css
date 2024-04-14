@@ -92,6 +92,11 @@
   bottom: 110px;
 }
 
+.login-button:hover {
+  color: white;
+  background: rgb(28, 0, 79);
+}
+
 .signup-redirect {
   color: darkblue;
   text-decoration: underline;

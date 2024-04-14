@@ -10,8 +10,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #003366;
-  background: linear-gradient(to bottom, #003366 30%, transparent 30%);
+  background-color: #285A84;
+  background: linear-gradient(to bottom, #285A84 30%, transparent 30%);
   padding: 10px 20px;
   color: white;
   width: 100%;
@@ -22,12 +22,12 @@ body {
 }
 
 .navbar-links button.active {
-  background-color: #003366;
+  background-color: #285A84;
   color: white;
 }
 
 .navbar-links button.settings-button.active {
-  background-color: #003366;
+  background-color: #285A84;
   color: rgb(255, 255, 255);
 }
 
@@ -43,7 +43,7 @@ body {
 
 .navbar-links button {
   background-color: rgba(255, 255, 255, 0);
-  color: #003366;
+  color: #285A84;
   border: none;
   padding: 10px 15px;
   cursor: pointer;
@@ -62,7 +62,7 @@ body {
   align-items: center;
   justify-content: center;
   background-color: white;
-  color: #003366;
+  color: #285A84;
   padding: 10px;
   border: none;
   cursor: pointer;

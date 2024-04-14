@@ -73,45 +73,80 @@ const Navbar = () => {
         )}
         {role === "vendor" && (
           <>
-          <button onClick={() => handleNavigate("/VendorHome")}>
-            Homepage
-          </button>
-          <button onClick={() => handleNavigate("/AddItem")}>Add Item</button>
-          <button onClick={() => handleNavigate("/VendorOrders")}>
-            View Current Orders
-          </button>
-          <button onClick={() => handleNavigate("/ViewCustomersReviews")}>
-            View Customer Reviews
-          </button>
-          <button onClick={() => handleNavigate("/VendorProfile")}>
-            Profile & Analytics
-          </button>
+          <button
+              className={location.pathname === "/VendorHome" ? "active" : ""}
+              onClick={() => handleNavigate("/VendorHome")}
+            >
+              HomePage
+            </button>
+            <button
+              className={location.pathname === "/AddItem" ? "active" : ""}
+              onClick={() => handleNavigate("/AddItem")}
+            >
+              Add an Item
+            </button>
+            <button
+              className={location.pathname === "/VendorOrders" ? "active" : ""}
+              onClick={() => handleNavigate("/VendorOrders")}
+            >
+              View Current Orders
+            </button>
+            <button
+              className={location.pathname === "/ViewCustomersReviews" ? "active" : ""}
+              onClick={() => handleNavigate("/ViewCustomersReviews")}
+            >
+              View Customer Reviews
+            </button>
+            <button
+              className={location.pathname === "/VendorProfile" ? "active" : ""}
+              onClick={() => handleNavigate("/VendorProfile")}
+            >
+              Profile & Analytics
+            </button>
         </>
         )}
         {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECSES */}
         {role === "courier" && (
           <>
-            <button onClick={() => handleNavigate("/SeeOrders")}>
+          <button
+              className={location.pathname === "/SeeOrders" ? "active" : ""}
+              onClick={() => handleNavigate("/SeeOrders")}
+            >
               See All Orders
             </button>
-            <button onClick={() => handleNavigate("/courierAnalytics")}>
-              view analytics
+            <button
+              className={location.pathname === "/courierAnalytics" ? "active" : ""}
+              onClick={() => handleNavigate("/courierAnalytics")}
+            >
+              View analytics
             </button>
           </>
         )}
         {role === "admin" && (
           <>
-          <button onClick={() => handleNavigate("/AdminHome")}>
+          <button
+              className={location.pathname === "/AdminHome" ? "active" : ""}
+              onClick={() => handleNavigate("/AdminHome")}
+            >
               Home
             </button>
-            <button onClick={() => handleNavigate("/seeVendorRatings")}>
+            <button
+              className={location.pathname === "/seeVendorRatings" ? "active" : ""}
+              onClick={() => handleNavigate("/seeVendorRatings")}
+            >
               View Vendor Reviews
             </button>
-            <button onClick={() => handleNavigate("/joinRequests")}>
-            View Join Requests
+            <button
+              className={location.pathname === "/joinRequests" ? "active" : ""}
+              onClick={() => handleNavigate("/joinRequests")}
+            >
+              View Join Requests
             </button>
-            <button onClick={() => handleNavigate("/banUser")}>
-            Ban User
+            <button
+              className={location.pathname === "/banUser" ? "active" : ""}
+              onClick={() => handleNavigate("/banUser")}
+            >
+              Ban User
             </button>
           </>
         )}

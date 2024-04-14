@@ -138,7 +138,7 @@ function App() {
             <Route
               path="/AddItem"
               element={
-                <ProtectedRoute allowedRoles={["Vendor", "Student_Vendor"]}>
+                <ProtectedRoute allowedRoles={["vendor", "student_vendor"]}>
                   <AddItem />
                 </ProtectedRoute>
               }
@@ -146,7 +146,7 @@ function App() {
             <Route
               path="/SeeOrders"
               element={
-                <ProtectedRoute allowedRoles={["Courier"]}>
+                <ProtectedRoute allowedRoles={["courier"]}>
                   <SeeOrders />
                 </ProtectedRoute>
               }

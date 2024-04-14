@@ -7,9 +7,9 @@
 
 .login-left {
   /* flex: 1; */
-  background: url("./lums_background.png") no-repeat center center;
-  background-size: cover;
-  background-attachment: fixed; 
+  background: url("./lums_background.png");
+  /* background-size: cover; */
+  /* background-attachment: fixed;  */
   /* position: fixed; */
   width: 50%; 
   height: 100%;

@@ -948,7 +948,8 @@ app.post("/CustomerLastOrder", async (req, res) => {
   try {
     const lastOrder = await Order.find({ clientEmail: customerEmail }).sort({ createdAt: -1 }).limit(1);
 
-    if (!lastOrder || lastOrder == [] || (!lastOrder[0] || (lastOrder[0] && !lastOrder[0].itemName))){
+    // console.log("last order: ", lastOrder[0])
+    if (!lastOrder || lastOrder == [] || (!lastOrder[0] || (lastOrder[0] && !lastOrder[0].item_id))){
       res.json({msg: 'No last order'})
       return
     }

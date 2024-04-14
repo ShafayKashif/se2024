@@ -1,12 +1,13 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 // import { useAuth } from "./login_signup/AuthContext";
 import "../styles/Navbar.css";
-import logoImage from "../styles/logo.png";
-import settingImage from "../styles/settings.png";
+import logoImage from "../styles/campusCuisineSmall.png";
+import settingImage from "../styles/gear.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   // const { authState } = useAuth();
   // const { role } = authState;
   const role = window.sessionStorage.getItem('role')
@@ -24,28 +25,51 @@ const Navbar = () => {
       <div className="navbar-links">
         {role === "customer" && (
           <>
-            <button onClick={() => handleNavigate("/CustomerHome")}>
-              Homepage
-            </button>
-            <button onClick={() => handleNavigate("/CurrentOrder")}>
-              Current Order
-            </button>
-            <button onClick={() => handleNavigate("/PlaceOrder")}>
-              Place Order
-            </button>
-            <button onClick={() => handleNavigate("/ViewCart")}>
-              View Cart
-            </button>
-            <button onClick={() => handleNavigate("/CustomerReview")}>
-              Leave Review
-            </button>
-            <button onClick={() => handleNavigate("/CustomerViewMenu")}>
-               View menu
-            </button>
-            <button onClick={()=> handleNavigate("/CustomerUpdateInfo")} className="settings-button">
-               <img src={settingImage} alt="Settings" />
-            </button>
-          </>
+          <button
+            className={location.pathname === "/CustomerHome" ? "active" : ""}
+            onClick={() => handleNavigate("/CustomerHome")}
+          >
+            Homepage
+          </button>
+          <button
+            className={location.pathname === "/CurrentOrder" ? "active" : ""}
+            onClick={() => handleNavigate("/CurrentOrder")}
+          >
+            Current Order
+          </button>
+          <button
+            className={location.pathname === "/PlaceOrder" ? "active" : ""}
+            onClick={() => handleNavigate("/PlaceOrder")}
+          >
+            Place Order
+          </button>
+          <button
+            className={location.pathname === "/ViewCart" ? "active" : ""}
+            onClick={() => handleNavigate("/ViewCart")}
+          >
+            View Cart
+          </button>
+          <button
+            className={location.pathname === "/CustomerReview" ? "active" : ""}
+            onClick={() => handleNavigate("/CustomerReview")}
+          >
+            Leave Review
+          </button>
+          <button
+            className={location.pathname === "/CustomerViewMenu" ? "active" : ""}
+            onClick={() => handleNavigate("/CustomerViewMenu")}
+          >
+            View Menu
+          </button>
+          <button
+              className={
+                  location.pathname === "/CustomerUpdateInfo" ? "active settings-button" : "settings-button"
+              }
+              onClick={() => handleNavigate("/CustomerUpdateInfo")}
+              >
+              <img src={settingImage} alt="Settings" />
+          </button>
+        </>
         )}
         {role === "vendor" && (
           <>

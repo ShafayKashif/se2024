@@ -18,8 +18,8 @@
   background-color: rgb(111, 111, 111, 0.5); /* Set background color to black */
   color: white; /* Set text color to white */
   padding: 10px 20px;
-  position: relative;
-  width: 1340px;
+  position: absolute;
+  width: 1370px;
   left: 0px;
 }
 
@@ -35,10 +35,10 @@
 }
 
 .most-popular-sellers {
-  position: absolute;
+  position: relative;
   width: 45%;
-  left: 50px;
-  top: 100px;
+  right: 450px;
+  bottom: 180px;
   width: 450px;
   height: 80px;
   /* transform: scale(0.9); */
@@ -59,6 +59,7 @@
   color: black; /* Change text color to black */
   font-family: 'Inter', sans-serif; /* Apply Inter font */
   font-weight: 600;
+  position: relative;
 }
 
 .vendor-average-rating {
@@ -87,11 +88,11 @@
   background-size: cover; 
   display: inline-block; /* Make the div inline-block to appear next to the rating */
   vertical-align: middle; /* Align the div vertically with the text */
-  position: absolute;
+  position: relative;
   width: 9px;
   height: 9px;
-  top: 41px;
-  right: 138px;
+  top: 0px;
+  right: 2px;
 }
 
 .vendor-name {
@@ -156,8 +157,10 @@
 }
 
 .review-list-container {
-  overflow-x: auto; /* Enable horizontal scrolling */
-  white-space: nowrap; /* Prevent list items from wrapping */
+  overflow-x: hidden; /* Hide the default scrollbar */
+  overflow-y: hidden; /* Hide the vertical scrollbar */
+  white-space: nowrap;
+  position: relative;
 }
 
 .review-list {
@@ -176,6 +179,9 @@
   width: 400px;
   display: inline-block; /* Display list items inline */
   position: relative;
+  /* list-style-type: none;
+  padding: 0;
+  margin: 0; */
 }
 
 
@@ -213,4 +219,49 @@
   font-family: 'Inter';
   font-size: 12px;
   font-weight: 450;
+}
+
+
+.scroll-button-left {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+  left: 0; /* Adjust left position */
+}
+
+.scroll-button-left:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.scroll-button-left:focus {
+  outline: none;
+}
+
+.scroll-button-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+  right: 0; /* Adjust right position */
+}
+
+.scroll-button-right:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.scroll-button-right:focus {
+  outline: none;
 }

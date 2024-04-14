@@ -43,6 +43,27 @@ const AdminHome = () => {
     },
   };
 
+  const scrollList = (direction) => {
+    
+    const container = document.getElementById('review-list');
+    
+    const scrollAmount = 600;
+  
+    if (direction === "left") {
+      container.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    } else {
+      console.log("Scrolling right", container)
+      container.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+  
+
   return (
     // <div className="container">
     <div className='maindiv'>
@@ -55,8 +76,9 @@ const AdminHome = () => {
           <div className="vendor-card" key={index}>
             <p className="vendor-name">{vendor.name}</p>
             <div className="price-range-container">
-              <p className="vendor-price-range">Price Range: {vendor.minPrice} - {vendor.maxPrice}</p>
+              <p className="vendor-price-range">Price Range: {vendor.minPrice} - {vendor.maxPrice}
               <div className="dollar-logo"></div>
+              </p>
             </div>
             <div className="review-rating-container-2">
               <p className="vendor-average-rating">Rating: {Math.round(vendor.avgRating)}</p>
@@ -79,24 +101,27 @@ const AdminHome = () => {
       </div>
 
       {/* Display reviews sidebar */}
-      <div className='customer-reviews' style={{ overflowX: "auto", whiteSpace: "nowrap"}}>
-      <div className="second-grey-tape">
-        <h2 className="review-title">Most recent reviews:</h2>
+      <div className='customer-reviews' style={{ overflowX: "auto", whiteSpace: "nowrap", width: "50%", height: "200px" }}>
+      <button className="scroll-button-left" onClick={() => scrollList("left")}>{"<"}</button>
+        <div className="second-grey-tape">
+          <h2 className="review-title">Most recent reviews:</h2>
         </div>
-        <div className="review-list-container">
-            <ul className="review-list">
-              {myCustomerReviews.map((review, index) => (
-                <li key={index}>
-                  <p className="vendor-review-name">{review.vendor_name}</p>
-                  <div className="review-rating-container">
-                    <p className="vendor-review-rating">{review.rating}</p>
-                    <div className="star-logo"></div> {/* This div will contain the star logo */}
-                  </div>
-                  <p className="vendor-review-comment">{review.comment}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="review-list-container" id="review-list">
+          <ul className="review-list" >
+            {myCustomerReviews.map((review, index) => (
+              <li key={index}>
+                <p className="vendor-review-name">{review.vendor_name}</p>
+                <div className="review-rating-container">
+                  <p className="vendor-review-rating">{review.rating}</p>
+                  <div className="star-logo"></div> {/* This div will contain the star logo */}
+                </div>
+                <p className="vendor-review-comment">{review.comment}</p>
+              </li>
+            ))}
+          </ul>
+          
+        </div>
+        <button className="scroll-button-right" onClick={() => scrollList("right")}>{">"}</button>
       </div>
     </div>
   );

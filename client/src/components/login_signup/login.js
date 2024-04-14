@@ -5,8 +5,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
-import lumsBackground from "../../styles/lums_background.png";
-import logoImage from "../../styles/logo.png";
+import lumsBackground from "../../styles/lums_background.jpg";
+import logoImage from "../../styles/campusCuisine.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -93,21 +93,21 @@ const Login = () => {
       ></div>
       <div className="login-right">
         <img src={logoImage} alt="Logo" className="login-logo" />
-        <h2 className="login-title">Login</h2>
+        <h2 className="login-title">Log in</h2>
         <form onSubmit={handleLogin}>
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="login-input"
+            className="login-email-input"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="login-input"
+            className="login-password-input"
           />
           <button type="submit" className="login-button">
             Sign In

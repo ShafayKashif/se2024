@@ -674,7 +674,7 @@ const CustomergetNewOrders = async (req, res) => {
       
       // Find items matching the extracted itemIds
       const items = await Items.find({ itemId: { $in: itemIds } });
-      console.log("items: ", items);
+      // console.log("items: ", items);
       
       // Join orders and items where vendor email matches
       const joinedData = orders.map(order => {
@@ -946,7 +946,7 @@ app.post("/CustomerTopVendors", CustomerTopVendors);
 app.post("/CustomerLastOrder", async (req, res) => {
   const customerEmail = req.body.clientEmail;
   try {
-    const lastOrder = await Order.find({ clientEmail: customerEmail }).sort({ createdAt: -1 }).limit(1);
+    const lastOrder = await Order.find({ clientEmail: customerEmail, status: "Completed" }).sort({ createdAt: -1 }).limit(1);
 
     // console.log("last order: ", lastOrder[0])
     if (!lastOrder || lastOrder == [] || (!lastOrder[0] || (lastOrder[0] && !lastOrder[0].item_id))){
@@ -987,13 +987,13 @@ app.post("/CustomerReOrder", async (req, res) => {
 
 const CustomerViewCart = async (req, res) => {
   //Hassan Ali
-  console.log(req.body);
+  // console.log("Email: ", typeof(req.body.customer_email));
   // console.log("view cart: ");
-  const customerEmail = req.body.customerEmail;
+  const customerEmail = req.body.customer_email;
   try {
     // If email is null or undefined, assign a default value, Used during initial testing
     const cartItems = await Carts.find({ customer_email: customerEmail });
-    // console.log(cartItems);
+    console.log(cartItems);
     res.json(cartItems);
   } catch (error) {
     console.error("Error fetching items:", error);
@@ -1055,7 +1055,7 @@ app.post("/CustomerUpdateInfo" , async (req, res) => {
 
 const CustomerCurrentOrder = async (req, res) => {
   //Hassan Ali
-  console.log(req.body);
+  // console.log(req.body);
   // console.log("view cart: ");
   const customerEmail = req.body.CustomerEmail;
   try {
@@ -1209,7 +1209,7 @@ app.post('/updateCartItems', async (req, res) => {
   try {
     const customer_email = req.body.customerEmail;
     const updated_cart_items = req.body.items;
-    console.log("Updated cart items: ", updated_cart_items)
+    // console.log("Updated cart items: ", updated_cart_items)
     // Retrieve the cart items for the specified customer
     const cart_items = await Carts.find({ customerEmail: customer_email });
 

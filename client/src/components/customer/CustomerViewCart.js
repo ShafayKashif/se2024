@@ -4,10 +4,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const CustomerHome = () => {
+const CustomerViewCart = () => {
     const navigate = useNavigate();
     const [items, setItems] = useState([]);
     const customer_email = window.sessionStorage.getItem('email');
+    console.log("Customer email: ", customer_email)
 
     useEffect(() => {
         fetchItems();
@@ -28,7 +29,7 @@ const CustomerHome = () => {
             const cart = response.data;
             // console.log("cart", cart);
             const items = cart.filter(item => item.customer_email === customer_email);
-            // console.log("items", items);
+            console.log("items", items);
             if (items.length === 0) {
                 alert("Cart is empty, please add items to cart from \"view menu tab\".");
                 return;
@@ -226,35 +227,6 @@ const CustomerHome = () => {
             let itemId;
             let itemQuantity;
 
-            try {
-                const response = await axios.get('http://localhost:3001/studentvendors');
-                if (response.status === 200) {
-                    console.log("vendors fetched!");
-                    const vendors = response.data;
-                    // console.log("vendors", vendors);
-                    // console.log("vendor email has: ", vendor_email);
-                    const vendor = vendors.find(vendor => vendor.email == vendor_email);
-                    // console.log("vendor", vendor.email);
-                    // console.log("vendor_email", vendor_email);
-                    // console.log("found the single vendor: ", vendor);
-                    if (!vendor) {
-                        alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-                        return;
-                    } else {
-                        vendorname = vendor.name;
-                        vendorhostel = vendor.hostel;
-                        vendorroom = vendor.room_Number;
-                        vendorFound = true;
-                    }
-                } else {
-                    console.error('Failed to fetch student vendors:', await response.text());
-
-                }
-            } catch (error) {
-                // alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-                console.error('Error fetching student vendors:', error.message);
-                // return;
-            }
 
             if (vendorFound == false) {
                 try {
@@ -388,8 +360,9 @@ const CustomerHome = () => {
     const fetchItems = async () => {
         try {
             // let customer_email = localStorage.getItem('CustomerEmail');
-            const response = await axios.post('http://localhost:3001/CustomerViewCart', { customer_email });
+            const response = await axios.post('http://localhost:3001/CustomerViewCart', { customer_email: customer_email });
             setItems(response.data); // Server returns cart items for specified customer
+            console.log("response: ", response.data)
         } catch (error) {
             console.error('Error fetching items:', error);
         }
@@ -507,4 +480,4 @@ const CustomerHome = () => {
 
 }
 
-export default CustomerHome;
+export default CustomerViewCart;

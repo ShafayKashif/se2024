@@ -7,7 +7,7 @@ function Reviews() {
     const [reviews, setReviews] = useState([]);
     const [isBanned, setIsBanned] = useState(false);
     const navigate = useNavigate();
-    const vendorEmail = window.localStorage.getItem('vendorEmail');
+    const vendorEmail = window.sessionStorage.getItem('email');
 
     useEffect(() => {
         const checkBannedStatus = async () => {

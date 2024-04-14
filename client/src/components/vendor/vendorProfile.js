@@ -12,7 +12,7 @@ const VendorProfile = () => {
   const [worstSellingItem, setWorstSellingItem] = useState({});
   const [totalRevenue, setTotalRevenue] = useState(0);
 
-  const vendorEmail = window.localStorage.getItem('vendorEmail');
+  const vendorEmail = window.sessionStorage.getItem('email');
   const vendorImage = 'https://res.cloudinary.com/dcswark7e/image/upload/v1709190100/ReactDB/lfoqk8xfau0u886nrxuf.jpg'
 
   useEffect(() => {

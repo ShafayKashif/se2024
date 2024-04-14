@@ -9,7 +9,7 @@ const CourierAnalytics = () => {
 
   function getCourierEmail() {
     // Retrieve the courier's email from local storage
-    return window.localStorage.getItem('CourierEmail');
+    return window.sessionStorage.getItem('email');
   }
 
   useEffect(() => {

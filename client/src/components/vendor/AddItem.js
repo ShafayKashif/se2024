@@ -5,7 +5,7 @@ import '../../styles/vendorCss/addItemCustom.css';
 
 const AddItem = () => {
   const navigate = useNavigate();
-  const vendorEmail = window.localStorage.getItem('vendorEmail');
+  const vendorEmail = window.sessionStorage.getItem('email');
   const [isBanned, setIsBanned] = useState(false);
 
   useEffect(() => {

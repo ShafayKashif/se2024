@@ -23,7 +23,7 @@ const CustomerReview = (props) => {
     }
 
     // get the customer email from local storage, learnt from https://www.youtube.com/watch?v=A98SPz5XLwY
-    const customer_email = window.localStorage.getItem('CustomerEmail');
+    const customer_email = window.sessionStorage.getItem('email');
     console.log("customer_email", customer_email); 
 
     try {

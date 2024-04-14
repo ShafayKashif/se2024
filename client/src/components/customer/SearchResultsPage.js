@@ -14,17 +14,17 @@ const SearchResultsPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-      // Load cart information from localStorage when the component mounts
-      const savedCartItems = JSON.parse(localStorage.getItem('cartItems'));
+      // Load cart information from sessionStorage when the component mounts
+      const savedCartItems = JSON.parse(sessionStorage.getItem('cartItems'));
       if (savedCartItems) {
           setCartItems(savedCartItems);
       }
     }, []);
 
     const updateCartItems = (updatedCartItems) => {
-        // Update cart items state and also save it to localStorage
+        // Update cart items state and also save it to sessionStorage
         setCartItems(updatedCartItems);
-        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+        sessionStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
     };
 
     const handleSearchSubmit = async (event) => {
@@ -100,7 +100,7 @@ const SearchResultsPage = () => {
                 return
               }
               const total = item.quantity * item.price
-              const customerEmail = window.localStorage.getItem('CustomerEmail');
+              const customerEmail = window.sessionStorage.getItem('email');
               try{
                     await axios.post("http://localhost:3001/placeOrder", {
                     type: "placeOrder",

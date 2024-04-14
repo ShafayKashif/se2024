@@ -7,6 +7,7 @@ import axios from 'axios';
 const CustomerHome = () => {
     const navigate = useNavigate();
     const [items, setItems] = useState([]);
+    const customer_email = window.sessionStorage.getItem('email');
 
     useEffect(() => {
         fetchItems();
@@ -18,7 +19,7 @@ const CustomerHome = () => {
         let item_name = ""
         let numItems = 0;
 
-        const customer_email = window.localStorage.getItem('CustomerEmail');
+        // const customer_email = window.localStorage.getItem('CustomerEmail');
         console.log("customer_email", customer_email);
         const response = await axios.get('http://localhost:3001/CustomerCart');
         // console.log("response", response);
@@ -190,7 +191,7 @@ const CustomerHome = () => {
         let numItems = 0;
         
 
-        const customer_email = window.localStorage.getItem('CustomerEmail');
+        // const customer_email = window.localStorage.getItem('CustomerEmail');
         console.log("customer_email", customer_email);
         const response = await axios.get('http://localhost:3001/CustomerCart');
         // console.log("response", response);
@@ -386,8 +387,8 @@ const CustomerHome = () => {
 
     const fetchItems = async () => {
         try {
-            let customerEmail = localStorage.getItem('CustomerEmail');
-            const response = await axios.post('http://localhost:3001/CustomerViewCart', { customerEmail });
+            // let customer_email = localStorage.getItem('CustomerEmail');
+            const response = await axios.post('http://localhost:3001/CustomerViewCart', { customer_email });
             setItems(response.data); // Server returns cart items for specified customer
         } catch (error) {
             console.error('Error fetching items:', error);
@@ -463,8 +464,8 @@ const CustomerHome = () => {
 
     const updateCartItems = async (updatedItems) => {
         try {
-            let customerEmail = localStorage.getItem('CustomerEmail');
-            const response = await axios.post('http://localhost:3001/updateCartItems', { customerEmail, items: updatedItems });
+            // let customer_email = localStorage.getItem('CustomerEmail');
+            const response = await axios.post('http://localhost:3001/updateCartItems', { customer_email, items: updatedItems });
         } catch (error) {
             console.error('Error updating cart items:', error);
         }

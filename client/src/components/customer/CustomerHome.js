@@ -13,7 +13,7 @@ const CustomerHome = () => {
     const [amountSpent, setAmountSpent] = useState(0);
 
     const handlePlaceRecentOrder = async (event) => {
-        const response = await axios.post('http://localhost:3001/CustomerReOrder', {clientEmail: localStorage.getItem('CustomerEmail')});
+        const response = await axios.post('http://localhost:3001/CustomerReOrder', {clientEmail: sessionStorage.getItem('email')});
         if (response.status === 200) {
             alert('Order placed successfully!');
         } else {
@@ -55,7 +55,7 @@ const CustomerHome = () => {
         };
         const fetchLastOrder = async () => {
             try {
-                const response = await axios.post('http://localhost:3001/CustomerLastOrder', {clientEmail: localStorage.getItem('CustomerEmail')});
+                const response = await axios.post('http://localhost:3001/CustomerLastOrder', {clientEmail: sessionStorage.getItem('email')});
                 if (response.data.msg && response.data.msg === 'No last order')
                 {
                     setLastOrder([]);
@@ -69,7 +69,7 @@ const CustomerHome = () => {
         };
         const fetchCalAndAmount = async () => {
             try {
-                const response = await axios.post('http://localhost:3001/CustomerCalAndAmount', {clientEmail: localStorage.getItem('CustomerEmail')});
+                const response = await axios.post('http://localhost:3001/CustomerCalAndAmount', {clientEmail: sessionStorage.getItem('email')});
                 console.log("response for cal and amount: ", response);
                 setCaloriesConsumed(response.data.totalCalories);
                 setAmountSpent(response.data.totalAmount);

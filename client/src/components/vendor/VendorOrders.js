@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const VendorOrders = () => {
   const [orders, setOrders] = useState([]);
-  const vendorEmail = window.localStorage.getItem('vendorEmail');
+  const vendorEmail = window.sessionStorage.getItem('email');
   useEffect(() => {
     const fetchOrders = async () => {
       try {

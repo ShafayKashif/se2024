@@ -16,6 +16,7 @@ const CustomerPlaceOrder = (props) => {
   const [searchResults, setSearchResults] = useState([]);
   const [vendorEmails, setVendorEmails] = useState([]);
   const [selectedVendorEmail, setSelectedVendorEmail] = useState("");
+  const customer_email = window.sessionStorage.getItem('email');
   
   // useEffect(() => {
   //   fetchVendorEmails();
@@ -81,7 +82,7 @@ const CustomerPlaceOrder = (props) => {
       return;
     }
     // retrieve the customer email from local storage
-    const customer_email = window.localStorage.getItem('CustomerEmail');
+    // const customer_email = window.localStorage.getItem('CustomerEmail');
     console.log("customer_email", customer_email);
     // initialize variables to store the vendor and customer details (from databases cuz we are good coders and dont ask for same things twice :p)
     let vendorname = "";
@@ -237,7 +238,7 @@ const CustomerPlaceOrder = (props) => {
       return;
     }
 
-    const customer_email = window.localStorage.getItem('CustomerEmail');
+    // const customer_email = window.localStorage.getItem('CustomerEmail');
     console.log("customer_email", customer_email);
     let vendorname = "";
     let vendorhostel = "";
@@ -415,7 +416,7 @@ const CustomerPlaceOrder = (props) => {
       return;
     }
 
-    const customer_email = window.localStorage.getItem('CustomerEmail');
+    // const customer_email = window.localStorage.getItem('CustomerEmail');
     console.log("customer_email", customer_email);
     let vendorname = "";
     let vendorhostel = "";

@@ -1,15 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./login_signup/AuthContext";
+// import { useAuth } from "./login_signup/AuthContext";
 import "../styles/Navbar.css";
 import logoImage from "../styles/logo.png";
 import settingImage from "../styles/settings.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { authState } = useAuth();
-  const { role } = authState;
-  console.log("Role: ", role)
+  // const { authState } = useAuth();
+  // const { role } = authState;
+  const role = window.sessionStorage.getItem('role')
+  // console.log("Role: ", role)
 
   const handleNavigate = (path) => {
     navigate(path);

@@ -9,7 +9,7 @@ const VendorHome = () => {
   const [isBanned, setIsBanned] = useState(false);
   const [banDescription, setBanDescription] = useState('');
   const [applicationStatus, setApplicationStatus] = useState('');
-  const email = window.localStorage.getItem('vendorEmail');
+  const email = window.sessionStorage.getItem('email');
 
   useEffect(() => {
     if (applicationStatus === 'denied'){

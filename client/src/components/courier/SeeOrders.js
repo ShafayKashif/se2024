@@ -99,7 +99,7 @@ const SeeOrders = () => {
   }, []);
 
   return (
-    <div className="form-container">
+    <div className='maindiv'>
       <h2>Customer orders</h2>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
       <div className="table-container">

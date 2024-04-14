@@ -31,7 +31,7 @@ const CourierAnalytics = () => {
   }, [courierEmail]);
 
   return (
-    <div>
+    <div className='maindiv'>
       <h1>Welcome {courierEmail}</h1>
       <div className="container">
         <div className="stats-container">

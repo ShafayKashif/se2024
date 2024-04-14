@@ -45,7 +45,7 @@ const AdminHome = () => {
 
   return (
     // <div className="container">
-    <div>
+    <div className='maindiv'>
       {/* Display top vendors */}
       <div className="most-popular-sellers">
         <div className="grey-tape">

@@ -54,7 +54,7 @@ const BanVendors = () => {
   };
 
   return (
-    <div>
+    <div className='maindiv'>
       <h1>Ban Vendors</h1>
       <div>
         {/* Vendor Email input */}

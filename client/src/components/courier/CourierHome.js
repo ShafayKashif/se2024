@@ -47,7 +47,7 @@ const CourierHome = () => {
   };
 
   return (
-    <div>
+    <div className='maindiv'>
       <h1>Hello, welcome to CampusCuisine</h1>
       {applicationStatus === 'processing' ? (
         <p>Your application is currently being processed. Please wait for approval.</p>

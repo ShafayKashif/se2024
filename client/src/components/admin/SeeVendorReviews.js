@@ -26,7 +26,7 @@ const SeeVendorReviews = () => {
   };
 
   return (
-    <div>
+    <div className='maindiv'>
       <h1>Vendor Reviews</h1>
       {/* Search bar */}
       <input

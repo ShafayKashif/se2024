@@ -50,7 +50,7 @@ const SeeVendorRequests = () => {
   };
 
   return (
-    <div>
+    <div className='maindiv'>
       <h1>See Requests</h1>
 
       {/* Vendor Requests */}

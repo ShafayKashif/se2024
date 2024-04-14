@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../../styles/MainSignup.css";
-import logo from "../../styles/logo.png"; // Adjust the path as necessary
+import logo from "../../styles/campusCuisine.png"; // Adjust the path as necessary
 
 const MainSignup = () => {
   return (
-    <div className="MainSignup-page">
+    <div className='maindiv'>
       <img src={logo} alt="Logo" className="MainSignup-logo" />
       <h3 className="MainSignup-header">Signup As:</h3>
       <div className="partition"></div>

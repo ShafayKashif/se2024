@@ -227,31 +227,28 @@ const CustomerViewCart = () => {
             let itemId;
             let itemQuantity;
 
-
-            if (vendorFound == false) {
-                try {
-                    const response = await axios.get('http://localhost:3001/vendors');
-                    if (response.status === 200) {
-                        console.log("vendors fetched!");
-                        const vendors = response.data;
-                        console.log("vendors", vendors);
-                        const vendor = vendors.find(vendor => vendor.email === vendor_email);
-                        console.log("found the single vendor: ", vendor);
-                        if (!vendor) {
-                            alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-                            return;
-                        } else {
-                            vendorname = vendor.name;
-                            vendorhostel = "LUMS";
-                            vendorroom = "LUMS";
-                            vendorFound = true;
-                        }
+            try {
+                const response = await axios.get('http://localhost:3001/vendors');
+                if (response.status === 200) {
+                    console.log("vendors fetched!");
+                    const vendors = response.data;
+                    console.log("vendors", vendors);
+                    const vendor = vendors.find(vendor => vendor.email === vendor_email);
+                    console.log("found the single vendor: ", vendor);
+                    if (!vendor) {
+                        alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
+                        return;
                     } else {
-                        console.error('Failed to fetch vendors:', await response.text());
+                        vendorname = vendor.name;
+                        vendorhostel = "LUMS";
+                        vendorroom = "LUMS";
+                        vendorFound = true;
                     }
-                } catch (error) {
-                    console.error('Error fetching vendors:', error.message);
+                } else {
+                    console.error('Failed to fetch vendors:', await response.text());
                 }
+            } catch (error) {
+                console.error('Error fetching vendors:', error.message);
             }
 
             if (vendorFound == false) {

@@ -29,6 +29,7 @@ const SeeVendorReviews = () => {
   return (
     <div className='maindiv'>
       {/* Search bar */}
+      <h2>Vendor Search:</h2>
       <div className='input-container'>
       <input
         type="text"

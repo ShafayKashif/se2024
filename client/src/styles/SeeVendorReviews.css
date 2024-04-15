@@ -25,6 +25,17 @@ input[type="text"] {
   bottom: 159px;
   right: 175px; */
 }
+h2 {
+  font-size: 24px; /* Adjust the font size as needed */
+  font-weight: bold; /* Adjust the font weight as needed */
+  color: #333; /* Adjust the text color as needed */
+  background-color: #dfdfdf00; /* Adjust the background color as needed */
+  padding: 10px; /* Adjust the padding as needed */
+  border-radius: 5px; /* Adjust the border radius as needed */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adjust the shadow properties as needed */
+  margin-top: 20px; /* Adjust the top margin as needed */
+  margin-bottom: 10px; /* Adjust the bottom margin as needed */
+}
 
 .review-list-container-2 {
   overflow-x: hidden;

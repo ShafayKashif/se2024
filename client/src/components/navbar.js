@@ -103,6 +103,14 @@ const Navbar = () => {
             >
               Profile & Analytics
             </button>
+            <button
+              className={
+                  location.pathname === "/VendorUpdate" ? "active settings-button" : "settings-button"
+              }
+              onClick={() => handleNavigate("/VendorUpdate")}
+              >
+              <img src={settingImage} alt="Settings" />
+          </button>
         </>
         )}
         {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECSES */}

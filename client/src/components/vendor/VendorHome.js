@@ -77,7 +77,7 @@ const VendorHome = () => {
   };
 
   return (
-    <div>
+    <div className="content-container"> {/* Add class to style */}
       {isBanned ? (
         <div>
           <h1>You have been banned!</h1>

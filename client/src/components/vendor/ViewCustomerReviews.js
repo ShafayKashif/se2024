@@ -43,18 +43,25 @@ function Reviews() {
     };
 
     return (
-        <div>
+        <div className="container">
             <h1>Customer Reviews</h1>
             <button onClick={getReviews} disabled={isBanned}>Get Reviews</button>
             {isBanned && <p>You are banned. You cannot view reviews.</p>}
-            <ul>
-                {reviews.map((review, index) => (
-                    <li key={index}>
-                        <strong>Customer Email:</strong> {review.customer_email} - <strong>Rating:</strong> {review.rating} - <strong>Comment:</strong> {review.comment}
-                    </li>
-                ))}
-                {reviews.length === 0 && <li>No reviews found for this vendor.</li>}
-            </ul>
+            <div className="review-container">
+                <div className="review-grid">
+                    {reviews.slice(0, 4).map((review, index) => (
+                        <div className="review-box" key={index}>
+                            <div className="review-details">
+                                <strong>Customer Email:</strong> {review.customer_email} <br />
+                                <strong>Rating:</strong> {review.rating} <br />
+                                <strong>Comment:</strong> {review.comment} <br />
+                                <br /> {/* Adding a gap between reviews */}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            {reviews.length === 0 && <p className="no-reviews">No reviews found for this vendor.</p>}
         </div>
     );
 }

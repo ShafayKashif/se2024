@@ -21,7 +21,9 @@ import CustomerReview from "./models/CustomerReviewModel.js";
 import Carts from "./models/cartsModel.js";  
 
 //controllers
-import { showitems , add_item , ViewCustomerReviews, updateStockVendor,getNewOrders,vendorAnalytics} from "./controllers/vendorController.js";
+import { showitems , add_item , ViewCustomerReviews, updateStockVendor,sellData,getNewOrders,
+          vendorAnalytics,sellDataMostSold,calculateTotalRevenue,vendorItemGraphData,fetchVendorOrderHistory,
+          fetchVendorDetails,updateVendorImage} from "./controllers/vendorController.js";
 
 dotenv.config();
 
@@ -186,6 +188,13 @@ app.post("/ViewCustomerReviews", ViewCustomerReviews );
 app.post("/updateStockVendor",updateStockVendor);
 app.post("/getNewOrders",getNewOrders);
 app.post("/vendorAnalytics",vendorAnalytics);
+app.post("/sellData",sellData);
+app.post("/sellDataMostSold",sellDataMostSold);
+app.post("/calculateTotalRevenue",calculateTotalRevenue);
+app.post("/vendorItemGraphData", vendorItemGraphData);
+app.post("/VendorOrderHistory", fetchVendorOrderHistory);
+app.post("/vendorDetails",fetchVendorDetails)
+app.post("/updateVendorImage",updateVendorImage)
 
 
 
@@ -1086,7 +1095,7 @@ app.get("/courierorder", async (req, res) => {
 // Update order status from courier side, New->InProgress->Completed
 app.put("/order/update", async (req, res) => {
   const { orderId, newStatus, delivered_by } = req.body;
-
+  console.log(req.body)
   try {
     const order = await Order.findOne({ _id: orderId }).exec();
     if (!order) {

@@ -1,48 +1,18 @@
-/*Shehbaz*/
-/*ChatGPT for template*/
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #6495ED; 
-    color: #fff; 
+.review-container {
+    height: 200px; /* Set desired height */
+    overflow-y: scroll;
 }
 
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    background-color: lightblue;
 }
 
-h1 {
-    text-align: center;
+.containerh1 ,
+.container p {
+    color: black;
 }
 
-button {
-    background-color: #fff; 
-    color: #6495ED; 
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
-}
-
-button:hover {
-    background-color: #f0f0f0; 
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    margin-bottom: 10px;
-    background-color: #1d18bb ;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-strong {
-    color: #fff; 
+.review-container ,
+.container p {
+    color: black;
 }

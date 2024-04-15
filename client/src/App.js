@@ -30,6 +30,8 @@ import AddItem from "./components/vendor/AddItem";
 import ViewCustomersReviews from "./components/vendor/ViewCustomerReviews";
 import VendorProfile from "./components/vendor/vendorProfile";
 import VendorOrders from "./components/vendor/VendorOrders";
+import VendorUpdate from "./components/vendor/vendorUpdate";
+
 
 // courier imports
 import CourierHome from "./components/courier/CourierHome";
@@ -68,6 +70,9 @@ function App() {
             <Route path="/AddItem" element={<AddItem />} />
             <Route path="/VendorProfile" element={<VendorProfile />} />
             <Route path="/VendorOrders" element={<VendorOrders />} />
+            <Route path="/VendorUpdate" element={<VendorUpdate />} />
+
+            VendorUpdate
             <Route
               path="/ViewCustomersReviews"
               element={<ViewCustomersReviews />}

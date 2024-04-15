@@ -40,21 +40,20 @@ const SeeVendorReviews = () => {
       <button className="search-vendor-rating-button" onClick={handleSearchClick}>Search</button>
       </div>
       {/* Search button */}  
-      <ul className="review-list-container">
+      <div className="review-list-container-2">
+      <ul className="review-list-2">
         {reviews.map((review, index) => (
-          <li key={index} className="vendor-average-rating">
-            <p>
-              <strong>Vendor:</strong> {review.customer_email}
-            </p>
-            <p>
-              <strong>Rating:</strong> {review.rating}
-            </p>
-            <p>
-              <strong>Description:</strong> {review.comment}
-            </p>
-          </li>
+          <li key={index}>
+          <p className="vendor-review-name-2">{review.customer_email}</p>
+          <div className="review-rating-container-2">
+            <p className="vendor-review-rating-2">{review.rating}</p>
+            <div className="star-logo-2"></div> {/* This div will contain the star logo */}
+          </div>
+          <p className="vendor-review-comment-2">{review.comment}</p>
+        </li>
         ))}
       </ul>
+      </div>
     </div>
   );
 };

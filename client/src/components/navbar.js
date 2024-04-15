@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./login_signup/AuthContext";
 import "../styles/Navbar.css";
@@ -9,11 +9,17 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { authState } = useAuth();
   const { role } = authState;
-  console.log("Role: ", role)
+
+  // Effectively log the role changes - This can be expanded to handle role-specific logic
+  useEffect(() => {
+    console.log("Role has changed to: ", role);
+  }, [role]);
 
   const handleNavigate = (path) => {
     navigate(path);
   };
+
+  if (!role) return null; // Optionally render nothing or a minimal navbar if no role is set
 
   return (
     <nav className="navbar">
@@ -39,55 +45,53 @@ const Navbar = () => {
               Leave Review
             </button>
             <button onClick={() => handleNavigate("/CustomerViewMenu")}>
-               View menu
+              View menu
             </button>
-            <button onClick={()=> handleNavigate("/CustomerUpdateInfo")} className="settings-button">
-               <img src={settingImage} alt="Settings" />
+            <button
+              onClick={() => handleNavigate("/CustomerUpdateInfo")}
+              className="settings-button"
+            >
+              <img src={settingImage} alt="Settings" />
             </button>
           </>
         )}
         {role === "vendor" && (
           <>
-          <button onClick={() => handleNavigate("/VendorHome")}>
-            Homepage
-          </button>
-          <button onClick={() => handleNavigate("/AddItem")}>Add Item</button>
-          <button onClick={() => handleNavigate("/VendorOrders")}>
-            View Current Orders
-          </button>
-          <button onClick={() => handleNavigate("/ViewCustomersReviews")}>
-            View Customer Reviews
-          </button>
-          <button onClick={() => handleNavigate("/VendorProfile")}>
-            Profile & Analytics
-          </button>
-        </>
+            <button onClick={() => handleNavigate("/VendorHome")}>
+              Homepage
+            </button>
+            <button onClick={() => handleNavigate("/AddItem")}>Add Item</button>
+            <button onClick={() => handleNavigate("/VendorOrders")}>
+              View Current Orders
+            </button>
+            <button onClick={() => handleNavigate("/ViewCustomersReviews")}>
+              View Customer Reviews
+            </button>
+            <button onClick={() => handleNavigate("/VendorProfile")}>
+              Profile & Analytics
+            </button>
+          </>
         )}
-        {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECSES */}
         {role === "courier" && (
           <>
             <button onClick={() => handleNavigate("/SeeOrders")}>
               See All Orders
             </button>
             <button onClick={() => handleNavigate("/courierAnalytics")}>
-              view analytics
+              View Analytics
             </button>
           </>
         )}
         {role === "admin" && (
           <>
-          <button onClick={() => handleNavigate("/AdminHome")}>
-              Home
-            </button>
+            <button onClick={() => handleNavigate("/AdminHome")}>Home</button>
             <button onClick={() => handleNavigate("/seeVendorRatings")}>
               See All Orders
             </button>
             <button onClick={() => handleNavigate("/joinRequests")}>
-            View Join Requests
+              View Join Requests
             </button>
-            <button onClick={() => handleNavigate("/banUser")}>
-            Ban User
-            </button>
+            <button onClick={() => handleNavigate("/banUser")}>Ban User</button>
           </>
         )}
       </div>

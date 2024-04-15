@@ -23,7 +23,7 @@ import CustomerCurrentOrder from "./components/customer/CustomerCurrentOrder";
 import CustomerViewMenu from "./components/customer/CustomerViewMenu";
 import CustomerUpdateInfo from "./components/customer/CustomerUpdateInfo";
 
-// vender imports
+// vendor imports
 import StudentVendorHome from "./components/StudentVendorHome";
 import VendorHome from "./components/vendor/VendorHome";
 import AddItem from "./components/vendor/AddItem";
@@ -36,14 +36,13 @@ import CourierHome from "./components/courier/CourierHome";
 import SeeOrders from "./components/courier/SeeOrders";
 import CourierAnalytics from "./components/courier/courierAnalytics";
 
-//admin imports
+// admin imports
 import AdminHome from "./components/admin/AdminHome";
 import SeeVendorReviews from "./components/admin/SeeVendorReviews";
 import SeeVendorRequests from "./components/admin/SeeVendorRequests";
 import BanVendors from "./components/admin/BanVendors";
 import SeeCourierRequests from "./components/admin/SeeCourierRequests";
 
-// NOTE : the protected element is a JWT tokken implementation so that only specific users with specific roles can access certain pages however certain of those elements are commented out due to issues in merging and will be fixed by the next phase
 function App() {
   return (
     <BrowserRouter>
@@ -55,7 +54,6 @@ function App() {
           <Route path="/CustomerSignup" element={<CustomerSignup />} />
           <Route path="/CourierSignup" element={<CourierSignup />} />
           <Route path="/VendorSignup" element={<VendorSignup />} />
-
           <Route
             path="/StudentVendorSignup"
             element={<StudentVendorSignup />}
@@ -64,28 +62,102 @@ function App() {
           {/* Layout with Navbar */}
           <Route element={<LayoutWithNavbar />}>
             {/* Protected Routes with Navbar */}
-            <Route path="/VendorHome" element={<VendorHome />} />
-            <Route path="/AddItem" element={<AddItem />} />
-            <Route path="/VendorProfile" element={<VendorProfile />} />
-            <Route path="/VendorOrders" element={<VendorOrders />} />
-            <Route
-              path="/ViewCustomersReviews"
-              element={<ViewCustomersReviews />}
-            />
             <Route
               path="/CustomerHome"
               element={
-                // <ProtectedRoute allowedRoles={["customer"]}>
-                <CustomerHome />
-                // </ProtectedRoute>
+                <ProtectedRoute allowedRoles={["customer"]}>
+                  <CustomerHome />
+                </ProtectedRoute>
               }
             />
-            <Route path="/search" element={<SearchResultsPage />} />
-            <Route path="/PlaceOrder" element={<CustomerPlaceOrder />} />
-            <Route path="/ViewCart" element={<CustomerViewCart />} />
-            <Route path="/CurrentOrder" element={<CustomerCurrentOrder />} />
-            <Route path="/CustomerViewMenu" element={<CustomerViewMenu />} />
-            <Route path="/CustomerUpdateInfo" element={<CustomerUpdateInfo />} />
+            <Route
+              path="/CustomerReview"
+              element={
+                <ProtectedRoute allowedRoles={["customer"]}>
+                  <CustomerReview />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/PlaceOrder"
+              element={
+                <ProtectedRoute allowedRoles={["customer"]}>
+                  <CustomerPlaceOrder />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ViewCart"
+              element={
+                <ProtectedRoute allowedRoles={["customer"]}>
+                  <CustomerViewCart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/CurrentOrder"
+              element={
+                <ProtectedRoute allowedRoles={["customer"]}>
+                  <CustomerCurrentOrder />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/CustomerViewMenu"
+              element={
+                <ProtectedRoute allowedRoles={["customer"]}>
+                  <CustomerViewMenu />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/CustomerUpdateInfo"
+              element={
+                <ProtectedRoute allowedRoles={["customer"]}>
+                  <CustomerUpdateInfo />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/VendorHome"
+              element={
+                <ProtectedRoute allowedRoles={["vendor"]}>
+                  <VendorHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/AddItem"
+              element={
+                <ProtectedRoute allowedRoles={["vendor"]}>
+                  <AddItem />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/VendorProfile"
+              element={
+                <ProtectedRoute allowedRoles={["vendor"]}>
+                  <VendorProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/VendorOrders"
+              element={
+                <ProtectedRoute allowedRoles={["vendor"]}>
+                  <VendorOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ViewCustomersReviews"
+              element={
+                <ProtectedRoute allowedRoles={["vendor"]}>
+                  <ViewCustomersReviews />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/CourierHome"
               element={
@@ -95,92 +167,67 @@ function App() {
               }
             />
             <Route
-              path="/StudentVendorHome"
-              element={
-                <ProtectedRoute allowedRoles={["student_vendor"]}>
-                  <StudentVendorHome />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/VendorHome" element={<VendorHome />} />
-            <Route
-              path="/AdminHome"
-              element={
-                // <ProtectedRoute allowedRoles={["admin"]}>
-                  <AdminHome />
-                // </ProtectedRoute>
-              }
-            />
-            <Route
               path="/SeeOrders"
               element={
-                // <ProtectedRoute allowedRoles={["Admin"]}>
-                <SeeOrders />
-                // </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/CourierAnalytics"
-              element={
-                // <ProtectedRoute allowedRoles={["Admin"]}>
-                <CourierAnalytics />
-                // </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/CustomerReview"
-              element={
-                //<ProtectedRoute allowedRoles={["customer"]}>
-                <CustomerReview />
-                //</ProtectedRoute>
-              }
-            />
-            <Route
-              path="/AddItem"
-              element={
-                <ProtectedRoute allowedRoles={["Vendor", "Student_Vendor"]}>
-                  <AddItem />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/SeeOrders"
-              element={
-                <ProtectedRoute allowedRoles={["Courier"]}>
+                <ProtectedRoute allowedRoles={["courier"]}>
                   <SeeOrders />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/seeVendorRatings"
+              path="/CourierAnalytics"
               element={
-                // <ProtectedRoute allowedRoles={["admin"]}>
+                <ProtectedRoute allowedRoles={["courier"]}>
+                  <CourierAnalytics />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/AdminHome"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  <AdminHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/SeeVendorReviews"
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeVendorReviews />
-                // </ProtectedRoute>
+                </ProtectedRoute>
               }
             />
             <Route
-              path="/joinRequests"
+              path="/SeeVendorRequests"
               element={
-                // <ProtectedRoute allowedRoles={["admin"]}>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeVendorRequests />
-                // </ProtectedRoute>
+                </ProtectedRoute>
               }
             />
             <Route
-              path="/banUser"
+              path="/BanVendors"
               element={
-                // <ProtectedRoute allowedRoles={["admin"]}>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <BanVendors />
-                // </ProtectedRoute>
+                </ProtectedRoute>
               }
             />
             <Route
-              path="/view-courier-requests"
+              path="/SeeCourierRequests"
               element={
-                // <ProtectedRoute allowedRoles={["admin"]}>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <SeeCourierRequests />
-                // </ProtectedRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/StudentVendorHome"
+              element={
+                <ProtectedRoute allowedRoles={["student_vendor"]}>
+                  <StudentVendorHome />
+                </ProtectedRoute>
               }
             />
           </Route>

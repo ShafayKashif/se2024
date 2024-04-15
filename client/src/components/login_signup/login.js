@@ -1,10 +1,8 @@
 import "../../styles/login.css";
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-
 import lumsBackground from "../../styles/lums_background.png";
 import logoImage from "../../styles/logo.png";
 
@@ -36,48 +34,25 @@ const Login = () => {
 
       if (response.status === 200 && response.data.token) {
         console.log("Login successful!");
-        console.log("Received Token:", response.data.token);
-        console.log("Received Role:", response.data.role);
         dispatch({
           type: "LOGIN",
           payload: { role: response.data.role, token: response.data.token },
         });
+        localStorage.setItem("jwt_token", response.data.token);
+        localStorage.setItem("user_role", response.data.role);
+        localStorage.setItem(response.data.role + "Email", email); // Standardizing local storage keys
 
-        switch (response.data.role) {
-          case "student_vendor":
-            navigate("/StudentVendorHome");
-            break;
-          case "vendor":
-            navigate("/VendorHome");
-            window.localStorage.setItem("vendorEmail", email);
-            window.sessionStorage.setItem("email", email);
-            break;
-          case "customer":
-            window.localStorage.setItem("CustomerEmail", email);
-            window.sessionStorage.setItem("email", email);
-            console.log("set item customer: ", email);
-            navigate("/CustomerHome");
-            break;
-          case "courier":
-            window.localStorage.setItem("CourierEmail", email);
-            navigate("/CourierHome");
-            break;
-          case "admin":
-            window.localStorage.setItem("AdminEmail", email);
-            window.sessionStorage.setItem("email", email);
-            navigate("/AdminHome");
-            break;
-          default:
-            console.log("Role not recognized:", response.data.role);
-        }
+        navigateBasedOnRole(response.data.role, navigate);
       } else {
         console.error(
           "Login failed:",
           response.data.message || "Unknown error"
         );
+        alert("Login failed: " + (response.data.message || "Unknown error"));
       }
     } catch (error) {
       console.error("Error during login:", error);
+      alert("Login error: " + error.message);
     }
   };
 
@@ -116,5 +91,27 @@ const Login = () => {
     </div>
   );
 };
+
+function navigateBasedOnRole(role, navigate) {
+  switch (role) {
+    case "student_vendor":
+      navigate("/StudentVendorHome");
+      break;
+    case "vendor":
+      navigate("/VendorHome");
+      break;
+    case "customer":
+      navigate("/CustomerHome");
+      break;
+    case "courier":
+      navigate("/CourierHome");
+      break;
+    case "admin":
+      navigate("/AdminHome");
+      break;
+    default:
+      console.log("Role not recognized:", role);
+  }
+}
 
 export default Login;

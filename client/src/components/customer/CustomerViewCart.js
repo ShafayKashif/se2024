@@ -1,4 +1,4 @@
-import '../../styles/CustomerHome.css'
+import '../../styles/CustomerPlaceOrder.css'
 import { useState, useEffect } from "react";
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -467,7 +467,7 @@ const CustomerViewCart = () => {
                     </div>
                 ))}
             </div>
-            <div>
+            <div className='ButtonsCPO'>
                 <button className="sub-button" type="submit" onClick={handleSelfPickup}>
                     Self Pickup
                 </button>

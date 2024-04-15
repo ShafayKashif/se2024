@@ -1,4 +1,4 @@
-import "../../styles/CustomerReview.css";
+import "../../styles/CustomerUpdateInfo.css";
 // usestate to store the input values, learnt from: https://www.youtube.com/watch?v=5e9_hp0nh1Q
 import { useState } from "react";
 // axios to make get requests to the server, learnt from: https://www.youtube.com/watch?v=RQM5UyDrNDc
@@ -47,6 +47,12 @@ const CustomerUpdateInfo = (props) => {
         }
     };
 
+    const handleLogOut = () => {
+        window.sessionStorage.clear();
+        navigate('/');
+    }
+
+
 
 
     return (
@@ -71,9 +77,11 @@ const CustomerUpdateInfo = (props) => {
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                 />
+
                 <button className="sub-button" type="submit">
                     Update Info
                 </button>
+                <button className="sub-button" onClick={handleLogOut}>Log out</button>
             </form>
         </div>
     );

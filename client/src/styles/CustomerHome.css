@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
   font-family: "Poppins", sans-serif;
+  color:#000;
 }
 
 body {
@@ -95,3 +96,17 @@ p {
   font-size: 9px; /* Set font size to 14px */
 }
 
+.BottomCH {
+  display: flex;
+  flex-direction: row;
+  justify-content: center; /* Optional: Align items horizontally at the center */
+  align-items: center; /* Optional: Align items vertically at the center */
+}
+
+.BottomerCH {
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Optional: Align items horizontally at the center */
+  align-items: center; /* Optional: Align items vertically at the center */
+}

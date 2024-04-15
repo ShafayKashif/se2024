@@ -86,9 +86,6 @@ const CustomerHome = () => {
     return (
         <div className='maindiv'>
             <h1></h1>
-            <h1></h1>
-            <h1></h1>
-            <h3></h3>
             <form onSubmit={handleSearchSubmit}>
                 <input onChange={handleSearchInputChange}
                     type="text"
@@ -111,6 +108,7 @@ const CustomerHome = () => {
                     </div>
                 ))}
             </div> 
+            <div className='BottomCH'>
             <h4 className='title1'>
                 Order again:
             </h4>
@@ -127,12 +125,15 @@ const CustomerHome = () => {
                     </div>
                 ))}
             </div>
-            <h6>
+            <div className='BottomerCH'>
+            <h4>
                 Calories Consumed with us: {caloriesConsumed} 
-            </h6>
-            <h6>
+            </h4>
+            <h4>
                 Amount spent with us: {amountSpent}
-            </h6>
+            </h4>
+            </div>
+            </div>
 
         </div>
     );

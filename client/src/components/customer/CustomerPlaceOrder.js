@@ -635,7 +635,7 @@ const CustomerPlaceOrder = (props) => {
             ))}
           </select>
         </div>
-        <div>
+        <div className="ButtonsCPO">
           <button className="sub-button" type="submit" onClick={handleAddToCart}>
             Add To Cart
           </button>

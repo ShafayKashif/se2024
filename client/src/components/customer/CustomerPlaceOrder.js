@@ -252,58 +252,27 @@ const CustomerPlaceOrder = (props) => {
     let itemQuantity;
 
     try {
-      const response = await axios.get('http://localhost:3001/studentvendors');
+      const response = await axios.get('http://localhost:3001/vendors');
       if (response.status === 200) {
         console.log("vendors fetched!");
         const vendors = response.data;
         console.log("vendors", vendors);
-        const vendor = vendors.find(vendor => vendor.email == vendor_email);
-        console.log("vendor", vendor.email);
-        console.log("vendor_email", vendor_email);
+        const vendor = vendors.find(vendor => vendor.email === vendor_email);
         console.log("found the single vendor: ", vendor);
         if (!vendor) {
           alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
           return;
         } else {
           vendorname = vendor.name;
-          vendorhostel = vendor.hostel;
-          vendorroom = vendor.room_Number;
+          vendorhostel = "LUMS";
+          vendorroom = "LUMS";
           vendorFound = true;
         }
       } else {
-        console.error('Failed to fetch student vendors:', await response.text());
-
+        console.error('Failed to fetch vendors:', await response.text());
       }
     } catch (error) {
-      // alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-      console.error('Error fetching student vendors:', error.message);
-      // return;
-    }
-
-    if (vendorFound == false) {
-      try {
-        const response = await axios.get('http://localhost:3001/vendors');
-        if (response.status === 200) {
-          console.log("vendors fetched!");
-          const vendors = response.data;
-          console.log("vendors", vendors);
-          const vendor = vendors.find(vendor => vendor.email === vendor_email);
-          console.log("found the single vendor: ", vendor);
-          if (!vendor) {
-            alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-            return;
-          } else {
-            vendorname = vendor.name;
-            vendorhostel = "LUMS";
-            vendorroom = "LUMS";
-            vendorFound = true;
-          }
-        } else {
-          console.error('Failed to fetch vendors:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error fetching vendors:', error.message);
-      }
+      console.error('Error fetching vendors:', error.message);
     }
 
     if (vendorFound == false) {
@@ -430,58 +399,27 @@ const CustomerPlaceOrder = (props) => {
     let itemQuantity;
 
     try {
-      const response = await axios.get('http://localhost:3001/studentvendors');
+      const response = await axios.get('http://localhost:3001/vendors');
       if (response.status === 200) {
         console.log("vendors fetched!");
         const vendors = response.data;
         console.log("vendors", vendors);
-        const vendor = vendors.find(vendor => vendor.email == vendor_email);
-        console.log("vendor", vendor.email);
-        console.log("vendor_email", vendor_email);
+        const vendor = vendors.find(vendor => vendor.email === vendor_email);
         console.log("found the single vendor: ", vendor);
         if (!vendor) {
           alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
           return;
         } else {
           vendorname = vendor.name;
-          vendorhostel = vendor.hostel;
-          vendorroom = vendor.room_Number;
+          vendorhostel = "LUMS";
+          vendorroom = "LUMS";
           vendorFound = true;
         }
       } else {
-        console.error('Failed to fetch student vendors:', await response.text());
-
+        console.error('Failed to fetch vendors:', await response.text());
       }
     } catch (error) {
-      // alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-      console.error('Error fetching student vendors:', error.message);
-      // return;
-    }
-
-    if (vendorFound == false) {
-      try {
-        const response = await axios.get('http://localhost:3001/vendors');
-        if (response.status === 200) {
-          console.log("vendors fetched!");
-          const vendors = response.data;
-          console.log("vendors", vendors);
-          const vendor = vendors.find(vendor => vendor.email === vendor_email);
-          console.log("found the single vendor: ", vendor);
-          if (!vendor) {
-            alert("Vendor doesnt exist, please reconfirm from \"view menu tab\".");
-            return;
-          } else {
-            vendorname = vendor.name;
-            vendorhostel = "LUMS";
-            vendorroom = "LUMS";
-            vendorFound = true;
-          }
-        } else {
-          console.error('Failed to fetch vendors:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error fetching vendors:', error.message);
-      }
+      console.error('Error fetching vendors:', error.message);
     }
 
     if (vendorFound == false) {

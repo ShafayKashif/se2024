@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "../../styles/SeeVendorReviews.css";
 
 const SeeVendorReviews = () => {
   const [vendorEmail, setVendorEmail] = useState('');
@@ -27,19 +28,21 @@ const SeeVendorReviews = () => {
 
   return (
     <div className='maindiv'>
-      <h1>Vendor Reviews</h1>
       {/* Search bar */}
+      <div className='input-container'>
       <input
         type="text"
         placeholder="Search by vendor email"
         value={vendorEmail}
         onChange={handleSearchChange}
+        onKeyDown={handleSearchClick}
       />
-      {/* Search button */}
-      <button onClick={handleSearchClick}>Search</button>
-      <ul>
+      <button className="search-vendor-rating-button" onClick={handleSearchClick}>Search</button>
+      </div>
+      {/* Search button */}  
+      <ul className="review-list-container">
         {reviews.map((review, index) => (
-          <li key={index}>
+          <li key={index} className="vendor-average-rating">
             <p>
               <strong>Vendor:</strong> {review.customer_email}
             </p>

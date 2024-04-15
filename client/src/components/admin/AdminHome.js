@@ -41,6 +41,8 @@ const AdminHome = () => {
         fontSize: 14,
       },
     },
+    width: 500,
+    height: 350,
   };
 
   const scrollList = (direction) => {

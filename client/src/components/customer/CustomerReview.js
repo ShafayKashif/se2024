@@ -95,7 +95,7 @@ const CustomerReview = (props) => {
         <div>
           <input
             className="user-inp"
-            type="text"
+            type="textarea"
             placeholder="Vendor Email"
             value={vendor_email}
             onChange={(e) => setVendor(e.target.value)}
@@ -104,7 +104,7 @@ const CustomerReview = (props) => {
         <div>
           <input
             className="user-inp"
-            type="text"
+            type="textarea"
             placeholder="Description"
             value={comment}
             onChange={(e) => setDescription(e.target.value)}

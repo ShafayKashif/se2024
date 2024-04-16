@@ -108,7 +108,7 @@ const AddItem = () => {
         <div>
           <input
             className="item-inp"
-            type="text"
+            type="textarea"
             placeholder="Item Name"
             value={itemName}
             onChange={(e) => setItemName(e.target.value)}
@@ -119,7 +119,7 @@ const AddItem = () => {
         <div>
           <input
             className="item-inp"
-            type="text"
+            type="textarea"
             placeholder="Category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}

@@ -1,5 +1,5 @@
 // Page author: Hassan Ali
-import "../../styles/CustomerPlaceOrder.css";
+// import "../../styles/CustomerPlaceOrder.css";
 // usestate to store the input values, learnt from: https://www.youtube.com/watch?v=5e9_hp0nh1Q
 import { useState, useEffect } from "react";
 // axios to make get requests to the server, learnt from: https://www.youtube.com/watch?v=RQM5UyDrNDc
@@ -330,6 +330,12 @@ const CustomerPlaceOrder = (props) => {
     catch (error) {
       console.error('Error fetching items:', error.message);
     }
+    console.log("itemQuantity: ", itemQuantity);
+    console.log("quantity: ", quantity);
+    if (quantity > itemQuantity) {
+      alert("Quantity exceeds the available stock, please reconfirm from \"view menu tab\".");
+      return;
+    }
     let total = price * quantity;
     let clientAddr = customerroom + ", " + customerhostel;
     let vendorAddr = vendorroom + ", " + vendorhostel;
@@ -477,6 +483,12 @@ const CustomerPlaceOrder = (props) => {
     catch (error) {
       console.error('Error fetching items:', error.message);
     }
+    console.log("itemQuantity: ", itemQuantity);
+    console.log("quantity: ", quantity);
+    if (quantity > itemQuantity) {
+      alert("Quantity exceeds the available stock, please reconfirm from \"view menu tab\".");
+      return;
+    }
     let total = price * quantity;
     let clientAddr = customerroom + ", " + customerhostel;
     let vendorAddr = vendorroom + ", " + vendorhostel;
@@ -532,21 +544,17 @@ const CustomerPlaceOrder = (props) => {
       <h1 >
         Place order
       </h1>
-      <div className="partition"></div>
       <form className="form" onSubmit={handleAddToCart}>
-
-        <div>
           <input
-            className="user-inp"
-            type="text"
+            className="user-inpCPO"
+            type="textarea"
             placeholder="Item Name"
             value={item_name}
             onChange={handleInputChange}
           />
-          
-        </div>
+       
         {/* Render search results */}
-        <div className="search-results">
+        <div className="search-results1">
           {searchResults.map((item) => (
             <div className="search-results-item" key={item.itemId}>
               <p onClick={() => handleSearchClick(item.itemName)}>{item.itemName}</p>
@@ -556,7 +564,7 @@ const CustomerPlaceOrder = (props) => {
         </div>
         <div>
           <input
-            className="user-inp"
+            className="user-inpCPO"
             type="number"
             placeholder="Quantity"
             value={quantity}
@@ -564,7 +572,7 @@ const CustomerPlaceOrder = (props) => {
           />
         </div>
         <div>
-          <select className="user-inp" onChange={handleVendorSelect}>
+          <select className="user-inpCPO" onChange={handleVendorSelect}>
             <option value="">Select Vendor</option>
             {vendorEmails.map((vendor) => (
               <option key={vendor} value={vendor} className="vendor-render">

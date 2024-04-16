@@ -72,7 +72,7 @@ const CustomerUpdateInfo = (props) => {
                     <option value="phone_Number">Phone Number</option>
                 </select>
                 <input
-                    type="text"
+                    type="textarea"
                     placeholder="Enter new value"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}

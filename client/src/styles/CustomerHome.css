@@ -150,7 +150,7 @@ p {
   cursor: pointer;
   width: 130px; /* Set initial width */
   height: 40px; /* Set initial height */
-  background-color: #82f1a3; /* Set initial background color */
+  background-color: #ffffff; /* Set initial background color */
   border-radius: 8px;
   transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease; /* Add transition */
   font-family: Arial, Helvetica, sans-serif;

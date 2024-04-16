@@ -47,6 +47,7 @@ const CustomerViewMenu = () => {
                 <input
                     type="text"
                     placeholder="Search..."
+                    className='SearchBar1'
                     value={searchQuery}
                     onChange={handleSearchInputChange}
                 />

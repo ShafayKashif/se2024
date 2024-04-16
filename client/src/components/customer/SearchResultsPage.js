@@ -164,11 +164,11 @@ const SearchResultsPage = () => {
               <input
                 type="text"
                 placeholder="Search..."
+                className="SearchBar1"
                 value={newSearchQuery}
                 onChange={handleSearchInputChange}
-                className="search-input"
               />
-              <button type="submit" className="search-button">Search</button>
+              <button type="submit" className="SearchButton">Search</button>
             </form>
             <div className="sort-by-container">
               <label htmlFor="sort" className="sort-label">Sort by:</label>
@@ -180,36 +180,20 @@ const SearchResultsPage = () => {
             </div>
           </div>
           <p className="search-results-query"></p>
-          <ul className="search-results-list">
-            {sortedResults.map((result, index) => (
-              <li key={index} className="search-results-item">
-                <img src={result.image} alt={result.itemName} className="item-image" />
-                <div>
-                  <h2 className="item-name">{result.itemName}</h2>
-                  <p className="vendor-email">Vendor Email: {result.vendorEmail}</p>
-                  <p className="item-price">Price: {result.price}</p>
-                  <p className="item-calories">Calories: {result.calories}</p>
-                  <button onClick={() => handleAddToCart(result)} className="add-to-cart-button">Add to Cart</button>
-                </div>
-              </li>
-            ))}
-          </ul>
-          {cartItems.length > 0 && (
-            <div className="cart-container">
-              <h2 className="cart-title">Cart</h2>
-              <ul className="cart-list">
-                    {cartItems.map((item, index) => (
-                      <li key={index} className="cart-item">
-                          {item.itemName} - Quantity: {item.quantity}
-                          <button onClick={() => handleIncreaseQuantity(item.itemId)}>+</button>
-                          <button onClick={() => handleDecreaseQuantity(item.itemId)}>-</button>
-                          <button onClick={() => handleRemoveFromCart(item.itemId)}>Remove</button>
-                      </li>
-                  ))}
-              </ul>
-              <button onClick={handleCheckout} className="checkout-button">Checkout</button>
+
+
+          <div className="items-container1">
+                {sortedResults.map((result, index) => (
+                    <div key={index} className="item-card1">
+                        <h6>{result.itemName}</h6>
+                        <img src={result.image} alt={result.itemName} className="item-image1" />
+                        <p>Category: {result.category}</p>
+                        <p>Vendor: {result.vendorEmail}</p>
+                        <p>Price: {result.price}</p>
+                        <p>calories: {result.calories}</p>
+                    </div>
+                ))}
             </div>
-          )}
         </div>
       );     
 };

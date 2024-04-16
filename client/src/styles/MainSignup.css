@@ -1,46 +1,63 @@
-.MainSignup-page {
+/* Basic styling for the entire signup page container */
+.uniqueSignupPage {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: white;
+  background-color: #f0f0f0;
 }
 
-.MainSignup-header {
-  color: black;
+/* Header styling for prominence and clarity */
+.uniqueSignupHeader {
+  color: #333;
+  font-size: 24px;
   margin-bottom: 20px;
 }
 
-.MainSignup-logo {
-  margin-bottom: 20px;
-  width: 350px;
-  height: 350px;
+/* Uniform styling for all user input fields and select dropdown */
+.uniqueUserInput, .uniquePassInput, select {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
-.form {
+/* Styling for the form to center and space out elements */
+.uniqueForm {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flexDirection: column;
+  width: 90%;
+  max-width: 500px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.sub-button {
-  background-color: #003366;
+/* Button styling for aesthetics and usability */
+.uniqueSubButton {
+  background-color: #0056b3;
   color: white;
   padding: 10px 20px;
-  margin: 10px 0;
-  text-decoration: none;
-  border-radius: 8px;
-  cursor: pointer;
+  margin-top: 10px;
   border: none;
+  borderRadius: 4px;
+  width: 50%;
+  cursor: pointer;
 }
 
-.question {
-  margin-top: 20px;
-  color: black;
+/* Error message styling for visibility */
+.uniqueErrorMessage {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
 }
 
-.question a {
-  color: darkblue;
-  text-decoration: none;
+/* Focus effect for inputs and dropdowns to enhance user experience */
+input:focus, select:focus {
+  border-color: #4a90e2;
+  outline: none;
 }

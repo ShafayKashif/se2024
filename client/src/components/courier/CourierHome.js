@@ -1,4 +1,4 @@
-import "../../styles/CourierHome.css";
+import "../../styles/CustomerHome.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +46,7 @@ const CourierHome = () => {
   };
 
   return (
-    <div className='maindiv'>
+    <div >
       <h1>Hello, welcome to CampusCuisine</h1>
       {applicationStatus === 'processing' ? (
         <p>Your application is currently being processed. Please wait for approval.</p>

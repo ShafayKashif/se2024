@@ -1262,3 +1262,19 @@ app.post('/remove-from-cart', async (req, res) => {
   }
 });
 
+
+app.post("/CourierUpdateInfo",async (req, res) => {
+const { courier_email,field, value} = req.body;
+try {
+  const courier = await Couriers.findOne({ email: courier_email });
+  if (!courier) {
+    return res.status(404).json({ message: "courier not found" });
+  }
+  courier[field] = value;
+  await courier.save();
+  res.status(200).json({ message: "courier updated successfully" });
+} catch (error) {
+  console.error("Error updating customer:", error);
+  res.status(500).json({ error: "Internal Server Error" });
+}
+});

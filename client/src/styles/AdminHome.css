@@ -106,7 +106,7 @@
   /* width: 30%; */
   position: absolute;
   right: 80px;
-  top: 100px;
+  top: 68px;
   width: 500px;
   height: 50px;
 }
@@ -141,7 +141,7 @@
   margin: 0;
   height: 20px;
   position: relative;
-  bottom: 8px;
+  bottom: 20px;
   right: 0px;
   font-weight: 550;
   font-size: 24px;
@@ -228,16 +228,17 @@
   transform: translateY(-50%);
   width: 30px;
   height: 30px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.8);
   border: none;
   border-radius: 50%;
   cursor: pointer;
   z-index: 1;
   left: 0; /* Adjust left position */
+  line-height: 12px;
 }
 
 .scroll-button-left:hover {
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgb(116, 116, 116);
 }
 
 .scroll-button-left:focus {
@@ -250,16 +251,17 @@
   transform: translateY(-50%);
   width: 30px;
   height: 30px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.8);
   border: none;
   border-radius: 50%;
   cursor: pointer;
   z-index: 1;
   right: 0; /* Adjust right position */
+  line-height: 12px;
 }
 
 .scroll-button-right:hover {
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgb(116, 116, 116);
 }
 
 .scroll-button-right:focus {

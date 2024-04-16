@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../../styles/AdminHome.css";
 import axios from 'axios';
 import { Chart } from "react-google-charts";
@@ -7,6 +7,19 @@ const AdminHome = () => {
   const [topVendors, setTopVendors] = useState([]);
   const [allVendors, setAllVendors] = useState([]);
   const [myCustomerReviews, setMyCustomerReviews] = useState([]);
+  const [reviewBoxWidth, setReviewBoxWidth] = useState(500);
+  const [reviewBoxHeight, setReviewBoxHeight] = useState(200);
+  
+  const reviewBoxRef = useRef(null);
+  const handleResize = (event) => {
+    // Calculate the new width and height based on the mouse movement
+    const newWidth = event.clientX - reviewBoxRef.current.offsetLeft;
+    const newHeight = event.clientY - reviewBoxRef.current.offsetTop;
+  
+    // Update the state variables
+    setReviewBoxWidth(newWidth);
+    setReviewBoxHeight(newHeight);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,8 +40,33 @@ const AdminHome = () => {
       }
     };
 
+    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("mouseup", handleMouseUp);
+    
+
     fetchData();
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
   }, []);
+
+  const handleMouseDown = (event) => {
+    // Check if the mouse is pressed inside the review box
+    if (
+      event.target.className === "customer-reviews" ||
+      event.target.parentElement.className === "customer-reviews"
+    ) {
+      // Add event listener for mouse move to handle resizing
+      document.addEventListener("mousemove", handleResize);
+    }
+  };
+
+  const handleMouseUp = () => {
+    // Remove event listener for mouse move
+    document.removeEventListener("mousemove", handleResize);
+  };
+  
 
   // Transform topVendors data into the format expected by Chart component
   const chartData = allVendors.map(vendor => [vendor.name, vendor.orderCount]);
@@ -103,7 +141,16 @@ const AdminHome = () => {
       </div>
 
       {/* Display reviews sidebar */}
-      <div className='customer-reviews' style={{ overflowX: "auto", whiteSpace: "nowrap", width: "50%", height: "200px" }}>
+      <div
+  className='customer-reviews'
+  style={{
+    overflowX: "auto",
+    whiteSpace: "nowrap",
+    width: reviewBoxWidth + "px",
+    height: reviewBoxHeight + "px",
+  }}
+  ref={reviewBoxRef}
+>
       <button className="scroll-button-left" onClick={() => scrollList("left")}>{"<"}</button>
         <div className="second-grey-tape">
           <h2 className="review-title">Most recent reviews:</h2>

@@ -43,7 +43,7 @@ const SeeOrders = () => {
   };
   const getCourierEmail = () => {
     // Retrieve the courier's email from local storage
-    const email = window.sessionStorage.getItem('email');
+    const email = window.localStorage.getItem('CourierEmail');
     // Return the courier's email
     return email;
   };

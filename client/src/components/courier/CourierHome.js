@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const CourierHome = () => {
   const navigate = useNavigate();
   const [applicationStatus, setApplicationStatus] = useState('');
-  const my_email = window.sessionStorage.getItem('email');
+  const my_email = window.localStorage.getItem('CourierEmail');
 
   useEffect(() => {
     // Function to check application status

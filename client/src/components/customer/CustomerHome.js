@@ -13,7 +13,7 @@ const CustomerHome = () => {
     const [amountSpent, setAmountSpent] = useState(0);
 
     const handlePlaceRecentOrder = async (event) => {
-        const response = await axios.post('http://localhost:3001/CustomerReOrder', {clientEmail: sessionStorage.getItem('email')});
+        const response = await axios.post('http://localhost:3001/CustomerReOrder', { clientEmail: sessionStorage.getItem('email') });
         if (response.status === 200) {
             alert('Order placed successfully!');
         } else {
@@ -43,7 +43,7 @@ const CustomerHome = () => {
             console.error("Error during search:", error.message);
         }
     }
-    
+
     useEffect(() => {
         const fetchItems = async () => {
             try {
@@ -55,12 +55,11 @@ const CustomerHome = () => {
         };
         const fetchLastOrder = async () => {
             try {
-                const response = await axios.post('http://localhost:3001/CustomerLastOrder', {clientEmail: sessionStorage.getItem('email')});
-                if (response.data.msg && response.data.msg === 'No last order')
-                {
+                const response = await axios.post('http://localhost:3001/CustomerLastOrder', { clientEmail: sessionStorage.getItem('email') });
+                if (response.data.msg && response.data.msg === 'No last order') {
                     setLastOrder([]);
                 }
-                else{
+                else {
                     setLastOrder(response.data);//Server returns items being sold by he vendor
                 }
             } catch (error) {
@@ -69,7 +68,7 @@ const CustomerHome = () => {
         };
         const fetchCalAndAmount = async () => {
             try {
-                const response = await axios.post('http://localhost:3001/CustomerCalAndAmount', {clientEmail: sessionStorage.getItem('email')});
+                const response = await axios.post('http://localhost:3001/CustomerCalAndAmount', { clientEmail: sessionStorage.getItem('email') });
                 console.log("response for cal and amount: ", response);
                 setCaloriesConsumed(response.data.totalCalories);
                 setAmountSpent(response.data.totalAmount);
@@ -86,10 +85,11 @@ const CustomerHome = () => {
     return (
         <div className='maindiv'>
             <h1></h1>
-            <form onSubmit={handleSearchSubmit}>
+            <form onSubmit={handleSearchSubmit} >
                 <input onChange={handleSearchInputChange}
                     type="text"
-                    />
+                    className='SearchBar1'
+                />
                 <button type="submit" className='SearchButton' onClick={handleSearchSubmit}>Search</button>
             </form>
             <h3 className='title1'>
@@ -98,41 +98,42 @@ const CustomerHome = () => {
             <div className="items-container1">
                 {items.map(item => (
                     <div key={item.itemId} className="item-card1">
-                        <img src={item.image} alt={item.itemName} className="item-image1" />
                         <h6>{item.itemName}</h6>
+                        <img src={item.image} alt={item.itemName} className="item-image1" />
                         <p>Category: {item.category}</p>
                         <p>Vendor: {item.vendorEmail}</p>
                         <p>Price: {item.price}</p>
                         <p>calories: {item.calories}</p>
-
                     </div>
                 ))}
-            </div> 
+            </div>
             <div className='BottomCH'>
-            <h4 className='title1'>
-                Order again:
-            </h4>
-            <div className="items-container1">
-                {lastOrder.map(item => (
-                    <div key={item.itemId} className="item-card1">
-                        <img src={item.image} alt={item.itemName} className="item-image1" />
-                        <h6>{item.itemName}</h6>
-                        <p>Category: {item.category}</p>
-                        <p>Vendor: {item.vendorEmail}</p>
-                        <p>Price: {item.price}</p>
-                        <p>calories: {item.calories}</p>
-                        <button onClick={handlePlaceRecentOrder}>Re-Order</button>
+                <div class="items-containerRO">
+                    <div class="item-cardRO" onClick={handlePlaceRecentOrder}>
+                        <div class="order-again">Order Again</div>
+                        {lastOrder.map(item => (
+                            <div key={item.itemId} class="item-details">
+                                <img src={item.image} alt={item.itemName} class="item-image1" />
+                                <h6>{item.itemName}</h6>
+                                <p>Category: {item.category}</p>
+                                <p>Vendor: {item.vendorEmail}</p>
+                                <p>Price: {item.price}</p>
+                                <p>calories: {item.calories}</p>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
-            <div className='BottomerCH'>
-            <h4>
-                Calories Consumed with us: {caloriesConsumed} 
-            </h4>
-            <h4>
-                Amount spent with us: {amountSpent}
-            </h4>
-            </div>
+                </div>
+
+
+
+                <div className='BottomerCH'>
+                    <h4>
+                        Calories Consumed with us: {caloriesConsumed}
+                    </h4>
+                    <h4>
+                        Amount spent with us: {amountSpent}
+                    </h4>
+                </div>
             </div>
 
         </div>

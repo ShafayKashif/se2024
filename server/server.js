@@ -496,8 +496,8 @@ app.post('/is-application-approved', async (request, response) => {
       response.status(200).json({decision: student_vendor.application})
     }
     else if (requested_user_role === 'courier') {
-      const courier = await Couriers.findOne({email: requestedEmail})
-      response.status(200).json({decision: courier.application})
+      const courier = await Users.findOne({email: requestedEmail})
+      response.status(200).json({decision: courier.status})
     }
   } catch(err){
     console.log("error")

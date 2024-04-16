@@ -94,9 +94,7 @@ function App() {
             <Route
               path="/CourierHome"
               element={
-                <ProtectedRoute allowedRoles={["courier"]}>
                   <CourierHome />
-                </ProtectedRoute>
               }
             />
             <Route

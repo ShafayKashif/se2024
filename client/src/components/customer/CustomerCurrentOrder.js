@@ -8,7 +8,7 @@ const CustomerCurrentOrder = () => {
   const fetchOrders = async () => {
     try {
       // Fetch orders from your backend API
-      const response = await axios.post('http://localhost:3001/Customergetneworders',{ CustomerEmail });
+      const response = await axios.post('https://se2024-ghn9.onrender.com/Customergetneworders',{ CustomerEmail });
       setOrders(response.data); // Assuming your API returns orders in JSON format
     } catch (error) {
       console.error('Error fetching orders:', error);

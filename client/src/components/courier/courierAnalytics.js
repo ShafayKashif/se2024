@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import '../../styles/courierAnalytics.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "../../styles/courierAnalytics.css";
 
 const CourierAnalytics = () => {
   const [completedOrdersCount, setCompletedOrdersCount] = useState(0);
@@ -9,21 +9,26 @@ const CourierAnalytics = () => {
 
   function getCourierEmail() {
     // Retrieve the courier's email from local storage
-    return window.sessionStorage.getItem('email');
+    return window.sessionStorage.getItem("email");
   }
 
   useEffect(() => {
     const fetchCompletedOrders = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/orders/completed/${courierEmail}`);
+        const response = await axios.get(
+          `https://se2024-ghn9.onrender.com/orders/completed/${courierEmail}`
+        );
         if (response.status === 200) {
           setCompletedOrders(response.data.completedOrders);
           setCompletedOrdersCount(response.data.completedOrders.length);
         } else {
-          console.error('Failed to fetch completed orders:', await response.text());
+          console.error(
+            "Failed to fetch completed orders:",
+            await response.text()
+          );
         }
       } catch (error) {
-        console.error('Error fetching completed orders:', error.message);
+        console.error("Error fetching completed orders:", error.message);
       }
     };
 
@@ -31,7 +36,7 @@ const CourierAnalytics = () => {
   }, [courierEmail]);
 
   return (
-    <div className='maindiv'>
+    <div className="maindiv">
       <h1>Welcome {courierEmail}</h1>
       <div className="container">
         <div className="stats-container">
@@ -59,7 +64,9 @@ const CourierAnalytics = () => {
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody style={{ maxHeight: '300px', overflowY: 'auto' }}> {/* Add inline styles */}
+            <tbody style={{ maxHeight: "300px", overflowY: "auto" }}>
+              {" "}
+              {/* Add inline styles */}
               {completedOrders.map((order, index) => (
                 <tr key={index}>
                   <td>{order.order_id}</td>

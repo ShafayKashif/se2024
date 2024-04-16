@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 
 const SeeVendorRequests = () => {
   const [vendorRequests, setVendorRequests] = useState([]);
@@ -7,13 +7,20 @@ const SeeVendorRequests = () => {
 
   const seeRequests = async () => {
     try {
-      const my_requests = await axios.get("http://localhost:3001/view-join-requests");
-      console.log("Requests: ", my_requests)
+      const my_requests = await axios.get(
+        "https://se2024-ghn9.onrender.com/view-join-requests"
+      );
+      console.log("Requests: ", my_requests);
       const allUsers = my_requests.data.allUsers;
 
       // Filter requests based on user type
-      const vendorReqs = allUsers.filter(user => user.userType === 'vendor' || user.userType === 'studentVendor');
-      const courierReqs = allUsers.filter(user => user.userType === 'courier');
+      const vendorReqs = allUsers.filter(
+        (user) =>
+          user.userType === "vendor" || user.userType === "studentVendor"
+      );
+      const courierReqs = allUsers.filter(
+        (user) => user.userType === "courier"
+      );
 
       setVendorRequests(vendorReqs);
       setCourierRequests(courierReqs);
@@ -37,20 +44,27 @@ const SeeVendorRequests = () => {
   const handleDecision = async (userEmail, decision) => {
     try {
       // console.log("Email: ", userEmail)
-      await axios.post("http://localhost:3001/application-decision", {
-        userEmail,
-        decision
-      });
+      await axios.post(
+        "https://se2024-ghn9.onrender.com/application-decision",
+        {
+          userEmail,
+          decision,
+        }
+      );
       // Remove the request from the UI
-      setVendorRequests(prevRequests => prevRequests.filter(user => user.email !== userEmail));
-      setCourierRequests(prevRequests => prevRequests.filter(user => user.email !== userEmail)); // Remove from courier requests if it exists
+      setVendorRequests((prevRequests) =>
+        prevRequests.filter((user) => user.email !== userEmail)
+      );
+      setCourierRequests((prevRequests) =>
+        prevRequests.filter((user) => user.email !== userEmail)
+      ); // Remove from courier requests if it exists
     } catch (err) {
       console.log("Error while sending application decision:", err);
     }
   };
 
   return (
-    <div className='maindiv'>
+    <div className="maindiv">
       <h1>See Requests</h1>
 
       {/* Vendor Requests */}
@@ -60,8 +74,12 @@ const SeeVendorRequests = () => {
           <p>Vendor Email: {vendor.email}</p>
           <p>Vendor Name: {vendor.name}</p>
           {/* Render Approve and Decline buttons */}
-          <button onClick={() => handleDecision(vendor.email, "approve")}>Approve</button>
-          <button onClick={() => handleDecision(vendor.email, "decline")}>Decline</button>
+          <button onClick={() => handleDecision(vendor.email, "approve")}>
+            Approve
+          </button>
+          <button onClick={() => handleDecision(vendor.email, "decline")}>
+            Decline
+          </button>
         </div>
       ))}
 
@@ -72,8 +90,12 @@ const SeeVendorRequests = () => {
           <p>Courier Email: {courier.email}</p>
           <p>Courier Name: {courier.name}</p>
           {/* Render Approve and Decline buttons */}
-          <button onClick={() => handleDecision(courier.email, "approve")}>Approve</button>
-          <button onClick={() => handleDecision(courier.email, "decline")}>Decline</button>
+          <button onClick={() => handleDecision(courier.email, "approve")}>
+            Approve
+          </button>
+          <button onClick={() => handleDecision(courier.email, "decline")}>
+            Decline
+          </button>
         </div>
       ))}
     </div>

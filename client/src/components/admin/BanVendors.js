@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const BanVendors = () => {
-  const [vendorEmail, setVendorEmail] = useState('');
-  const [description, setDescription] = useState('');
+  const [vendorEmail, setVendorEmail] = useState("");
+  const [description, setDescription] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const handleVendorEmailChange = (event) => {
     setVendorEmail(event.target.value);
@@ -17,20 +17,25 @@ const BanVendors = () => {
 
   const banVendor = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/ban-vendor", {
-        type: 'ban-vendor',
-        email_to_ban: vendorEmail,
-        reason: description,
-      });
-      console.log("Resopnse: ", response.data)
+      const response = await axios.post(
+        "https://se2024-ghn9.onrender.com/ban-vendor",
+        {
+          type: "ban-vendor",
+          email_to_ban: vendorEmail,
+          reason: description,
+        }
+      );
+      console.log("Resopnse: ", response.data);
       if (response.status === 200 && response.data.valid) {
-        setMessage("Vendor with email " + vendorEmail + " banned successfully!");
+        setMessage(
+          "Vendor with email " + vendorEmail + " banned successfully!"
+        );
       } else if (response.status === 200 && !response.data.valid) {
         setMessage("Vendor with email " + vendorEmail + " not found!");
       }
       // Reset form fields after banning
-      setVendorEmail('');
-      setDescription('');
+      setVendorEmail("");
+      setDescription("");
       // Hide confirmation dialog
       setShowConfirmation(false);
     } catch (err) {
@@ -54,7 +59,7 @@ const BanVendors = () => {
   };
 
   return (
-    <div className='maindiv'>
+    <div className="maindiv">
       <h1>Ban Vendors</h1>
       <div>
         {/* Vendor Email input */}
@@ -93,4 +98,4 @@ const BanVendors = () => {
   );
 };
 
-export default BanVendors
+export default BanVendors;

@@ -3,15 +3,18 @@ import axios from "axios";
 import "../../styles/SeeVendorReviews.css";
 
 const SeeVendorReviews = () => {
-  const [vendorEmail, setVendorEmail] = useState('');
+  const [vendorEmail, setVendorEmail] = useState("");
   const [reviews, setReviews] = useState([]);
 
   const fetchReviews = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/view-vendor-ratings", {
-        type: 'view-vendor-ratings',
-        query: vendorEmail,
-      });
+      const response = await axios.post(
+        "https://se2024-ghn9.onrender.com/view-vendor-ratings",
+        {
+          type: "view-vendor-ratings",
+          query: vendorEmail,
+        }
+      );
       setReviews(response.data);
     } catch (error) {
       console.error("Error fetching reviews:", error);
@@ -27,19 +30,24 @@ const SeeVendorReviews = () => {
   };
 
   return (
-    <div className='maindiv'>
+    <div className="maindiv">
       {/* Search bar */}
-      <div className='input-container'>
-      <input
-        type="text"
-        placeholder="Search by vendor email"
-        value={vendorEmail}
-        onChange={handleSearchChange}
-        onKeyDown={handleSearchClick}
-      />
-      <button className="search-vendor-rating-button" onClick={handleSearchClick}>Search</button>
+      <div className="input-container">
+        <input
+          type="text"
+          placeholder="Search by vendor email"
+          value={vendorEmail}
+          onChange={handleSearchChange}
+          onKeyDown={handleSearchClick}
+        />
+        <button
+          className="search-vendor-rating-button"
+          onClick={handleSearchClick}
+        >
+          Search
+        </button>
       </div>
-      {/* Search button */}  
+      {/* Search button */}
       <ul className="review-list-container">
         {reviews.map((review, index) => (
           <li key={index} className="vendor-average-rating">

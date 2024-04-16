@@ -1,23 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import '../../styles/vendorCss/vendorUpdate.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../../styles/vendorCss/vendorUpdate.css";
 
 const VendorUpdate = () => {
   const navigate = useNavigate();
-  const vendorEmail = window.sessionStorage.getItem('email');
+  const vendorEmail = window.sessionStorage.getItem("email");
   const [isBanned, setIsBanned] = useState(false);
 
   useEffect(() => {
     const checkBannedStatus = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/is-vendor-banned', { email: vendorEmail });
+        const response = await axios.post(
+          "https://se2024-ghn9.onrender.com/is-vendor-banned",
+          { email: vendorEmail }
+        );
         setIsBanned(response.data.isBanned);
         if (response.data.isBanned) {
-          alert('You have been banned: ' + response.data.banDescription);
+          alert("You have been banned: " + response.data.banDescription);
         }
       } catch (error) {
-        console.error('Error checking banned status:', error);
+        console.error("Error checking banned status:", error);
       }
     };
 
@@ -37,7 +40,7 @@ const VendorUpdate = () => {
   //const [category, setCategory] = useState('');
   //const [stock, setStock] = useState('');
   //const [price, setPrice] = useState('');
-  const [imageLink, setImageLink] = useState('');
+  const [imageLink, setImageLink] = useState("");
   //const [calories, setCalories] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -45,21 +48,24 @@ const VendorUpdate = () => {
     event.preventDefault();
 
     if (!imageLink) {
-      alert('Please fill in all fields');
+      alert("Please fill in all fields");
       return;
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/updateVendorImage', {email: vendorEmail ,imageLink});
+      const response = await axios.post(
+        "https://se2024-ghn9.onrender.com/updateVendorImage",
+        { email: vendorEmail, imageLink }
+      );
 
       if (response.status === 200) {
-        console.log('Item added successfully!');
-        alert('picture added successfully!');
+        console.log("Item added successfully!");
+        alert("picture added successfully!");
         navigate(-1);
       }
     } catch (error) {
-      console.error('Error adding item:', error.message);
-      alert('Failed to add picture. Please try again.');
+      console.error("Error adding item:", error.message);
+      alert("Failed to add picture. Please try again.");
     }
   };
 
@@ -69,20 +75,23 @@ const VendorUpdate = () => {
     const selectedImage = e.target.files[0];
 
     const formData = new FormData();
-    formData.append('file', selectedImage);
-    formData.append('upload_preset', 'pv6cd033');
+    formData.append("file", selectedImage);
+    formData.append("upload_preset", "pv6cd033");
 
     try {
-      const response = await axios.post('https://api.cloudinary.com/v1_1/dcswark7e/image/upload', formData);
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dcswark7e/image/upload",
+        formData
+      );
 
       if (response.status === 200) {
         setImageLink(response.data.secure_url);
       } else {
-        throw new Error('Failed to upload image to Cloudinary');
+        throw new Error("Failed to upload image to Cloudinary");
       }
     } catch (error) {
-      console.error('Error uploading image to Cloudinary:', error);
-      alert('Failed to upload image. Please try again.');
+      console.error("Error uploading image to Cloudinary:", error);
+      alert("Failed to upload image. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -95,9 +104,7 @@ const VendorUpdate = () => {
       <form className="form" onSubmit={handleAddItem}>
         {/* Input fields */}
         {/* Other input fields */}
-        <div>
-
-        </div>
+        <div></div>
         {/* Image upload field */}
         <div>
           <input
@@ -110,7 +117,7 @@ const VendorUpdate = () => {
         </div>
         <div>
           <button className="sub-button" type="submit" disabled={isBanned}>
-            {isBanned ? 'Banned: Cannot update Image' : 'Update Image'}
+            {isBanned ? "Banned: Cannot update Image" : "Update Image"}
           </button>
         </div>
       </form>

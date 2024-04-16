@@ -1,24 +1,82 @@
-// SeeOrders.js
-//page author: Talha Tariq
 import '../../styles/SeeOrders.css'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const VendorOrders = () => {
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const [orders, setOrders] = useState([]);
+  const [isBanned, setIsBanned] = useState(false);
+  const [banDescription, setBanDescription] = useState('');
+  const [applicationStatus, setApplicationStatus] = useState('');
   const vendorEmail = window.localStorage.getItem('vendorEmail');
 
-  const [Clickable, setIsClickable] = useState(true);
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/getNewOrders',{ vendorEmail });
+        if (response.status === 200) {
+          // Filter orders to include only those with delivery attribute set to true
+          response.data.forEach(function(item) {
+            if (item.hasOwnProperty('delivery')) {
+                item.delivery = item.delivery ? 'Yes' : 'No';
+            }
+          });
 
-  const isClickable=(value)=>{
-    if(value==='Yes'){
-      return true;
-    }else{
-      return false;
-    }
+          const filteredOrders = response.data;
+          setOrders(filteredOrders);
+          console.log(orders);
+        } else {
+          console.error('Failed to fetch orders:', await response.text());
+        }
+      } catch (error) {
+        console.error('Error fetching orders:', error.message);
+      }
+    };
+
+    const checkBannedStatus = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/is-vendor-banned', { email: vendorEmail });
+        if (response.data.isBanned) {
+          setIsBanned(true);
+          setBanDescription(response.data.banDescription);
+        }
+      } catch (error) {
+        console.error('Error checking banned status:', error);
+      }
+    };
+
+    const checkApplicationStatus = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/is-application-approved', { email: vendorEmail, user_role: 'vendor' });
+        const status = response.data.decision;
+        if (status === 'approved') {
+          fetchOrders();
+        } else if (status === 'declined') {
+          setApplicationStatus('declined');
+        } else {
+          setApplicationStatus('processing');
+        }
+      } catch (error) {
+        console.error('Error checking application status:', error);
+      }
+    };
+
+    // Initial calls to fetch orders, check banned status, and application status
+    fetchOrders();
+    const interval = setInterval(() => {
+      checkBannedStatus();
+      checkApplicationStatus();
+    }, 5000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, [vendorEmail]);
+
+  const getNextStatus = (currentStatus) => {
+    return currentStatus === 'New' ? 'InProgress' : currentStatus === 'InProgress' ? 'Completed' : 'Completed';
   };
-
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
@@ -43,28 +101,16 @@ const VendorOrders = () => {
       console.error('Error updating order status:', error.message);
     }
   };
-  const getNextStatus = (currentStatus) => {
-    return currentStatus === 'New' ? 'InProgress' : currentStatus === 'InProgress' ? 'Completed' : 'Completed';
-  };
-  const getCourierEmail = () => {
-    // Retrieve the courier's email from local storage
-    const email = window.sessionStorage.getItem('email');
-    // Return the courier's email
-    return email;
-  };
-  
+
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      // Retrieve the courier's email from the authentication token or session
-      
       const response = await axios.put(`http://localhost:3001/order/update`, {
         orderId: orderId,
         newStatus: newStatus,
-        delivered_by: "" // Include the courier's email in the request
+        delivered_by: ''
       });
-      
+
       if (response.status === 200) {
-        // Update the local state with modified order data
         const updatedOrders = orders.map(order => {
           if (order._id === orderId) {
             return { ...order, status: newStatus };
@@ -72,7 +118,6 @@ const VendorOrders = () => {
           return order;
         });
         setOrders(updatedOrders);
-  
         console.log('Order status updated successfully:', response.data.updatedOrder);
       } else {
         console.error('Failed to update order status:', response.data.message);
@@ -81,87 +126,76 @@ const VendorOrders = () => {
       console.error('Error updating order status:', error.message);
     }
   };
-  
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await axios.post('http://localhost:3001/getNewOrders',{ vendorEmail });
-        if (response.status === 200) {
-          // Filter orders to include only those with delivery attribute set to true
-          response.data.forEach(function(item) {
-            if (item.hasOwnProperty('delivery')) {
-                item.delivery = item.delivery ? 'Yes' : 'No';
-            }
-        });
-          const filteredOrders = response.data;
-
-          setOrders(filteredOrders);
-          console.log(orders)
-        } else {
-          console.error('Failed to fetch orders:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error fetching orders:', error.message);
-      }
-    };
-  
-    fetchOrders();
-  }, []);
 
   return (
     <div className="form-container">
       <h2>Customer orders</h2>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <div className="table-container">
-        <table className="table">
-          <thead>
-            <tr>
-              <th style={{ textAlign: 'center', padding: '15px' }}>Customer Name</th>
-              <th style={{ textAlign: 'center', padding: '15px' }}>Item</th>
-              <th style={{ textAlign: 'center', padding: '15px' }}>Quantity</th>
-              <th style={{ textAlign: 'center', padding: '15px' }}>Total</th>
-              <th style={{ textAlign: 'center', padding: '15px' }}>Delivery</th>
-              <th style={{ textAlign: 'center', padding: '15px' }}>Status</th>
-            </tr>
-          </thead>
+      {isBanned ? (
+        <div>
+          <h1>You have been banned!</h1>
+          <p>{banDescription}</p>
+        </div>
+      ) : applicationStatus === 'processing' ? (
+        <div>
+          <h1>Application Processing</h1>
+          <p>Your application is currently being processed. Please wait for approval.</p>
+        </div>
+      ) : applicationStatus === 'declined' ? (
+        <div>
+          <h1>Application Decision</h1>
+          <p>Your application has been denied. Better luck next time, champ!</p>
+        </div>
+      ) : (
+        <div className="table-container">
+          <table className="table">
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'center', padding: '15px' }}>Customer Name</th>
+                <th style={{ textAlign: 'center', padding: '15px' }}>Item</th>
+                <th style={{ textAlign: 'center', padding: '15px' }}>Quantity</th>
+                <th style={{ textAlign: 'center', padding: '15px' }}>Total</th>
+                <th style={{ textAlign: 'center', padding: '15px' }}>Delivery</th>
+                <th style={{ textAlign: 'center', padding: '15px' }}>Status</th>
+              </tr>
+            </thead>
             <tbody>
-            {orders.map((orderItem, index) => (
-              // Render only if the order status is not "Completed"
-              orderItem.status !== 'Completed' && (
-                <tr key={index}>
-                  <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client}</td>
-                  <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.itemName}</td>
-                  <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.quantity}</td>
-                  <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.total}</td>
-                  <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.delivery}</td>
-                  <td style={{ textAlign: 'center', padding: '15px' }}>
-                    <button
-                      style={{
-                        backgroundColor:
-                          orderItem.status === 'New'
-                            ? 'red'
-                            : orderItem.status === 'InProgress'
-                            ? 'yellow'
-                            : 'green',
-                        color: 'Black',
-                        border: 'none',
-                        borderRadius: '10px',
-                        padding: '5px 10px',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => handleStatusChange(orderItem._id, getNextStatus(orderItem.status))}
-                      disabled={isClickable(orderItem.delivery)}
-                    >
-                      {orderItem.status}
-                    </button>
-                  </td>
-                </tr>
-              )
-            ))}
-          </tbody>
-        </table>
-      </div>
+              {orders.map((orderItem, index) => (
+                // Render only if the order status is not "Completed"
+                orderItem.status !== 'Completed' && (
+                  <tr key={index}>
+                    <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.client}</td>
+                    <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.itemName}</td>
+                    <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.quantity}</td>
+                    <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.total}</td>
+                    <td style={{ textAlign: 'center', padding: '15px' }}>{orderItem.delivery}</td>
+                    <td style={{ textAlign: 'center', padding: '15px' }}>
+                      <button
+                        style={{
+                          backgroundColor:
+                            orderItem.status === 'New'
+                              ? 'red'
+                              : orderItem.status === 'InProgress'
+                              ? 'yellow'
+                              : 'green',
+                          color: 'Black',
+                          border: 'none',
+                          borderRadius: '10px',
+                          padding: '5px 10px',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => handleStatusChange(orderItem._id, getNextStatus(orderItem.status))}
+                      >
+                        {orderItem.status}
+                      </button>
+                    </td>
+                  </tr>
+                )
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };

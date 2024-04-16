@@ -160,10 +160,10 @@ app.post("/login", async (req, res) => {
 
   try {
     let user = await Users.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "User not found" });
+    if (!user) return res.status(200).json({ msg: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
+    if (!isMatch) return res.status(200).json({ msg: "Incorrect password" });
 
     // token generation
     const token = generateToken(user);
@@ -496,8 +496,8 @@ app.post('/is-application-approved', async (request, response) => {
       response.status(200).json({decision: student_vendor.application})
     }
     else if (requested_user_role === 'courier') {
-      const courier = await Couriers.findOne({email: requestedEmail})
-      response.status(200).json({decision: courier.application})
+      const courier = await Users.findOne({email: requestedEmail})
+      response.status(200).json({decision: courier.status})
     }
   } catch(err){
     console.log("error")
@@ -1262,3 +1262,19 @@ app.post('/remove-from-cart', async (req, res) => {
   }
 });
 
+
+app.post("/CourierUpdateInfo",async (req, res) => {
+const { courier_email,field, value} = req.body;
+try {
+  const courier = await Couriers.findOne({ email: courier_email });
+  if (!courier) {
+    return res.status(404).json({ message: "courier not found" });
+  }
+  courier[field] = value;
+  await courier.save();
+  res.status(200).json({ message: "courier updated successfully" });
+} catch (error) {
+  console.error("Error updating customer:", error);
+  res.status(500).json({ error: "Internal Server Error" });
+}
+});

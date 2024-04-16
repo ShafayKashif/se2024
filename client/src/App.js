@@ -37,7 +37,7 @@ import VendorUpdate from "./components/vendor/vendorUpdate";
 import CourierHome from "./components/courier/CourierHome";
 import SeeOrders from "./components/courier/SeeOrders";
 import CourierAnalytics from "./components/courier/courierAnalytics";
-
+import CourierUpdateInfo from "./components/courier/CourierUpdateInfo";
 //admin imports
 import AdminHome from "./components/admin/AdminHome";
 import SeeVendorReviews from "./components/admin/SeeVendorReviews";
@@ -94,9 +94,7 @@ function App() {
             <Route
               path="/CourierHome"
               element={
-                <ProtectedRoute allowedRoles={["courier"]}>
                   <CourierHome />
-                </ProtectedRoute>
               }
             />
             <Route
@@ -125,11 +123,27 @@ function App() {
               }
             />
             <Route
+              path="/CourierUpdateInfo"
+              element={
+                // <ProtectedRoute allowedRoles={["Admin"]}>
+                <CourierUpdateInfo />
+                // </ProtectedRoute>
+              }
+            />
+            <Route
               path="/CourierAnalytics"
               element={
                 // <ProtectedRoute allowedRoles={["Admin"]}>
                 <CourierAnalytics />
                 // </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/CourierUpdateInfo"
+              element={
+                <ProtectedRoute allowedRoles={["courier"]}>
+                  <CourierUpdateInfo />
+                </ProtectedRoute>
               }
             />
             <Route

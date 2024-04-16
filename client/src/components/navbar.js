@@ -128,6 +128,14 @@ const Navbar = () => {
             >
               View analytics
             </button>
+            <button
+              className={
+                  location.pathname === "/CourierUpdateInfo" ? "active settings-button" : "settings-button"
+              }
+              onClick={() => handleNavigate("/CourierUpdateInfo")}
+              >
+              <img src={settingImage} alt="Settings" />
+          </button>
           </>
         )}
         {role === "admin" && (

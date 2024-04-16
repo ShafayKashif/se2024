@@ -88,6 +88,11 @@ const VendorHome = () => {
           <h1>Application Processing</h1>
           <p>Your application is currently being processed. Please wait for approval.</p>
         </div>
+      ) : applicationStatus === 'declined' ? (
+        <div>
+          <h1>Application Decision</h1>
+          <p>Your application has been denied. Better luck next time, champ!</p>
+        </div>
       ) : (
         <div>
           <h1>Welcome,</h1>

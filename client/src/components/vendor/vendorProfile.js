@@ -13,6 +13,9 @@ const VendorProfile = () => {
   const [totalRevenue, setTotalRevenue] = useState();
   const [itemGraphData, setItemGraphData] = useState();
   const [vendorOrderHistory, setVendorOrderHistory] = useState();
+  const [isBanned, setIsBanned] = useState(false);
+  const [applicationStatus, setApplicationStatus] = useState('');
+  const [banDescription, setBanDescription] = useState('');
   
   const vendorEmail = window.localStorage.getItem('vendorEmail');
   const [vendorImage, setVendorImage] = useState();
@@ -94,6 +97,41 @@ const VendorProfile = () => {
     fetchVendorDetails();
     numEachItemSold();
     mostItemSold();
+
+
+    const checkBannedStatus = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/is-vendor-banned', { email: vendorEmail });
+        setIsBanned(response.data.isBanned);
+        if (response.data.isBanned) {
+          alert('You have been banned: ' + response.data.banDescription);
+          setBanDescription(response.data.banDescription)
+        }
+      } catch (error) {
+        console.error('Error checking banned status:', error);
+      }
+    };
+
+    const checkApplicationStatus = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/is-application-approved', { email: vendorEmail, user_role: 'vendor' });
+        setApplicationStatus(response.data.decision);
+        if (response.data.decision === 'denied') {
+          alert('Your application has been declined.');
+        }
+      } catch (error) {
+        console.error('Error checking application status:', error);
+      }
+    };
+
+    // Set interval to check banned status and application status every 10 seconds
+    const interval = setInterval(() => {
+      checkBannedStatus();
+      checkApplicationStatus();
+    }, 5000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
     
     
   }, [vendorEmail]);

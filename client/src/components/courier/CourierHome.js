@@ -1,4 +1,4 @@
-import "../../styles/CourierHome.css";
+import "../../styles/CustomerHome.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ const CourierHome = () => {
       try {
         const response = await axios.post('http://localhost:3001/is-application-approved', { email: my_email, user_role: 'courier' });
         const status = response.data.decision;
+        console.log('Application status:', response.data.decision);
         if (status === 'approved') {
           // Application approved, render functionality
           navigate("/SeeOrders");
@@ -40,25 +41,18 @@ const CourierHome = () => {
     // Clear interval on component unmount
     return () => clearInterval(interval);
   }, [my_email, navigate]);
-  const handleSeeOrders = (event) => {
-    event.preventDefault(); // Prevent the form submission
-    navigate("/SeeOrders");
-  };
+  
 
   return (
-    <div className='maindiv'>
-      <h1>Hello, welcome to CampusCuisine</h1>
+    <div >
       {applicationStatus === 'processing' ? (
-        <p>Your application is currently being processed. Please wait for approval.</p>
+      <h3 className='title'>
+                Your application is currently being processed. Please wait for approval
+      </h3>      
       ) : (
-        <form className="form" onSubmit={handleSeeOrders}>
-          <div>
-            <button className="sub-button-Home" type="submit">
-              See available orders
-            </button>
-          </div>
-        </form>
-      )}
+        <p>Application status: {applicationStatus}</p>
+        )}
+
     </div>
   );
 };

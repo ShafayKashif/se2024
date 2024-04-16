@@ -7,6 +7,8 @@ const VendorUpdate = () => {
   const navigate = useNavigate();
   const vendorEmail = window.sessionStorage.getItem('email');
   const [isBanned, setIsBanned] = useState(false);
+  const [applicationStatus, setApplicationStatus] = useState('');
+  const [banDescription, setBanDescription] = useState('');
 
   useEffect(() => {
     const checkBannedStatus = async () => {
@@ -15,19 +17,30 @@ const VendorUpdate = () => {
         setIsBanned(response.data.isBanned);
         if (response.data.isBanned) {
           alert('You have been banned: ' + response.data.banDescription);
+          setBanDescription(response.data.banDescription)
         }
       } catch (error) {
         console.error('Error checking banned status:', error);
       }
     };
 
-    // Check banned status on component mount
-    checkBannedStatus();
+    const checkApplicationStatus = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/is-application-approved', { email: vendorEmail, user_role: 'vendor' });
+        setApplicationStatus(response.data.decision);
+        if (response.data.decision === 'denied') {
+          alert('Your application has been declined.');
+        }
+      } catch (error) {
+        console.error('Error checking application status:', error);
+      }
+    };
 
-    // Set interval to check banned status every 10 seconds
+    // Set interval to check banned status and application status every 10 seconds
     const interval = setInterval(() => {
       checkBannedStatus();
-    }, 10000);
+      checkApplicationStatus();
+    }, 5000);
 
     // Clear interval on component unmount
     return () => clearInterval(interval);
@@ -89,7 +102,24 @@ const VendorUpdate = () => {
   };
 
   return (
+    
     <div className="add-item-page">
+      {isBanned ? (
+        <div>
+          <h1>You have been banned!</h1>
+          <p>{banDescription}</p>
+        </div>
+      ) : applicationStatus === 'processing' ? (
+        <div>
+          <h1>Application Processing</h1>
+          <p>Your application is currently being processed. Please wait for approval.</p>
+        </div>
+      ) : applicationStatus === 'declined' ? (
+        <div>
+          <h1>Application Decision</h1>
+          <p>Your application has been denied. Better luck next time, champ!</p>
+        </div>
+      ) : ( <div>
       <h1 className="add-item-header">Update Image</h1>
       <div className="partition"></div>
       <form className="form" onSubmit={handleAddItem}>
@@ -114,6 +144,7 @@ const VendorUpdate = () => {
           </button>
         </div>
       </form>
+      </div>)}
     </div>
   );
 };

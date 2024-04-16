@@ -33,9 +33,9 @@ const CourierUpdateInfo = (props) => {
             });
 
             if (response.status === 200) {
-                // if successsful, log the review and redirect to customer home
                 console.log("update info logged!");
-                navigate('/CustomerHome');
+                console.log(response.data.message);
+                navigate('/CourierHome');
             } else {
                 console.error("update log failed:", await response.text());
             }
@@ -62,11 +62,10 @@ const CourierUpdateInfo = (props) => {
             <form className="form" onSubmit={handleUpdateInfo}>
                 <select class="user-inp" onChange={(e) => setField(e.target.value)}>
                     <option value="">Select Field</option>
-                    <option value="password">Password</option>
                     <option value="phone_Number">Phone Number</option>
                 </select>
                 <input
-                    type="text"
+                    type="textarea"
                     placeholder="Enter new value"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}

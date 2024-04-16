@@ -39,8 +39,7 @@ const CourierHome = () => {
 
     // Clear interval on component unmount
     return () => clearInterval(interval);
-  }, []);
-
+  }, [my_email, navigate]);
   const handleSeeOrders = (event) => {
     event.preventDefault(); // Prevent the form submission
     navigate("/SeeOrders");

@@ -51,10 +51,10 @@ const VendorOrders = () => {
       try {
         const response = await axios.post('http://localhost:3001/is-application-approved', { email: vendorEmail, user_role: 'vendor' });
         const status = response.data.decision;
-        if (status === 'approved') {
+        if (status === 'approve') {
           fetchOrders();
-        } else if (status === 'declined') {
-          setApplicationStatus('declined');
+        } else if (status === 'decline') {
+          setApplicationStatus('decline');
         } else {
           setApplicationStatus('processing');
         }
@@ -141,7 +141,7 @@ const VendorOrders = () => {
           <h1>Application Processing</h1>
           <p>Your application is currently being processed. Please wait for approval.</p>
         </div>
-      ) : applicationStatus === 'declined' ? (
+      ) : applicationStatus === 'decline' ? (
         <div>
           <h1>Application Decision</h1>
           <p>Your application has been denied. Better luck next time, champ!</p>

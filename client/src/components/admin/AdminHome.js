@@ -68,7 +68,8 @@ const AdminHome = () => {
 
   return (
     // <div className="container">
-    <div className='maindiv'>
+    <div className='admin-home-container'>
+      <div className='fixed-tint'></div>
       {/* Display top vendors */}
       <div className="most-popular-sellers">
         <div className="grey-tape">

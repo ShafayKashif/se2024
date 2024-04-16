@@ -29,7 +29,7 @@ function Reviews() {
           try {
             const response = await axios.post('http://localhost:3001/is-application-approved', { email: vendorEmail, user_role: 'vendor' });
             setApplicationStatus(response.data.decision);
-            if (response.data.decision === 'denied') {
+            if (response.data.decision === 'decline') {
               alert('Your application has been declined.');
             }
           } catch (error) {
@@ -75,7 +75,7 @@ function Reviews() {
           <h1>Application Processing</h1>
           <p>Your application is currently being processed. Please wait for approval.</p>
         </div>
-      ) : applicationStatus === 'declined' ? (
+      ) : applicationStatus === 'decline' ? (
         <div>
           <h1>Application Decision</h1>
           <p>Your application has been denied. Better luck next time, champ!</p>

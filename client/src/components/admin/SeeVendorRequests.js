@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import '../../styles/SeeVendorRequests.css';
+import zIndex from "@mui/material/styles/zIndex";
 
 const SeeVendorRequests = () => {
   const [vendorRequests, setVendorRequests] = useState([]);
@@ -50,34 +52,50 @@ const SeeVendorRequests = () => {
   };
 
   return (
-    <div className='maindiv'>
-      <h1>See Requests</h1>
-
+    <div className='see-vendor-requests-container'>
+      <div className="fixed-tint"></div>
+  
       {/* Vendor Requests */}
-      <h2>Vendor Requests</h2>
-      {vendorRequests.map((vendor, index) => (
-        <div key={index}>
-          <p>Vendor Email: {vendor.email}</p>
-          <p>Vendor Name: {vendor.name}</p>
-          {/* Render Approve and Decline buttons */}
-          <button onClick={() => handleDecision(vendor.email, "approve")}>Approve</button>
-          <button onClick={() => handleDecision(vendor.email, "decline")}>Decline</button>
-        </div>
-      ))}
-
+      {vendorRequests.length > 0 && (
+        <>
+          <h2 className="popular-sellers-title">Vendor Requests</h2>
+          {vendorRequests.map((vendor, index) => (
+            <div className="vendor-card" key={index}>
+              <h3>{vendor.name}</h3>
+              <p>Price Range: {/* Add price range here */}</p>
+              <p>Phone Number: {vendor.phone_Number}</p>
+              {/* Render Approve and Decline buttons */}
+              <button className="approve-button" onClick={() => handleDecision(vendor.email, "approve")}>Approve</button>
+              <button className="decline-button" onClick={() => handleDecision(vendor.email, "decline")}>Decline</button>
+            </div>
+          ))}
+        </>
+      )}
+  
       {/* Courier Requests */}
-      <h2>Courier Requests</h2>
-      {courierRequests.map((courier, index) => (
-        <div key={index}>
-          <p>Courier Email: {courier.email}</p>
-          <p>Courier Name: {courier.name}</p>
-          {/* Render Approve and Decline buttons */}
-          <button onClick={() => handleDecision(courier.email, "approve")}>Approve</button>
-          <button onClick={() => handleDecision(courier.email, "decline")}>Decline</button>
-        </div>
-      ))}
+      {courierRequests.length > 0 && (
+        <>
+          <h2 className="popular-sellers-title">Courier Requests</h2>
+          {courierRequests.map((courier, index) => (
+            <div className="courier-card" key={index}>
+              <h3>{courier.name}</h3>
+              <p>Roll Number: {courier.roll_Number}</p>
+              <p>Phone Number: {courier.phone_Number}</p>
+              {/* Render Approve and Decline buttons */}
+              <button className="approve-button" onClick={() => handleDecision(courier.email, "approve")}>Approve</button>
+              <button className="decline-button" onClick={() => handleDecision(courier.email, "decline")}>Decline</button>
+            </div>
+          ))}
+        </>
+      )}
+  
+      {/* No Requests Message */}
+      {((!vendorRequests && !courierRequests) || (vendorRequests.length === 0 && courierRequests.length === 0)) && (
+        <h1 className="popular-sellers-title" style={{ transform: 'translate(500px, 0px)' }}>No current requests</h1>
+      )}
     </div>
   );
+  
 };
 
 export default SeeVendorRequests;

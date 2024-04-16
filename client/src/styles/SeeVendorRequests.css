@@ -1,0 +1,51 @@
+/* Container for vendor and courier requests */
+.see-vendor-requests-container {
+  }  
+  
+  /* Background tint */
+  .fixed-tint {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.85); /* Adjust opacity here */
+  }
+  
+  /* Vendor and courier cards */
+  .vendor-card,
+  .courier-card {
+    background-color: #f9f9f9ab;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .vendor-card h3,
+  .courier-card h3 {
+    color: #ff2d55; /* Red color for vendor name */
+    font-family: 'Libre Bodoni', serif;
+    margin-bottom: 10px;
+  }
+  
+  .vendor-card p,
+  .courier-card p {
+    margin-bottom: 5px;
+  }
+  
+  /* Button styles */
+  .approve-button,
+  .decline-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .decline-button {
+    background-color: #f44336; /* Red */
+  }
+  

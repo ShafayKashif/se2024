@@ -116,7 +116,7 @@ const VendorProfile = () => {
       try {
         const response = await axios.post('http://localhost:3001/is-application-approved', { email: vendorEmail, user_role: 'vendor' });
         setApplicationStatus(response.data.decision);
-        if (response.data.decision === 'denied') {
+        if (response.data.decision === 'decline') {
           alert('Your application has been declined.');
         }
       } catch (error) {
@@ -176,7 +176,24 @@ const VendorProfile = () => {
   };
 
   return (
+    
     <div className="profile-container">
+      {isBanned ? (
+        <div>
+          <h1>You have been banned!</h1>
+          <p>{banDescription}</p>
+        </div>
+      ) : applicationStatus === 'processing' ? (
+        <div>
+          <h1>Application Processing</h1>
+          <p>Your application is currently being processed. Please wait for approval.</p>
+        </div>
+      ) : applicationStatus === 'decline' ? (
+        <div>
+          <h1>Application Decision</h1>
+          <p>Your application has been denied. Better luck next time, champ!</p>
+        </div>
+      ) : ( <div>
       <div className="profile-header">
         <div className="image-box">
           <img src={vendorImage} alt="Vendor" />
@@ -207,6 +224,7 @@ const VendorProfile = () => {
       <div className="download-button">
         <button onClick={downloadAnalyticsAsPDF}>Download Analytics as PDF</button>
       </div>
+      </div>)}
     </div>
   );
 };

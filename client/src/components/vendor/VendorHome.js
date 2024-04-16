@@ -12,7 +12,7 @@ const VendorHome = () => {
   const email = window.sessionStorage.getItem('email');
 
   useEffect(() => {
-    if (applicationStatus === 'denied'){
+    if (applicationStatus === 'decline'){
       alert("Your application has been declined.")
       return;
     }
@@ -41,9 +41,9 @@ const VendorHome = () => {
       try {
         const response = await axios.post('http://localhost:3001/is-application-approved', { email, user_role: 'vendor' });
         const status = response.data.decision;
-        if (status === 'approved') {
+        if (status === 'approve') {
           fetchItems();
-        } else if (status === 'declined') {
+        } else if (status === 'decline') {
           alert('Your application has been declined.');
           setApplicationStatus('declined')
         } else {
@@ -88,7 +88,7 @@ const VendorHome = () => {
           <h1>Application Processing</h1>
           <p>Your application is currently being processed. Please wait for approval.</p>
         </div>
-      ) : applicationStatus === 'declined' ? (
+      ) : applicationStatus === 'decline' ? (
         <div>
           <h1>Application Decision</h1>
           <p>Your application has been denied. Better luck next time, champ!</p>

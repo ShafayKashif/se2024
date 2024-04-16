@@ -13,6 +13,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { dispatch } = useAuth();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const validEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -33,8 +34,12 @@ const Login = () => {
         email,
         password,
       });
-
-      if (response.status === 200 && response.data.token) {
+      if (response.data.msg === "User not found") {
+        setErrorMessage("User not found!");
+      } else if (response.data.msg === "Incorrect password") {
+        setErrorMessage("Incorrect password!");
+      }
+      else if (response.status === 200 && response.data.token) {
         console.log("Login successful!");
         console.log("Received Token:", response.data.token);
         console.log("Received Role:", response.data.role);
@@ -97,14 +102,14 @@ const Login = () => {
         <form onSubmit={handleLogin}>
           <input
             type="email"
-            placeholder="Email"
+            placeholder="Email*"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="login-email-input"
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Password*"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="login-password-input"
@@ -113,6 +118,7 @@ const Login = () => {
             Sign In
           </button>
         </form>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <div className="signup-redirect">
           No account? <a href="/MainSignup">Sign up</a>
         </div>

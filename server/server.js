@@ -160,10 +160,10 @@ app.post("/login", async (req, res) => {
 
   try {
     let user = await Users.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "User not found" });
+    if (!user) return res.status(200).json({ msg: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
+    if (!isMatch) return res.status(200).json({ msg: "Incorrect password" });
 
     // token generation
     const token = generateToken(user);

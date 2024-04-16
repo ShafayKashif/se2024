@@ -92,3 +92,13 @@ h1 {
 input[type="checkbox"] {
   transform: scale(0.8);
 }
+.table-container {
+  max-height: 200px; /* Maximum height of the container */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+.table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  overflow: scroll;
+}

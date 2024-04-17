@@ -115,6 +115,38 @@ const Navbar = () => {
           </button> */}
         </>
         )}
+        
+        {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECASES */}
+        {(role === "courier"||role==='vendor') && (!application&&(application==="processing"||application==="decline"))&&(
+          <>
+          
+          </>
+        )}
+        {role === "courier" && (!application||(application==="processing"||application==="decline"))&&(
+            <>
+             <button
+              className={location.pathname === "/SeeOrders" ? "active" : ""}
+              onClick={() => handleNavigate("/SeeOrders")}
+            >
+              See All Orders
+            </button>
+            <button
+              className={location.pathname === "/courierAnalytics" ? "active" : ""}
+              onClick={() => handleNavigate("/courierAnalytics")}
+            >
+              View analytics
+            </button>
+            <button
+              className={
+                  location.pathname === "/CourierUpdateInfo" ? "active settings-button" : "settings-button"
+              }
+              onClick={() => handleNavigate("/CourierUpdateInfo")}
+              >
+              <img src={settingImage} alt="Settings" />
+          </button> 
+          </>
+        )}
+
         {role === "vendor" && (!status||status!='banned') && (
           <>
           <button
@@ -156,36 +188,6 @@ const Navbar = () => {
               <img src={settingImage} alt="Settings" />
           </button>
         </>
-        )}
-        {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECSES */}
-        {role === "courier" && (!application&&(application==="processing"||application==="decline"))&&(
-          <>
-          
-          </>
-        )}
-        {role === "courier" && (!application||(application==="processing"||application==="decline"))&&(
-            <>
-             <button
-              className={location.pathname === "/SeeOrders" ? "active" : ""}
-              onClick={() => handleNavigate("/SeeOrders")}
-            >
-              See All Orders
-            </button>
-            <button
-              className={location.pathname === "/courierAnalytics" ? "active" : ""}
-              onClick={() => handleNavigate("/courierAnalytics")}
-            >
-              View analytics
-            </button>
-            <button
-              className={
-                  location.pathname === "/CourierUpdateInfo" ? "active settings-button" : "settings-button"
-              }
-              onClick={() => handleNavigate("/CourierUpdateInfo")}
-              >
-              <img src={settingImage} alt="Settings" />
-          </button> 
-          </>
         )}
 
         {role === "admin" && (

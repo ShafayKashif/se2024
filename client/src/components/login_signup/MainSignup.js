@@ -13,7 +13,9 @@ const MainSignup = () => {
         confirmPassword: "",
         roll_Number: "",
         hostel: "",
-        room_Number: ""
+        room_Number: "",
+        description: "",
+        image: "",
     });
     const [error, setError] = useState("");
 
@@ -55,11 +57,19 @@ const MainSignup = () => {
         }
     };
 
-    const inputStyle = { 
-        width: '100%', padding: '10px', margin: '5px 0', borderRadius: '5px', 
-        border: '1px solid #ccc', backgroundColor: '#fff', color: '#000', 
-        outline: 'none'
-    };
+    const inputStyle = {
+        width: "100%",
+        padding: "10px",
+        margin: "5px 0",
+        borderRadius: "5px",
+        border: "1px solid #0056b3", // Dark blue border
+        backgroundColor: "#162447", // Dark blue background color
+        color: "#f0f0f0", // Text color
+        outline: "none",
+        "::placeholder": {
+          color: "#ccc", // Placeholder text color
+        },
+      };
 
     return (
         <div style={{ padding: '20px', maxWidth: '500px', margin: 'auto', color: '#000' }}>
@@ -70,7 +80,6 @@ const MainSignup = () => {
                     <option value="customer">Customer</option>
                     <option value="courier">Courier</option>
                     <option value="vendor">Vendor</option>
-                    <option value="student_vendor">Student Vendor</option>
                 </select>
 
                 {role && <>

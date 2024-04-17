@@ -46,9 +46,11 @@ const VendorHome = () => {
           fetchItems();
         } else if (status === 'decline') {
           alert('Your application has been declined.');
+          window.sessionStorage.setItem('application', 'decline')
           setApplicationStatus('declined')
         } else {
           setApplicationStatus('processing');
+          window.sessionStorage.setItem('application', 'processing')
         }
       } catch (error) {
         console.error('Error checking application status:', error);

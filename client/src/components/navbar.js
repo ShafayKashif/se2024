@@ -12,6 +12,7 @@ const Navbar = () => {
   // const { role } = authState;
   const role = window.sessionStorage.getItem('role')
   const status = window.sessionStorage.getItem('status')
+  const application = window.sessionStorage.getItem("application")
   // console.log("Role: ", role)
 
   const handleNavigate = (path) => {
@@ -157,9 +158,14 @@ const Navbar = () => {
         </>
         )}
         {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECSES */}
-        {role === "courier" && (
+        {role === "courier" && (!application&&(application==="processing"||application==="decline"))&&(
           <>
-          <button
+          
+          </>
+        )}
+        {role === "courier" && (!application||(application==="processing"||application==="decline"))&&(
+            <>
+             <button
               className={location.pathname === "/SeeOrders" ? "active" : ""}
               onClick={() => handleNavigate("/SeeOrders")}
             >
@@ -178,9 +184,10 @@ const Navbar = () => {
               onClick={() => handleNavigate("/CourierUpdateInfo")}
               >
               <img src={settingImage} alt="Settings" />
-          </button>
+          </button> 
           </>
         )}
+
         {role === "admin" && (
           <>
           <button

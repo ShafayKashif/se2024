@@ -15,14 +15,19 @@ const CourierHome = () => {
         const response = await axios.post('http://localhost:3001/is-application-approved', { email: my_email, user_role: 'courier' });
         const status = response.data.decision;
         console.log('Application status:', response.data.decision);
-        if (status === 'approved') {
+        if (status === 'approve') {
           // Application approved, render functionality
+
           navigate("/SeeOrders");
-        } else if (status === 'declined') {
+        } else if (status === 'decline') {
           // Application declined, alert the user
-          alert('Your application has been declined.');
+          // alert('Your application has been declined.');
+          window.sessionStorage.setItem("application", "decline");
+          setApplicationStatus('decline');
         } else {
           // Application still processing, set status
+          window.sessionStorage.setItem("application", "processing");
+
           setApplicationStatus('processing');
         }
       } catch (error) {
@@ -44,16 +49,20 @@ const CourierHome = () => {
   
 
   return (
-    <div >
-      {applicationStatus === 'processing' ? (
-      <h3 className='title'>
-                Your application is currently being processed. Please wait for approval
-      </h3>      
-      ) : (
-        <p>Application status: {applicationStatus}</p>
-        )}
+    <div>
+  {applicationStatus === 'processing' ? (
+    <h3 className='title'>
+      Your application is currently being processed. Please wait for approval
+    </h3>      
+  ) : applicationStatus === 'decline' ? (
+    <h3 className='title'>
+      Application has been rejected
+    </h3>
+  ) : (
+    <p>Application status: {applicationStatus}</p>
+  )}
+</div>
 
-    </div>
   );
 };
 

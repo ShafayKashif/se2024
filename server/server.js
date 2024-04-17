@@ -469,11 +469,11 @@ app.post('/is-application-approved', async (request, response) => {
       response.status(200).json({decision: vendor.application})
     }
     else if (requested_user_role === 'courier') {
-      const courier = await Users.findOne({email: requestedEmail})
-      if (courier.status==="approved"){
-        response.status(200).json({decision: 'approved'})
+      const courier = await Couriers.findOne({email: requestedEmail})
+      if (courier.application==="approve"){
+        response.status(200).json({decision: 'approve'})
       }
-      response.status(200).json({decision: courier.status})
+      response.status(200).json({decision: courier.application})
     }
   } catch(err){
     console.log("error")

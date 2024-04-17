@@ -75,44 +75,7 @@ const Navbar = () => {
         )}
         {role === "vendor" && status==='banned' && (
           <>
-          {/* <button
-              className={location.pathname === "/VendorHome" ? "active" : ""}
-              onClick={() => handleNavigate("/VendorHome")}
-            >
-              HomePage
-            </button>
-            <button
-              className={location.pathname === "/AddItem" ? "active" : ""}
-              onClick={() => handleNavigate("/AddItem")}
-            >
-              Add an Item
-            </button>
-            <button
-              className={location.pathname === "/VendorOrders" ? "active" : ""}
-              onClick={() => handleNavigate("/VendorOrders")}
-            >
-              View Current Orders
-            </button>
-            <button
-              className={location.pathname === "/ViewCustomersReviews" ? "active" : ""}
-              onClick={() => handleNavigate("/ViewCustomersReviews")}
-            >
-              View Customer Reviews
-            </button>
-            <button
-              className={location.pathname === "/VendorProfile" ? "active" : ""}
-              onClick={() => handleNavigate("/VendorProfile")}
-            >
-              Profile & Analytics
-            </button>
-            <button
-              className={
-                  location.pathname === "/VendorUpdate" ? "active settings-button" : "settings-button"
-              }
-              onClick={() => handleNavigate("/VendorUpdate")}
-              >
-              <img src={settingImage} alt="Settings" />
-          </button> */}
+          
         </>
         )}
         
@@ -122,7 +85,7 @@ const Navbar = () => {
           
           </>
         )}
-        {role === "courier" && (!application||(application==="processing"||application==="decline"))&&(
+        {role === "courier" && (!application&&(application!=="processing"||application!=="decline"))&&(
             <>
              <button
               className={location.pathname === "/SeeOrders" ? "active" : ""}
@@ -147,7 +110,7 @@ const Navbar = () => {
           </>
         )}
 
-        {role === "vendor" && (!status||status!='banned') && (
+        {role === "vendor" && (!status||status!='banned') && (!application&&(application!=="processing"||application!=="decline"))&&(
           <>
           <button
               className={location.pathname === "/VendorHome" ? "active" : ""}
@@ -215,6 +178,11 @@ const Navbar = () => {
               onClick={() => handleNavigate("/banUser")}
             >
               Ban User
+            </button>
+            <button
+              onClick={() => handleNavigate("/")}
+            >
+              log out
             </button>
           </>
         )}

@@ -92,7 +92,6 @@ const MainSignup = () => {
           <option value="customer">Customer</option>
           <option value="courier">Courier</option>
           <option value="vendor">Vendor</option>
-          <option value="student_vendor">Student Vendor</option>
         </select>
 
         {role && (

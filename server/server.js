@@ -18,12 +18,25 @@ import { Router } from "express";
 import Order from "./models/ordersModel.js";
 import Items from "./models/itemModel.js";
 import CustomerReview from "./models/CustomerReviewModel.js";
-import Carts from "./models/cartsModel.js";  
+import Carts from "./models/cartsModel.js";
 
 //controllers
-import { showitems , add_item , ViewCustomerReviews, updateStockVendor,sellData,getNewOrders,
-          vendorAnalytics,sellDataMostSold,calculateTotalRevenue,vendorItemGraphData,fetchVendorOrderHistory,
-          fetchVendorDetails,updateVendorImage,VendorUpdateInfo} from "./controllers/vendorController.js";
+import {
+  showitems,
+  add_item,
+  ViewCustomerReviews,
+  updateStockVendor,
+  sellData,
+  getNewOrders,
+  vendorAnalytics,
+  sellDataMostSold,
+  calculateTotalRevenue,
+  vendorItemGraphData,
+  fetchVendorOrderHistory,
+  fetchVendorDetails,
+  updateVendorImage,
+  VendorUpdateInfo,
+} from "./controllers/vendorController.js";
 
 dotenv.config();
 
@@ -76,6 +89,7 @@ const verifyToken = (req, res, next) => {
 };
 
 // Unified Signup Route
+// Unified Signup Route
 app.post("/signup", upload.single("image"), async (req, res) => {
   const {
     email,
@@ -87,6 +101,7 @@ app.post("/signup", upload.single("image"), async (req, res) => {
     room_Number,
     hostel,
   } = req.body;
+<<<<<<< Updated upstream
   let Model = Users;
   let newUser;
 
@@ -150,6 +165,70 @@ app.post("/signup", upload.single("image"), async (req, res) => {
     res.status(201).json({ token });
   } catch (err) {
     console.error(err);
+=======
+
+  console.log("Attempting signup with:", { email, usertype, name }); // Log initial signup attempt
+
+  if (!email || !password || !usertype || !name || !phone_Number) {
+    console.log("Failed signup due to missing fields:", {
+      email,
+      usertype,
+      name,
+    });
+    return res.status(400).json({ msg: "Missing required fields" });
+  }
+
+  try {
+    if (await Users.findOne({ email })) {
+      console.log("Failed signup - user already exists:", email);
+      return res.status(400).json({ msg: "User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    let newUser = {
+      email,
+      name,
+      phone_Number,
+      password: hashedPassword,
+      application: "processing",
+    };
+    let Model;
+
+    switch (usertype) {
+      case "student_vendor":
+        Model = studentVendors;
+        newUser = { ...newUser, roll_Number, room_Number, hostel };
+        break;
+      case "vendor":
+        Model = Vendors;
+        break;
+      case "courier":
+        Model = Couriers;
+        newUser = { ...newUser, roll_Number };
+        break;
+      case "customer":
+        Model = Customers;
+        newUser = { ...newUser, roll_Number, room_Number, hostel };
+        break;
+      default:
+        console.log("Failed signup - invalid user type:", usertype);
+        return res.status(400).send("Invalid user type");
+    }
+
+    const user = new Model(newUser); // Model is now clearly defined before use
+    await user.save();
+    console.log("User created successfully in DB:", newUser);
+
+    const token = generateToken(user);
+    console.log("Token generated for user:", {
+      id: user.id,
+      email: user.email,
+    });
+
+    res.status(201).json({ token });
+  } catch (err) {
+    console.error("Server error during signup:", err);
+>>>>>>> Stashed changes
     res.status(500).send("Server error");
   }
 });
@@ -178,26 +257,21 @@ app.post("/login", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-
-
-
 //Shehbaz
-app.post("/add_item", add_item );
-app.post("/showitems", showitems );
-app.post("/ViewCustomerReviews", ViewCustomerReviews );
-app.post("/updateStockVendor",updateStockVendor);
-app.post("/getNewOrders",getNewOrders);
-app.post("/vendorAnalytics",vendorAnalytics);
-app.post("/sellData",sellData);
-app.post("/sellDataMostSold",sellDataMostSold);
-app.post("/calculateTotalRevenue",calculateTotalRevenue);
+app.post("/add_item", add_item);
+app.post("/showitems", showitems);
+app.post("/ViewCustomerReviews", ViewCustomerReviews);
+app.post("/updateStockVendor", updateStockVendor);
+app.post("/getNewOrders", getNewOrders);
+app.post("/vendorAnalytics", vendorAnalytics);
+app.post("/sellData", sellData);
+app.post("/sellDataMostSold", sellDataMostSold);
+app.post("/calculateTotalRevenue", calculateTotalRevenue);
 app.post("/vendorItemGraphData", vendorItemGraphData);
 app.post("/VendorOrderHistory", fetchVendorOrderHistory);
-app.post("/vendorDetails",fetchVendorDetails)
-app.post("/updateVendorImage",updateVendorImage)
-app.post("/VendorUpdateInfo",VendorUpdateInfo)
-
-
+app.post("/vendorDetails", fetchVendorDetails);
+app.post("/updateVendorImage", updateVendorImage);
+app.post("/VendorUpdateInfo", VendorUpdateInfo);
 
 // Source: Chat GPT
 // Function to calculate Jaccard similarity between two strings
@@ -272,19 +346,19 @@ app.get("/getInfoForAdminHomePage", async (request, response) => {
 
     // Group orders by vendor email and calculate total quantity and sales for each vendor
     const vendorSalesInfo = {};
-    orders.forEach(order => {
-      if (order.status=="Completed") //add to sales info only if order is completed
-      {  
+    orders.forEach((order) => {
+      if (order.status == "Completed") {
+        //add to sales info only if order is completed
         if (!vendorSalesInfo[order.vendorEmail]) {
           vendorSalesInfo[order.vendorEmail] = {
             totalItemsSold: 0,
             totalPriceOfItemsSold: 0,
-            orderCount: 0  // Initialize order count
+            orderCount: 0, // Initialize order count
           };
         }
         vendorSalesInfo[order.vendorEmail].totalItemsSold += order.quantity;
         vendorSalesInfo[order.vendorEmail].totalPriceOfItemsSold += order.total;
-        vendorSalesInfo[order.vendorEmail].orderCount++;  // Increment order count
+        vendorSalesInfo[order.vendorEmail].orderCount++; // Increment order count
       }
     });
 
@@ -295,7 +369,9 @@ app.get("/getInfoForAdminHomePage", async (request, response) => {
     const vendors = await Vendors.find({ email: { $in: topVendorEmails } });
 
     // Find student vendors in the StudentVendors collection
-    const myStudentVendors = await studentVendors.find({ email: { $in: topVendorEmails } });
+    const myStudentVendors = await studentVendors.find({
+      email: { $in: topVendorEmails },
+    });
 
     // Combine vendors and student vendors into a single array
     const allVendors = [...vendors, ...myStudentVendors];
@@ -306,8 +382,10 @@ app.get("/getInfoForAdminHomePage", async (request, response) => {
     // Calculate price range for each vendor
     const vendorPriceRanges = [];
     for (const vendor of allVendors) {
-      const vendorItems = items.filter(item => item.vendorEmail === vendor.email);
-      const prices = vendorItems.map(item => item.price);
+      const vendorItems = items.filter(
+        (item) => item.vendorEmail === vendor.email
+      );
+      const prices = vendorItems.map((item) => item.price);
       const minPrice = Math.min(...prices);
       const maxPrice = Math.max(...prices);
       vendorPriceRanges.push({ email: vendor.email, minPrice, maxPrice });
@@ -319,17 +397,26 @@ app.get("/getInfoForAdminHomePage", async (request, response) => {
     // Calculate average rating for each vendor
     const vendorAvgRatings = [];
     for (const vendor of allVendors) {
-      const vendorReviews = customerReviews.filter(review => review.vendor_email === vendor.email);
-      const totalRatings = vendorReviews.reduce((acc, review) => acc + review.rating, 0);
+      const vendorReviews = customerReviews.filter(
+        (review) => review.vendor_email === vendor.email
+      );
+      const totalRatings = vendorReviews.reduce(
+        (acc, review) => acc + review.rating,
+        0
+      );
       const avgRating = totalRatings / vendorReviews.length;
       vendorAvgRatings.push({ email: vendor.email, avgRating });
     }
 
     // Combine vendors, price ranges, average ratings, and order counts into a single array
-    const vendorsInfo = allVendors.map(vendor => {
+    const vendorsInfo = allVendors.map((vendor) => {
       const { email, name } = vendor;
-      const { minPrice, maxPrice } = vendorPriceRanges.find(item => item.email === email);
-      const { avgRating } = vendorAvgRatings.find(item => item.email === email);
+      const { minPrice, maxPrice } = vendorPriceRanges.find(
+        (item) => item.email === email
+      );
+      const { avgRating } = vendorAvgRatings.find(
+        (item) => item.email === email
+      );
       const { orderCount } = vendorSalesInfo[email];
       return { email, name, minPrice, maxPrice, avgRating, orderCount };
     });
@@ -346,72 +433,85 @@ app.get("/getInfoForAdminHomePage", async (request, response) => {
 });
 
 app.post("/view-vendor-ratings", async (request, response) => {
-  if (request.body && request.body.type === 'view-vendor-ratings'){
-    try{
-      const queried_email = request.body.query
+  if (request.body && request.body.type === "view-vendor-ratings") {
+    try {
+      const queried_email = request.body.query;
       // console.log("Email: ", queried_email)
-      const vendorReviews = await CustomerReview.find({ vendor_email: queried_email })
-      console.log("REviews: ", vendorReviews)
-      response.status(200).json(vendorReviews)
-    } catch(err){
-      console.error("Error searching for reviews of the vendor:")
-      response.status(500).json({ error: "Internal server error" })
+      const vendorReviews = await CustomerReview.find({
+        vendor_email: queried_email,
+      });
+      console.log("REviews: ", vendorReviews);
+      response.status(200).json(vendorReviews);
+    } catch (err) {
+      console.error("Error searching for reviews of the vendor:");
+      response.status(500).json({ error: "Internal server error" });
     }
   }
 });
 
-app.post('/ban-vendor', async (request, response) => {
-  if (request.body && request.body.type === 'ban-vendor'){
-    try{
-      const email_to_ban = request.body.email_to_ban
-      const description = request.body.reason
+app.post("/ban-vendor", async (request, response) => {
+  if (request.body && request.body.type === "ban-vendor") {
+    try {
+      const email_to_ban = request.body.email_to_ban;
+      const description = request.body.reason;
       // console.log("Email: ", queried_email)
-      
-      const vendor = await Vendors.findOne({ email: email_to_ban })
-      console.log("Vendor: ", vendor)
+
+      const vendor = await Vendors.findOne({ email: email_to_ban });
+      console.log("Vendor: ", vendor);
       if (!vendor) {
-        const student_vendor = await studentVendors.findOne({email: email_to_ban})
-        if (!student_vendor){
-          return response.status(200).json({ error: "Vendor not found" , valid: false})
+        const student_vendor = await studentVendors.findOne({
+          email: email_to_ban,
+        });
+        if (!student_vendor) {
+          return response
+            .status(200)
+            .json({ error: "Vendor not found", valid: false });
         }
-        student_vendor.status = "banned" + ":" + description 
-        await student_vendor.save()
+        student_vendor.status = "banned" + ":" + description;
+        await student_vendor.save();
+        await Items.deleteMany({ vendorEmail: email_to_ban });
+        // await Order.deleteMany({ vendorEmail: email_to_ban });
+      } else {
+        vendor.status = "banned" + ":" + description;
+        await vendor.save();
         await Items.deleteMany({ vendorEmail: email_to_ban });
         // await Order.deleteMany({ vendorEmail: email_to_ban });
       }
-      else {
-        vendor.status = "banned" + ":" + description
-        await vendor.save()
-        await Items.deleteMany({ vendorEmail: email_to_ban });
-        // await Order.deleteMany({ vendorEmail: email_to_ban });
-      }
-      
-      return response.status(200).json({ message: "Vendor banned successfully" , valid: true})
-    } catch(err){
-      console.error("Error banning vendor:")
-      response.status(500).json({ error: "Internal server error" })
+
+      return response
+        .status(200)
+        .json({ message: "Vendor banned successfully", valid: true });
+    } catch (err) {
+      console.error("Error banning vendor:");
+      response.status(500).json({ error: "Internal server error" });
     }
   }
 });
 
 // ping to vendor for ban or unbanned
-app.post('/is-vendor-banned', async (request, response) => {
+app.post("/is-vendor-banned", async (request, response) => {
   const requestedEmail = request.body.email;
 
   let isBanned = false;
-  let banDescription = '';
+  let banDescription = "";
 
   // Check in Vendors collection
   const vendor = await Vendors.findOne({ email: requestedEmail });
-  if (vendor && vendor.status && vendor.status.startsWith('banned')) {
+  if (vendor && vendor.status && vendor.status.startsWith("banned")) {
     isBanned = true;
     banDescription = vendor.status.slice(7);
   }
 
   // Check in studentVendors collection if not found in Vendors
   if (!isBanned) {
-    const studentVendor = await studentVendors.findOne({ email: requestedEmail });
-    if (studentVendor && studentVendor.status && studentVendor.status.startsWith('banned')) {
+    const studentVendor = await studentVendors.findOne({
+      email: requestedEmail,
+    });
+    if (
+      studentVendor &&
+      studentVendor.status &&
+      studentVendor.status.startsWith("banned")
+    ) {
       isBanned = true;
       banDescription = studentVendor.status.slice(7);
     }
@@ -421,23 +521,44 @@ app.post('/is-vendor-banned', async (request, response) => {
   response.json({ isBanned, banDescription });
 });
 
-app.get('/view-join-requests', async (request, response) => {
+app.get("/view-join-requests", async (request, response) => {
   try {
-    const processing_vendors = await Vendors.find({ application: 'processing' });
-    const processing_student_vendors = await studentVendors.find({ application: 'processing' });
-    const processing_couriers = await Couriers.find({ application: 'processing' });
+    const processing_vendors = await Vendors.find({
+      application: "processing",
+    });
+    const processing_student_vendors = await studentVendors.find({
+      application: "processing",
+    });
+    const processing_couriers = await Couriers.find({
+      application: "processing",
+    });
 
     let allUsers = [];
 
     // Add user type to each object and push to allUsers array
     if (processing_vendors) {
-      allUsers = allUsers.concat(processing_vendors.map(vendor => ({ ...vendor.toObject(), userType: 'vendor' })));
+      allUsers = allUsers.concat(
+        processing_vendors.map((vendor) => ({
+          ...vendor.toObject(),
+          userType: "vendor",
+        }))
+      );
     }
     if (processing_student_vendors) {
-      allUsers = allUsers.concat(processing_student_vendors.map(studentVendor => ({ ...studentVendor.toObject(), userType: 'studentVendor' })));
+      allUsers = allUsers.concat(
+        processing_student_vendors.map((studentVendor) => ({
+          ...studentVendor.toObject(),
+          userType: "studentVendor",
+        }))
+      );
     }
     if (processing_couriers) {
-      allUsers = allUsers.concat(processing_couriers.map(courier => ({ ...courier.toObject(), userType: 'courier' })));
+      allUsers = allUsers.concat(
+        processing_couriers.map((courier) => ({
+          ...courier.toObject(),
+          userType: "courier",
+        }))
+      );
     }
 
     // console.log("Users: ", allUsers)
@@ -448,64 +569,60 @@ app.get('/view-join-requests', async (request, response) => {
   }
 });
 
-app.post('/application-decision', async (request, response) => {
-
-  const vendor_email = request.body.userEmail
-  const decision = request.body.decision
+app.post("/application-decision", async (request, response) => {
+  const vendor_email = request.body.userEmail;
+  const decision = request.body.decision;
   // console.log("Vendor with email: ", vendor_email, " with decision: ", decision)
   try {
-    const vendor = await Vendors.findOne({ email: vendor_email })
+    const vendor = await Vendors.findOne({ email: vendor_email });
 
     if (vendor) {
-      vendor.application = decision
-      await vendor.save()
+      vendor.application = decision;
+      await vendor.save();
       // console.log("Saved decision")
       // console.log("APplication: ", vendor.application)
-    }
-    else {
-      const student_vendor = await studentVendors.findOne({email: vendor_email})
-  
+    } else {
+      const student_vendor = await studentVendors.findOne({
+        email: vendor_email,
+      });
+
       if (student_vendor) {
-        student_vendor.application = decision
-        await student_vendor.save()
-      }
-      else {
-        const courier = await Couriers.findOne({email: vendor_email})
+        student_vendor.application = decision;
+        await student_vendor.save();
+      } else {
+        const courier = await Couriers.findOne({ email: vendor_email });
 
         if (courier) {
-          courier.application = decision
-          await courier.save()
+          courier.application = decision;
+          await courier.save();
         }
       }
     }
-    
-  } catch(err) {
-    console.log("Error while decision being made")
+  } catch (err) {
+    console.log("Error while decision being made");
   }
 });
 
-app.post('/is-application-approved', async (request, response) => {
-  const requestedEmail = request.body.email
-  const requested_user_role = request.body.user_role
+app.post("/is-application-approved", async (request, response) => {
+  const requestedEmail = request.body.email;
+  const requested_user_role = request.body.user_role;
   try {
-    if (requested_user_role === 'vendor') {
-      const vendor = await Vendors.findOne({email: requestedEmail})
-      if (!vendor.application){
-        response.status(200).json({decision: 'approve'})
+    if (requested_user_role === "vendor") {
+      const vendor = await Vendors.findOne({ email: requestedEmail });
+      if (!vendor.application) {
+        response.status(200).json({ decision: "approve" });
       }
-      response.status(200).json({decision: vendor.application})
-    }
-    else if (requested_user_role === 'courier') {
-      const courier = await Users.findOne({email: requestedEmail})
-      if (!courier.application){
-        response.status(200).json({decision: 'approved'})
+      response.status(200).json({ decision: vendor.application });
+    } else if (requested_user_role === "courier") {
+      const courier = await Users.findOne({ email: requestedEmail });
+      if (!courier.application) {
+        response.status(200).json({ decision: "approved" });
       }
-      response.status(200).json({decision: courier.application})
+      response.status(200).json({ decision: courier.application });
     }
-  } catch(err){
-    console.log("error")
+  } catch (err) {
+    console.log("error");
   }
-  
 });
 
 // ***************************************************
@@ -570,15 +687,16 @@ app.post("/placeOrder", async (request, response) => {
       } = request.body;
 
       // Check if the item is already in the cart for the specified customer
-      console.log("request:", request.body)
+      console.log("request:", request.body);
       const existingCartItem = await Carts.findOne({
         customer_email: customer_email,
-        itemId: itemId
+        itemId: itemId,
       });
 
       if (existingCartItem) {
         // If the item already exists, update its quantity
-        existingCartItem.quantity = parseInt(existingCartItem.quantity, 10) + parseInt(quantity, 10);
+        existingCartItem.quantity =
+          parseInt(existingCartItem.quantity, 10) + parseInt(quantity, 10);
         const savedCartItem = await existingCartItem.save();
         console.log("Existing item in cart updated:", savedCartItem);
         response.status(200).json({ isAuthenticated: true });
@@ -606,7 +724,6 @@ app.post("/placeOrder", async (request, response) => {
     }
   }
 });
-
 
 // [EXPERIMENTAL] puts the order data into orders table, as in its an official order now which everyone can access
 app.post("/selfpickup", async (request, response) => {
@@ -657,56 +774,62 @@ app.post("/selfpickup", async (request, response) => {
 });
 
 app.post("/UpdateQuantity", async (request, response) => {
-    console.log("Update Quantity");
-    try {
-      const { vendorEmail, itemId, quantity } = request.body;
-      console.log("request body: ", request.body);
-      const updatedCart = await Items.updateOne(
-        { vendorEmail, itemId },
-        { stock: quantity }
-      );
-      console.log("Cart updated:", updatedCart);
-      response.status(200).json({ isAuthenticated: true });
-    } catch (error) {
-      console.error("Error updating cart:", error);
-    }
+  console.log("Update Quantity");
+  try {
+    const { vendorEmail, itemId, quantity } = request.body;
+    console.log("request body: ", request.body);
+    const updatedCart = await Items.updateOne(
+      { vendorEmail, itemId },
+      { stock: quantity }
+    );
+    console.log("Cart updated:", updatedCart);
+    response.status(200).json({ isAuthenticated: true });
+  } catch (error) {
+    console.error("Error updating cart:", error);
+  }
 });
 
 const CustomergetNewOrders = async (req, res) => {
   console.log("HERE", req.body);
   try {
-      let customerEmail = req.body.CustomerEmail;
-      console.log("customerEmail is: ", customerEmail);
-      // Get all orders matching vendor email and not delivered
-      const orders = await Order.find({ clientEmail: customerEmail, $or: [{ status: "New" },{ status: "InProgress" }] });
-      // Extract itemIds from orders
-      // console.log("orders: ", orders);
-      const itemIds = orders.map(orders => orders.item_id);
-      // console.log("itemIds: ", itemIds);
-      
-      // Find items matching the extracted itemIds
-      const items = await Items.find({ itemId: { $in: itemIds } });
-      // console.log("items: ", items);
-      
-      // Join orders and items where vendor email matches
-      const joinedData = orders.map(order => {
-        const matchingItem = items.find(item => item.itemId === order.item_id);
+    let customerEmail = req.body.CustomerEmail;
+    console.log("customerEmail is: ", customerEmail);
+    // Get all orders matching vendor email and not delivered
+    const orders = await Order.find({
+      clientEmail: customerEmail,
+      $or: [{ status: "New" }, { status: "InProgress" }],
+    });
+    // Extract itemIds from orders
+    // console.log("orders: ", orders);
+    const itemIds = orders.map((orders) => orders.item_id);
+    // console.log("itemIds: ", itemIds);
+
+    // Find items matching the extracted itemIds
+    const items = await Items.find({ itemId: { $in: itemIds } });
+    // console.log("items: ", items);
+
+    // Join orders and items where vendor email matches
+    const joinedData = orders
+      .map((order) => {
+        const matchingItem = items.find(
+          (item) => item.itemId === order.item_id
+        );
         if (matchingItem) {
           return { ...order.toObject(), ...matchingItem.toObject() };
         }
         return null; // If no match found
-      }).filter(item => item !== null);
-      
-      console.log(joinedData);
-      res.json(joinedData);
+      })
+      .filter((item) => item !== null);
 
+    console.log(joinedData);
+    res.json(joinedData);
   } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-}
+};
 
-app.post("/CustomergetNewOrders",CustomergetNewOrders);
+app.post("/CustomergetNewOrders", CustomergetNewOrders);
 
 app.post("/selfpickupCart", async (request, response) => {
   if (
@@ -798,7 +921,7 @@ app.post("/customerDelivery", async (request, response) => {
         status,
         item_id: itemId,
       });
-      
+
       const savedOrder = await newOrder.save();
       console.log("Order placed:", savedOrder);
       response.status(200).json({ isAuthenticated: true });
@@ -807,7 +930,6 @@ app.post("/customerDelivery", async (request, response) => {
     }
   }
 });
-
 
 app.post("/customerDeliveryCart", async (request, response) => {
   if (
@@ -852,7 +974,9 @@ app.post("/customerDeliveryCart", async (request, response) => {
         response.status(200).json({ message: "Cart deleted successfully" });
       } catch (error) {
         console.error("Error deleting cart:", error);
-        response.status(500).json({ error: "An error occurred while deleting cart" });
+        response
+          .status(500)
+          .json({ error: "An error occurred while deleting cart" });
       }
       const savedOrder = await newOrder.save();
       console.log("Order placed:", savedOrder);
@@ -862,8 +986,6 @@ app.post("/customerDeliveryCart", async (request, response) => {
     }
   }
 });
-
-
 
 // this function is inspired by the one talha wrote in his branch for fetching orders for his courier page, this one primarily is used to get all order details so cross verification can be done whether the customer reviewing a vendor ordered from them or not
 app.get("/order", async (req, res) => {
@@ -884,7 +1006,6 @@ app.get("/customerCart", async (req, res) => {
     console.error("Error fetching carts:", error);
     res.status(500).send("Internal Server Error");
   }
-
 });
 
 // same inspiration as above, this one returns all student vendors for cross validation
@@ -937,7 +1058,7 @@ const CustomerTopVendors = async (req, res) => {
   // console.log("Top vendors: ");
   try {
     // If email is null or undefined, assign a default value, Used during initial testing
-    const items = await Order.find().sort({createdAt: -1}).limit(15);
+    const items = await Order.find().sort({ createdAt: -1 }).limit(15);
     // console.log(items);
     const itemIds = [];
     items.forEach((item) => {
@@ -958,12 +1079,22 @@ app.post("/CustomerTopVendors", CustomerTopVendors);
 app.post("/CustomerLastOrder", async (req, res) => {
   const customerEmail = req.body.clientEmail;
   try {
-    const lastOrder = await Order.find({ clientEmail: customerEmail, status: "Completed" }).sort({ createdAt: -1 }).limit(1);
+    const lastOrder = await Order.find({
+      clientEmail: customerEmail,
+      status: "Completed",
+    })
+      .sort({ createdAt: -1 })
+      .limit(1);
 
     // console.log("last order: ", lastOrder[0])
-    if (!lastOrder || lastOrder == [] || (!lastOrder[0] || (lastOrder[0] && !lastOrder[0].item_id))){
-      res.json({msg: 'No last order'})
-      return
+    if (
+      !lastOrder ||
+      lastOrder == [] ||
+      !lastOrder[0] ||
+      (lastOrder[0] && !lastOrder[0].item_id)
+    ) {
+      res.json({ msg: "No last order" });
+      return;
     }
     const itemId1 = lastOrder[0].item_id;
     // console.log("itemid1 is: ", itemId1);
@@ -979,13 +1110,15 @@ app.post("/CustomerLastOrder", async (req, res) => {
 app.post("/CustomerReOrder", async (req, res) => {
   const customerEmail = req.body.clientEmail;
   try {
-    const lastOrder = await Order.find({ clientEmail: customerEmail }).sort({ createdAt: -1 }).limit(1);
-    console.log("last order: ", lastOrder[0])
+    const lastOrder = await Order.find({ clientEmail: customerEmail })
+      .sort({ createdAt: -1 })
+      .limit(1);
+    console.log("last order: ", lastOrder[0]);
     const newOrderData = {
       ...lastOrder[0].toObject(),
       _id: undefined,
       status: "New",
-      delivered_by: ""
+      delivered_by: "",
     };
     const newOrder = new Order(newOrderData);
     const savedOrder = await newOrder.save();
@@ -1034,7 +1167,6 @@ app.post("/CustomerCalAndAmount", async (req, res) => {
   } catch (error) {
     console.error("Error fetching items:", error);
     res.status(500).json({ error: "Server error" });
-
   }
 });
 
@@ -1048,9 +1180,8 @@ app.post("/CustomerFullMenu", async (req, res) => {
   }
 });
 
-
-app.post("/CustomerUpdateInfo" , async (req, res) => {
-  const { field, value, customer_email} = req.body;
+app.post("/CustomerUpdateInfo", async (req, res) => {
+  const { field, value, customer_email } = req.body;
   try {
     const customer = await Customers.findOne({ email: customer_email });
     if (!customer) {
@@ -1072,7 +1203,10 @@ const CustomerCurrentOrder = async (req, res) => {
   const customerEmail = req.body.CustomerEmail;
   try {
     // If email is null or undefined, assign a default value, Used during initial testing
-    const cartItems = await Order.find({ clientEmail: customerEmail, $or: [{ status: "New" },{ status: "In Progress" }] });
+    const cartItems = await Order.find({
+      clientEmail: customerEmail,
+      $or: [{ status: "New" }, { status: "In Progress" }],
+    });
     // console.log(cartItems);
     res.json(cartItems);
   } catch (error) {
@@ -1098,7 +1232,7 @@ app.get("/courierorder", async (req, res) => {
 // Update order status from courier side, New->InProgress->Completed
 app.put("/order/update", async (req, res) => {
   const { orderId, newStatus, delivered_by } = req.body;
-  console.log(req.body)
+  console.log(req.body);
   try {
     const order = await Order.findOne({ _id: orderId }).exec();
     if (!order) {
@@ -1118,17 +1252,20 @@ app.put("/order/update", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-app.get('/orders/count/:courierEmail', async (req, res) => {
+app.get("/orders/count/:courierEmail", async (req, res) => {
   const courierEmail = req.params.courierEmail;
 
   try {
     // Count the number of orders where delivered_by matches the courier's email
-    const completedOrdersCount = await Order.countDocuments({ delivered_by: courierEmail, status: 'Completed' });
+    const completedOrdersCount = await Order.countDocuments({
+      delivered_by: courierEmail,
+      status: "Completed",
+    });
 
     res.status(200).json({ completedOrdersCount });
   } catch (error) {
-    console.error('Error counting completed orders:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error counting completed orders:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 app.get("/orders/completed/:courierEmail", async (req, res) => {
@@ -1138,7 +1275,7 @@ app.get("/orders/completed/:courierEmail", async (req, res) => {
     // Find completed orders for the courier
     const completedOrders = await Order.find({
       delivered_by: courierEmail,
-      status: "Completed"
+      status: "Completed",
     });
 
     res.status(200).json({ completedOrders });
@@ -1147,7 +1284,7 @@ app.get("/orders/completed/:courierEmail", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-app.get('/order/:orderId', async (req, res) => {
+app.get("/order/:orderId", async (req, res) => {
   try {
     const orderId = req.params.orderId;
 
@@ -1156,21 +1293,20 @@ app.get('/order/:orderId', async (req, res) => {
 
     if (!order) {
       // If order is not found, return 404 status code and message
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
 
     // If order is found, return it in the response
     res.status(200).json(order);
   } catch (error) {
-    console.error('Error fetching order details:', error);
+    console.error("Error fetching order details:", error);
     // If any error occurs, return 500 status code and message
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-
 // Customer Bilal's additions:
-app.post('/items-for-search', async (req, res) => {
+app.post("/items-for-search", async (req, res) => {
   try {
     const query = req.body.query.toLowerCase();
     const items = await Items.find();
@@ -1183,7 +1319,7 @@ app.post('/items-for-search', async (req, res) => {
       const similarity = jaccardSimilarity(query, itemName, true);
       // console.log("Similarity with item: ", itemName, " is ", similarity)
 
-      let threshold = 0.3
+      let threshold = 0.3;
       if (similarity > threshold) {
         results.push({ item, similarity });
       }
@@ -1197,27 +1333,26 @@ app.post('/items-for-search', async (req, res) => {
     // console.log("Matched items: ", matchedItems)
     res.status(200).json(matchedItems);
   } catch (error) {
-    console.error('Error searching for items:', error.message);
-    res.status(500).send('Internal Server Error');
+    console.error("Error searching for items:", error.message);
+    res.status(500).send("Internal Server Error");
   }
 });
 
-app.post('/get-vendor-emails-for-customer-place-order', async (req, res) => {
-  
+app.post("/get-vendor-emails-for-customer-place-order", async (req, res) => {
   try {
     const itemName = req.body.query;
-    console.log("Query: ", itemName)
+    console.log("Query: ", itemName);
     const items = await Items.find({ itemName: itemName });
     const vendorEmails = items.map((item) => item.vendorEmail);
-    console.log("VendorS: ", vendorEmails)
+    console.log("VendorS: ", vendorEmails);
     res.status(200).json(vendorEmails);
   } catch (error) {
-    console.error('Error searching for items:', error.message);
-    res.status(500).send('Internal Server Error');
+    console.error("Error searching for items:", error.message);
+    res.status(500).send("Internal Server Error");
   }
 });
 
-app.post('/updateCartItems', async (req, res) => {
+app.post("/updateCartItems", async (req, res) => {
   try {
     const customer_email = req.body.customerEmail;
     const updated_cart_items = req.body.items;
@@ -1226,58 +1361,60 @@ app.post('/updateCartItems', async (req, res) => {
     const cart_items = await Carts.find({ customerEmail: customer_email });
 
     // Update the quantity of each item in the cart
-    updated_cart_items.forEach(updated_item => {
-      const cart_item = cart_items.find(item => item.itemId === updated_item.itemId);
+    updated_cart_items.forEach((updated_item) => {
+      const cart_item = cart_items.find(
+        (item) => item.itemId === updated_item.itemId
+      );
       if (cart_item) {
         cart_item.quantity = updated_item.quantity;
-        cart_item.total = updated_item.quantity * updated_item.price
-        cart_item.stock = updated_item.stock
+        cart_item.total = updated_item.quantity * updated_item.price;
+        cart_item.stock = updated_item.stock;
       }
     });
 
-    await Promise.all(updated_cart_items.map(async updated_item => {
-      const item = await Items.findOne({ itemId: updated_item.itemId });
-      if (item) {
-        item.stock = updated_item.stock;
-        await item.save();
-      }
-    }));
+    await Promise.all(
+      updated_cart_items.map(async (updated_item) => {
+        const item = await Items.findOne({ itemId: updated_item.itemId });
+        if (item) {
+          item.stock = updated_item.stock;
+          await item.save();
+        }
+      })
+    );
 
     res.status(200).send("Cart items updated successfully");
   } catch (error) {
-    console.error('Error updating cart items:', error);
+    console.error("Error updating cart items:", error);
     res.status(500).send("Internal server error");
   }
 });
 
-
-// remove an item from the cart table given customer email and itemId 
-app.post('/remove-from-cart', async (req, res) => {
+// remove an item from the cart table given customer email and itemId
+app.post("/remove-from-cart", async (req, res) => {
   try {
-      const { customer_email, itemId } = req.body;
+    const { customer_email, itemId } = req.body;
 
-      await Carts.deleteOne({ customer_email, itemId });
+    await Carts.deleteOne({ customer_email, itemId });
 
-      res.status(200).send("Item removed from cart successfully");
+    res.status(200).send("Item removed from cart successfully");
   } catch (error) {
-      console.error('Error removing item from cart:', error);
-      res.status(500).send("Internal server error");
+    console.error("Error removing item from cart:", error);
+    res.status(500).send("Internal server error");
   }
 });
 
-
-app.post("/CourierUpdateInfo",async (req, res) => {
-const { courier_email,field, value} = req.body;
-try {
-  const courier = await Couriers.findOne({ email: courier_email });
-  if (!courier) {
-    return res.status(404).json({ message: "courier not found" });
+app.post("/CourierUpdateInfo", async (req, res) => {
+  const { courier_email, field, value } = req.body;
+  try {
+    const courier = await Couriers.findOne({ email: courier_email });
+    if (!courier) {
+      return res.status(404).json({ message: "courier not found" });
+    }
+    courier[field] = value;
+    await courier.save();
+    res.status(200).json({ message: "courier updated successfully" });
+  } catch (error) {
+    console.error("Error updating customer:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-  courier[field] = value;
-  await courier.save();
-  res.status(200).json({ message: "courier updated successfully" });
-} catch (error) {
-  console.error("Error updating customer:", error);
-  res.status(500).json({ error: "Internal Server Error" });
-}
 });

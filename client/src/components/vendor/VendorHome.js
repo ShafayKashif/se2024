@@ -44,8 +44,9 @@ const VendorHome = () => {
         const status = response.data.decision;
         if (status === 'approve') {
           fetchItems();
+          window.sessionStorage.setItem('application', 'approve')
         } else if (status === 'decline') {
-          alert('Your application has been declined.');
+          // alert('Your application has been declined.');
           window.sessionStorage.setItem('application', 'decline')
           setApplicationStatus('declined')
         } else {
@@ -62,7 +63,7 @@ const VendorHome = () => {
       checkBannedStatus();
       
       checkApplicationStatus();
-    }, 5000);
+    }, 3000);
 
     // Cleanup function to clear interval
     return () => clearInterval(interval);

@@ -73,19 +73,19 @@ const Navbar = () => {
           </button>
         </>
         )}
-        {role === "vendor" && status==='banned' && (
+        {role === "vendor" &&status&& status==='banned' && (
           <>
           
         </>
         )}
         
         {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECASES */}
-        {(role === "courier"||role==='vendor') && (!application&&(application==="processing"||application==="decline"))&&(
+        {(role === "vendor" || role === "courier") && ((application === "processing" || application === "decline")) && (
           <>
           
           </>
         )}
-        {role === "courier" && ((application!=="processing"||application!=="decline"))&&(
+        {role === "courier" && (application&&(application!=="processing"&&application!=="decline"))&&(
             <>
              <button
               className={location.pathname === "/SeeOrders" ? "active" : ""}
@@ -110,7 +110,7 @@ const Navbar = () => {
           </>
         )}
 
-        {role === "vendor" && (!status||status!=='banned') && ((application!=="processing"||application!=="decline"))&&(
+        {role === "vendor" && ((!status||status!='banned') && (application && (application!=="processing"&&application!=="decline")))&&(
           <>
           <button
               className={location.pathname === "/VendorHome" ? "active" : ""}

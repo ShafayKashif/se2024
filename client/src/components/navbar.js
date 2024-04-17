@@ -85,7 +85,7 @@ const Navbar = () => {
           
           </>
         )}
-        {role === "courier" && (!application&&(application!=="processing"||application!=="decline"))&&(
+        {role === "courier" && ((application!=="processing"||application!=="decline"))&&(
             <>
              <button
               className={location.pathname === "/SeeOrders" ? "active" : ""}
@@ -110,7 +110,7 @@ const Navbar = () => {
           </>
         )}
 
-        {role === "vendor" && (!status||status!='banned') && (!application&&(application!=="processing"||application!=="decline"))&&(
+        {role === "vendor" && (!status||status!=='banned') && ((application!=="processing"||application!=="decline"))&&(
           <>
           <button
               className={location.pathname === "/VendorHome" ? "active" : ""}

@@ -6,10 +6,10 @@ import Navbar from "./components/navbar";
 // login signup imports
 import Login from "./components/login_signup/login";
 import MainSignup from "./components/login_signup/MainSignup";
-import CustomerSignup from "./components/login_signup/CustomerSignup";
-import CourierSignup from "./components/login_signup/CourierSignup";
-import VendorSignup from "./components/login_signup/VendorSignup";
-import StudentVendorSignup from "./components/login_signup/StudentVendorSignup";
+// import CustomerSignup from "./components/login_signup/CustomerSignup";
+// import CourierSignup from "./components/login_signup/CourierSignup";
+// import VendorSignup from "./components/login_signup/VendorSignup";
+// import StudentVendorSignup from "./components/login_signup/StudentVendorSignup";
 import { AuthProvider } from "./components/login_signup/AuthContext";
 import ProtectedRoute from "./components/login_signup/ProtectedRoute";
 
@@ -31,7 +31,6 @@ import ViewCustomersReviews from "./components/vendor/ViewCustomerReviews";
 import VendorProfile from "./components/vendor/vendorProfile";
 import VendorOrders from "./components/vendor/VendorOrders";
 import VendorUpdate from "./components/vendor/vendorUpdate";
-
 
 // courier imports
 import CourierHome from "./components/courier/CourierHome";
@@ -71,7 +70,6 @@ function App() {
             <Route path="/VendorProfile" element={<VendorProfile />} />
             <Route path="/VendorOrders" element={<VendorOrders />} />
             <Route path="/VendorUpdate" element={<VendorUpdate />} />
-
             VendorUpdate
             <Route
               path="/ViewCustomersReviews"
@@ -90,13 +88,11 @@ function App() {
             <Route path="/ViewCart" element={<CustomerViewCart />} />
             <Route path="/CurrentOrder" element={<CustomerCurrentOrder />} />
             <Route path="/CustomerViewMenu" element={<CustomerViewMenu />} />
-            <Route path="/CustomerUpdateInfo" element={<CustomerUpdateInfo />} />
             <Route
-              path="/CourierHome"
-              element={
-                  <CourierHome />
-              }
+              path="/CustomerUpdateInfo"
+              element={<CustomerUpdateInfo />}
             />
+            <Route path="/CourierHome" element={<CourierHome />} />
             <Route
               path="/StudentVendorHome"
               element={
@@ -110,7 +106,7 @@ function App() {
               path="/AdminHome"
               element={
                 // <ProtectedRoute allowedRoles={["admin"]}>
-                  <AdminHome />
+                <AdminHome />
                 // </ProtectedRoute>
               }
             />
@@ -174,7 +170,7 @@ function App() {
               path="/seeVendorRatings"
               element={
                 // <ProtectedRoute allowedRoles={["admin"]}>
-                  <SeeVendorReviews />
+                <SeeVendorReviews />
                 // </ProtectedRoute>
               }
             />
@@ -182,7 +178,7 @@ function App() {
               path="/joinRequests"
               element={
                 // <ProtectedRoute allowedRoles={["admin"]}>
-                  <SeeVendorRequests />
+                <SeeVendorRequests />
                 // </ProtectedRoute>
               }
             />
@@ -190,7 +186,7 @@ function App() {
               path="/banUser"
               element={
                 // <ProtectedRoute allowedRoles={["admin"]}>
-                  <BanVendors />
+                <BanVendors />
                 // </ProtectedRoute>
               }
             />
@@ -198,7 +194,7 @@ function App() {
               path="/view-courier-requests"
               element={
                 // <ProtectedRoute allowedRoles={["admin"]}>
-                  <SeeCourierRequests />
+                <SeeCourierRequests />
                 // </ProtectedRoute>
               }
             />

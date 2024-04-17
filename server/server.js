@@ -77,80 +77,53 @@ const verifyToken = (req, res, next) => {
 
 // Unified Signup Route
 app.post("/signup", upload.single("image"), async (req, res) => {
-  const {
-    email,
-    password,
-    usertype,
-    name,
-    phone_Number,
-    roll_Number,
-    room_Number,
-    hostel,
-  } = req.body;
-  let Model = Users;
-  let newUser;
+  const { email, password, usertype, name, phone_Number, roll_Number, room_Number, hostel } = req.body;
 
-  let user = await Users.findOne({ email });
-  if (user) return res.status(400).json({ msg: "User already exists" });
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  switch (usertype) {
-    case "student_vendor":
-      Model = studentVendors;
-      newUser = {
-        email,
-        roll_Number,
-        room_Number,
-        hostel,
-        name,
-        phone_Number,
-        password: hashedPassword,
-        application: 'processing'
-      };
-      break;
-    case "vendor":
-      Model = Vendors;
-      newUser = { email, name, phone_Number, password: hashedPassword, application: 'processing'};
-      break;
-    case "courier":
-      Model = Couriers;
-      newUser = {
-        email,
-        roll_Number,
-        name,
-        phone_Number,
-        password: hashedPassword,
-        application: 'processing'
-      };
-      break;
-    case "customer":
-      Model = Customers;
-      newUser = {
-        email,
-        roll_Number,
-        room_Number,
-        hostel,
-        name,
-        phone_Number,
-        password: hashedPassword,
-      };
-      break;
-    default:
-      return res.status(400).send("Invalid user type");
+  if (!email || !password || !usertype || !name || !phone_Number) {
+      return res.status(400).json({ msg: "Missing required fields" });
   }
 
   try {
-    const savedUser = new Model(newUser);
-    await savedUser.save();
+      let user = await Users.findOne({ email });
+      if (user) {
+          return res.status(400).json({ msg: "User already exists" });
+      }
 
-    await new Users({ email, password: hashedPassword, role: usertype }).save();
+      const hashedPassword = await bcrypt.hash(password, 10);
+      let newUser = { email, name, phone_Number, password: hashedPassword, application: 'processing' };
 
-    const token = generateToken(savedUser);
-    res.status(201).json({ token });
+      switch (usertype) {
+          case "student_vendor":
+              newUser = { ...newUser, roll_Number, room_Number, hostel };
+              Model = studentVendors;
+              break;
+          case "vendor":
+              // Vendors don't save roll number, room number, or hostel
+              Model = Vendors;
+              break;
+          case "courier":
+              // Couriers save roll number but not room number or hostel
+              newUser = { ...newUser, roll_Number };
+              Model = Couriers;
+              break;
+          case "customer":
+              // Customers save roll number, room number, and hostel
+              newUser = { ...newUser, roll_Number, room_Number, hostel };
+              Model = Customers;
+              break;
+          default:
+              return res.status(400).send("Invalid user type");
+      }
+
+      user = new Model(newUser);
+      await user.save();
+      
+      const token = generateToken(user);  // Ensure this method is secure
+      res.status(201).json({ token });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
+      console.error(err);
+      res.status(500).send("Server error");
   }
 });
 

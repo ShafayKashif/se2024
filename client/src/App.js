@@ -54,14 +54,14 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Login />} />
           <Route path="/MainSignup" element={<MainSignup />} />
-          <Route path="/CustomerSignup" element={<CustomerSignup />} />
+          {/* <Route path="/CustomerSignup" element={<CustomerSignup />} />
           <Route path="/CourierSignup" element={<CourierSignup />} />
           <Route path="/VendorSignup" element={<VendorSignup />} />
 
           <Route
             path="/StudentVendorSignup"
             element={<StudentVendorSignup />}
-          />
+          /> */}
 
           {/* Layout with Navbar */}
           <Route element={<LayoutWithNavbar />}>

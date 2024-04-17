@@ -1,46 +1,55 @@
-.MainSignup-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: white;
+/* General input styles */
+input[type="text"], input[type="password"], input[type="email"], select {
+  width: 100%;
+  padding: 10px 10px;  /* Ensuring enough padding inside the input box */
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  outline: none;
+  color: #000;  /* Ensuring text color is black */
+  box-sizing: border-box;  /* This ensures padding is included in width calculation */
+  height: 40px; /* Fixed height for all input fields */
+  display: block; /* Ensures that the input field is properly displayed */
+  overflow: hidden; /* Prevents text from being clipped */
 }
 
-.MainSignup-header {
-  color: black;
-  margin-bottom: 20px;
+/* Specific styles to ensure placeholder text is visible and in black */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #000;
+  opacity: 1; /* Firefox */
+  vertical-align: middle;  /* Aligning text vertically center */
 }
 
-.MainSignup-logo {
-  margin-bottom: 20px;
-  width: 350px;
-  height: 350px;
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #000;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: #000;
 }
 
-.sub-button {
-  background-color: #003366;
+/* Style for the select dropdown */
+select {
+  background-color: #fff;
+  color: #000;
+  height: 40px;  /* Consistent height with input fields */
+}
+
+/* Button styles */
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #0056b3;
   color: white;
-  padding: 10px 20px;
   margin: 10px 0;
-  text-decoration: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
   border: none;
 }
 
-.question {
-  margin-top: 20px;
-  color: black;
-}
-
-.question a {
-  color: darkblue;
-  text-decoration: none;
+/* Error message styling */
+.error-message {
+  color: red;
+  margin-top: 10px;
 }

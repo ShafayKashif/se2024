@@ -11,6 +11,7 @@ const Navbar = () => {
   // const { authState } = useAuth();
   // const { role } = authState;
   const role = window.sessionStorage.getItem('role')
+  const status = window.sessionStorage.getItem('status')
   // console.log("Role: ", role)
 
   const handleNavigate = (path) => {
@@ -71,7 +72,49 @@ const Navbar = () => {
           </button>
         </>
         )}
-        {role === "vendor" && (
+        {role === "vendor" && status==='banned' && (
+          <>
+          {/* <button
+              className={location.pathname === "/VendorHome" ? "active" : ""}
+              onClick={() => handleNavigate("/VendorHome")}
+            >
+              HomePage
+            </button>
+            <button
+              className={location.pathname === "/AddItem" ? "active" : ""}
+              onClick={() => handleNavigate("/AddItem")}
+            >
+              Add an Item
+            </button>
+            <button
+              className={location.pathname === "/VendorOrders" ? "active" : ""}
+              onClick={() => handleNavigate("/VendorOrders")}
+            >
+              View Current Orders
+            </button>
+            <button
+              className={location.pathname === "/ViewCustomersReviews" ? "active" : ""}
+              onClick={() => handleNavigate("/ViewCustomersReviews")}
+            >
+              View Customer Reviews
+            </button>
+            <button
+              className={location.pathname === "/VendorProfile" ? "active" : ""}
+              onClick={() => handleNavigate("/VendorProfile")}
+            >
+              Profile & Analytics
+            </button>
+            <button
+              className={
+                  location.pathname === "/VendorUpdate" ? "active settings-button" : "settings-button"
+              }
+              onClick={() => handleNavigate("/VendorUpdate")}
+              >
+              <img src={settingImage} alt="Settings" />
+          </button> */}
+        </>
+        )}
+        {role === "vendor" && (!status||status!='banned') && (
           <>
           <button
               className={location.pathname === "/VendorHome" ? "active" : ""}

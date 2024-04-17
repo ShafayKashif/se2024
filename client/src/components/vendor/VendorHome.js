@@ -30,6 +30,7 @@ const VendorHome = () => {
         const response = await axios.post('http://localhost:3001/is-vendor-banned', { email });
         if (response.data.isBanned) {
           setIsBanned(true);
+          window.sessionStorage.setItem('status', 'banned')
           setBanDescription(response.data.banDescription);
         }
       } catch (error) {
@@ -57,6 +58,7 @@ const VendorHome = () => {
     // Initial calls to fetch items, check banned status, and application status
     const interval = setInterval(() => {
       checkBannedStatus();
+      
       checkApplicationStatus();
     }, 5000);
 

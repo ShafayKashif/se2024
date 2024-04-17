@@ -1,0 +1,15 @@
+.update-image {
+    position: relative;
+  }
+  
+  .sub-button {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  
+  .logout-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+  

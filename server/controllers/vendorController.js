@@ -352,7 +352,7 @@ const updateVendorImage = async (req,res) => {
     // Update profile image link in the database
     vendor.profileImage = imageLink;
     await vendor.save();
-
+    console.log("SUCESS")
     res.status(200).json({ message: 'Profile image link updated successfully' });
   } catch (error) {
     console.error(error);
@@ -360,7 +360,24 @@ const updateVendorImage = async (req,res) => {
   }
 };
 
+const VendorUpdateInfo = async (req,res) => {
+  console.log(req.body)
+  const { vendorEmail,field, value} = req.body;
+  try {
+    const vendor = await Vendors.findOne({ email: vendorEmail });
+    if (!vendor) {
+      return res.status(404).json({ message: "vendor not found" });
+    }
+    vendor[field] = value;
+    await vendor.save();
+    res.status(200).json({ message: "vendor updated successfully" });
+  } catch (error) {
+    console.error("Error updating vendor:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+  };
+
 
   export {showitems,add_item,ViewCustomerReviews,updateStockVendor,sellData,getNewOrders,
           vendorAnalytics,sellDataMostSold,calculateTotalRevenue,vendorItemGraphData,fetchVendorOrderHistory,
-          fetchVendorDetails,updateVendorImage};
+          fetchVendorDetails,updateVendorImage,VendorUpdateInfo};

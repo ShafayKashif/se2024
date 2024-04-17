@@ -23,7 +23,7 @@ import Carts from "./models/cartsModel.js";
 //controllers
 import { showitems , add_item , ViewCustomerReviews, updateStockVendor,sellData,getNewOrders,
           vendorAnalytics,sellDataMostSold,calculateTotalRevenue,vendorItemGraphData,fetchVendorOrderHistory,
-          fetchVendorDetails,updateVendorImage} from "./controllers/vendorController.js";
+          fetchVendorDetails,updateVendorImage,VendorUpdateInfo} from "./controllers/vendorController.js";
 
 dotenv.config();
 
@@ -195,6 +195,7 @@ app.post("/vendorItemGraphData", vendorItemGraphData);
 app.post("/VendorOrderHistory", fetchVendorOrderHistory);
 app.post("/vendorDetails",fetchVendorDetails)
 app.post("/updateVendorImage",updateVendorImage)
+app.post("/VendorUpdateInfo",VendorUpdateInfo)
 
 
 

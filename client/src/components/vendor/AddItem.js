@@ -111,74 +111,6 @@ const AddItem = () => {
 
   return (
     <div className="add-item-page">
-      <h1 className="add-item-header">ADD ITEM</h1>
-      <div className="partition"></div>
-      <form className="form" onSubmit={handleAddItem}>
-        {/* Input fields */}
-        <div>
-          <input
-            className="item-inp"
-            type="textarea"
-            placeholder="Item Name"
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-          />
-        </div>
-        {/* Other input fields */}
-        <div>
-        <div>
-          <input
-            className="item-inp"
-            type="textarea"
-            placeholder="Category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="item-inp"
-            type="number"
-            placeholder="Stock"
-            value={stock}
-            onChange={(e) => setStock(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="item-inp"
-            type="number"
-            placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            className="item-inp"
-            type="number"
-            placeholder="Calories"
-            value={calories}
-            onChange={(e) => setCalories(e.target.value)}
-          />
-        </div>
-        </div>
-        {/* Image upload field */}
-        <div>
-          <input
-            className="item-inp"
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-          />
-          {loading && <div className="loading-icon">Loading...</div>}
-        </div>
-        <div>
-          <button className="sub-button" type="submit" disabled={isBanned}>
-            {isBanned ? 'Banned: Cannot Add Item' : 'Add Item'}
-          </button>
-        </div>
-      </form>
       {isBanned ? (
         <div>
           <h1>You have been banned!</h1>
@@ -195,7 +127,7 @@ const AddItem = () => {
           <p>Your application has been denied. Better luck next time, champ!</p>
         </div>
       ) : (
-        <div>
+        <>
           <h1 className="add-item-header">ADD ITEM</h1>
           <div className="partition"></div>
           <form className="form" onSubmit={handleAddItem}>
@@ -203,7 +135,7 @@ const AddItem = () => {
             <div>
               <input
                 className="item-inp"
-                type="text"
+                type="textarea"
                 placeholder="Item Name"
                 value={itemName}
                 onChange={(e) => setItemName(e.target.value)}
@@ -211,42 +143,40 @@ const AddItem = () => {
             </div>
             {/* Other input fields */}
             <div>
-              <div>
-                <input
-                  className="item-inp"
-                  type="text"
-                  placeholder="Category"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                />
-              </div>
-              <div>
-                <input
-                  className="item-inp"
-                  type="number"
-                  placeholder="Stock"
-                  value={stock}
-                  onChange={(e) => setStock(e.target.value)}
-                />
-              </div>
-              <div>
-                <input
-                  className="item-inp"
-                  type="number"
-                  placeholder="Price"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-              </div>
-              <div>
-                <input
-                  className="item-inp"
-                  type="number"
-                  placeholder="Calories"
-                  value={calories}
-                  onChange={(e) => setCalories(e.target.value)}
-                />
-              </div>
+              <input
+                className="item-inp"
+                type="textarea"
+                placeholder="Category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+            </div>
+            <div>
+              <input
+                className="item-inp"
+                type="number"
+                placeholder="Stock"
+                value={stock}
+                onChange={(e) => setStock(e.target.value)}
+              />
+            </div>
+            <div>
+              <input
+                className="item-inp"
+                type="number"
+                placeholder="Price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </div>
+            <div>
+              <input
+                className="item-inp"
+                type="number"
+                placeholder="Calories"
+                value={calories}
+                onChange={(e) => setCalories(e.target.value)}
+              />
             </div>
             {/* Image upload field */}
             <div>
@@ -264,7 +194,7 @@ const AddItem = () => {
               </button>
             </div>
           </form>
-        </div>
+        </>
       )}
     </div>
   );

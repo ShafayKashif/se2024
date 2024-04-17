@@ -60,11 +60,15 @@ const MainSignup = () => {
     padding: "10px",
     margin: "5px 0",
     borderRadius: "5px",
-    border: "1px solid #ccc",
-    backgroundColor: "#fff",
-    color: "#000",
+    border: "1px solid #0056b3", // Dark blue border
+    backgroundColor: "#162447", // Dark blue background color
+    color: "#f0f0f0", // Text color
     outline: "none",
+    "::placeholder": {
+      color: "#ccc", // Placeholder text color
+    },
   };
+
 
   return (
     <div

@@ -29,7 +29,7 @@ const Login = (prop)=>{
         }
 
         try {
-          const response = await axios.post("http://localhost:3001/", {     
+          const response = await axios.post("https://se2024-dou2.onrender.com/", {     
           email,
           password,
           type: "login",

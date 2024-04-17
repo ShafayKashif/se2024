@@ -30,16 +30,18 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://se2024-dou2.onrender.com/login",
+        {
+          email,
+          password,
+        }
+      );
       if (response.data.msg === "User not found") {
         setErrorMessage("User not found!");
       } else if (response.data.msg === "Incorrect password") {
         setErrorMessage("Incorrect password!");
-      }
-      else if (response.status === 200 && response.data.token) {
+      } else if (response.status === 200 && response.data.token) {
         console.log("Login successful!");
         console.log("Received Token:", response.data.token);
         console.log("Received Role:", response.data.role);
@@ -55,24 +57,24 @@ const Login = () => {
           case "vendor":
             navigate("/VendorHome");
             window.localStorage.setItem("vendorEmail", email);
-            window.sessionStorage.setItem('role', 'vendor')
+            window.sessionStorage.setItem("role", "vendor");
             window.sessionStorage.setItem("email", email);
             break;
           case "customer":
             window.localStorage.setItem("CustomerEmail", email);
-            window.sessionStorage.setItem('role', 'customer')
+            window.sessionStorage.setItem("role", "customer");
             window.sessionStorage.setItem("email", email);
             // console.log("set item customer: ", email);
             navigate("/CustomerHome");
             break;
           case "courier":
             window.localStorage.setItem("CourierEmail", email);
-            window.sessionStorage.setItem('role', 'courier')
+            window.sessionStorage.setItem("role", "courier");
             navigate("/CourierHome");
             break;
           case "admin":
             window.localStorage.setItem("AdminEmail", email);
-            window.sessionStorage.setItem('role', 'admin')
+            window.sessionStorage.setItem("role", "admin");
             window.sessionStorage.setItem("email", email);
             navigate("/AdminHome");
             break;
@@ -96,7 +98,7 @@ const Login = () => {
         className="login-left"
         style={{ backgroundImage: `url(${lumsBackground})` }}
       ></div>
-      <div className="login-right" style={{ paddingLeft: '120px' }}>
+      <div className="login-right" style={{ paddingLeft: "120px" }}>
         <img src={logoImage} alt="Logo" className="login-logo" />
         <h2 className="login-title">Log in</h2>
         <form onSubmit={handleLogin}>

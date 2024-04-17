@@ -40,10 +40,13 @@ const MainSignup = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/signup", {
-        ...formData,
-        usertype: role,
-      });
+      const response = await axios.post(
+        "https://se2024-dou2.onrender.com/signup",
+        {
+          ...formData,
+          usertype: role,
+        }
+      );
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
         navigate("/");
@@ -68,7 +71,6 @@ const MainSignup = () => {
       color: "#ccc", // Placeholder text color
     },
   };
-
 
   return (
     <div

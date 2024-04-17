@@ -30,7 +30,7 @@ const SearchResultsPage = () => {
     const handleSearchSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3001/query", {     
+            const response = await axios.post("https://se2024-dou2.onrender.com/query", {     
                 type: "food-search",
                 query: newSearchQuery,
                 // vendor email,customer email,quantity,item_name, // itemId,// item_id,// price,total,imglink,
@@ -102,7 +102,7 @@ const SearchResultsPage = () => {
               const total = item.quantity * item.price
               const customerEmail = window.sessionStorage.getItem('email');
               try{
-                    await axios.post("http://localhost:3001/placeOrder", {
+                    await axios.post("https://se2024-dou2.onrender.com/placeOrder", {
                     type: "placeOrder",
                     usertype: "customer",
                     vendor_email: item.vendorEmail,
@@ -119,7 +119,7 @@ const SearchResultsPage = () => {
                 console.log("Error while adding to cart from frontend: ", err)
               }
               try {
-                const response = await axios.post("http://localhost:3001/UpdateQuantity", {
+                const response = await axios.post("https://se2024-dou2.onrender.com/UpdateQuantity", {
                   itemId: item.itemID,
                   vendorEmail: item.vendorEmail,
                   quantity: item.stock-item.quantity,

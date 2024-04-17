@@ -3,9 +3,9 @@ import "../../styles/CustomerReview.css";
 // usestate to store the input values, learnt from: https://www.youtube.com/watch?v=5e9_hp0nh1Q
 import { useState } from "react";
 // axios to make get requests to the server, learnt from: https://www.youtube.com/watch?v=RQM5UyDrNDc
-import axios from 'axios';
+import axios from "axios";
 // use navigate to redirect to another page, learnt from: https://www.youtube.com/watch?v=162Lm52CTBM
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 const CustomerReview = (props) => {
   const navigate = useNavigate();
@@ -17,25 +17,32 @@ const CustomerReview = (props) => {
   // asynchronous function to handle the review submission
   const handleReview = async (event) => {
     event.preventDefault();
-    if (!vendor_email || !rating || !comment) { // check if all fields are filled
+    if (!vendor_email || !rating || !comment) {
+      // check if all fields are filled
       alert("Please fill in all required fields.");
       return;
     }
 
     // get the customer email from local storage, learnt from https://www.youtube.com/watch?v=A98SPz5XLwY
-    const customer_email = window.sessionStorage.getItem('email');
-    console.log("customer_email", customer_email); 
+    const customer_email = window.sessionStorage.getItem("email");
+    console.log("customer_email", customer_email);
 
     try {
       // get the orders from the server
-      const response = await axios.get('http://localhost:3001/order'); 
+      const response = await axios.get(
+        "https://se2024-dou2.onrender.com/order"
+      );
       if (response.status === 200) {
         // console.log statements for debugging :p
         console.log("orders fetched!");
         const orders = response.data;
         console.log("orders", orders);
         // finding an instance of the order where the vendor email and customer email match the input values to check if they even ordered from vendor
-        const order = orders.find(order => order.vendorEmail === vendor_email && order.clientEmail === customer_email);
+        const order = orders.find(
+          (order) =>
+            order.vendorEmail === vendor_email &&
+            order.clientEmail === customer_email
+        );
         console.log("order", order);
         // if they didnt order, then:
         if (!order) {
@@ -43,26 +50,30 @@ const CustomerReview = (props) => {
           return;
         }
       } else {
-        console.error('Failed to fetch orders:', await response.text());
+        console.error("Failed to fetch orders:", await response.text());
       }
     } catch (error) {
-      console.error('Error fetching orders:', error.message);
+      console.error("Error fetching orders:", error.message);
     }
 
     // log the review to the server
     try {
-      const response = await axios.post("http://localhost:3001/logreview", {     
-        vendor_email,
-        customer_email,
-        rating,
-        comment,
-      type: "review",
-      usertype: "customer",});
+      const response = await axios.post(
+        "https://se2024-dou2.onrender.com/logreview",
+        {
+          vendor_email,
+          customer_email,
+          rating,
+          comment,
+          type: "review",
+          usertype: "customer",
+        }
+      );
 
       if (response.status === 200) {
         // if successsful, log the review and redirect to customer home
         console.log("review logged!");
-        navigate('/CustomerHome');
+        navigate("/CustomerHome");
       } else {
         console.error("review log failed:", await response.text());
       }
@@ -86,12 +97,10 @@ const CustomerReview = (props) => {
     // using onsubmit to call handlereview when form submitted (i.e when the submit button is clicked)
     //using onchange to call the respective set function when the input value changes
     // using validate rating to ensure the rating is not greater than 5
-    <div className='maindiv'>
-      <h1 >
-        Review your vendor
-      </h1>
+    <div className="maindiv">
+      <h1>Review your vendor</h1>
       <div className="partition"></div>
-      <form className="form" onSubmit={handleReview}> 
+      <form className="form" onSubmit={handleReview}>
         <div>
           <input
             className="user-inp"

@@ -99,7 +99,7 @@ const MainSignup = () => {
             {role !== "vendor" && (
               <input
                 type="text"
-                placeholder="Roll Number"
+                placeholder="Roll Number*"
                 name="roll_Number"
                 value={formData.roll_Number}
                 onChange={handleChange}
@@ -108,7 +108,7 @@ const MainSignup = () => {
             )}
             <input
               type="text"
-              placeholder="Name"
+              placeholder="Name*"
               name="name"
               value={formData.name}
               onChange={handleChange}
@@ -116,7 +116,7 @@ const MainSignup = () => {
             />
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Email*"
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -124,7 +124,7 @@ const MainSignup = () => {
             />
             <input
               type="text"
-              placeholder="Phone Number"
+              placeholder="Phone Number*"
               name="phone_Number"
               value={formData.phone_Number}
               onChange={handleChange}
@@ -134,7 +134,7 @@ const MainSignup = () => {
               <>
                 <input
                   type="text"
-                  placeholder="Hostel"
+                  placeholder="Hostel*"
                   name="hostel"
                   value={formData.hostel}
                   onChange={handleChange}
@@ -142,7 +142,7 @@ const MainSignup = () => {
                 />
                 <input
                   type="text"
-                  placeholder="Room Number"
+                  placeholder="Room Number*"
                   name="room_Number"
                   value={formData.room_Number}
                   onChange={handleChange}
@@ -152,7 +152,7 @@ const MainSignup = () => {
             )}
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Password*"
               name="password"
               value={formData.password}
               onChange={handleChange}
@@ -160,7 +160,7 @@ const MainSignup = () => {
             />
             <input
               type="password"
-              placeholder="Confirm Password"
+              placeholder="Confirm Password*"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}

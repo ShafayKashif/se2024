@@ -182,7 +182,7 @@ const Navbar = () => {
             <button
               onClick={() => handleNavigate("/")}
             >
-              log out
+              Log out
             </button>
           </>
         )}

@@ -89,7 +89,6 @@ const verifyToken = (req, res, next) => {
 };
 
 // Unified Signup Route
-// Unified Signup Route
 app.post("/signup", upload.single("image"), async (req, res) => {
   const {
     email,

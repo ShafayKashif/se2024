@@ -85,7 +85,7 @@ const Navbar = () => {
           
           </>
         )}
-        {role === "courier" && (application&&(application!=="processing"&&application!=="decline"))&&(
+        {role === "courier" && (!application&&(application!=="processing"&&application!=="decline"))&&(
             <>
              <button
               className={location.pathname === "/SeeOrders" ? "active" : ""}

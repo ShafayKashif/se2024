@@ -101,7 +101,6 @@ app.post("/signup", upload.single("image"), async (req, res) => {
     room_Number,
     hostel,
   } = req.body;
-<<<<<<< Updated upstream
   let Model = Users;
   let newUser;
 
@@ -121,12 +120,18 @@ app.post("/signup", upload.single("image"), async (req, res) => {
         name,
         phone_Number,
         password: hashedPassword,
-        application: 'processing'
+        application: "processing",
       };
       break;
     case "vendor":
       Model = Vendors;
-      newUser = { email, name, phone_Number, password: hashedPassword, application: 'processing'};
+      newUser = {
+        email,
+        name,
+        phone_Number,
+        password: hashedPassword,
+        application: "processing",
+      };
       break;
     case "courier":
       Model = Couriers;
@@ -136,7 +141,7 @@ app.post("/signup", upload.single("image"), async (req, res) => {
         name,
         phone_Number,
         password: hashedPassword,
-        application: 'processing'
+        application: "processing",
       };
       break;
     case "customer":
@@ -165,70 +170,6 @@ app.post("/signup", upload.single("image"), async (req, res) => {
     res.status(201).json({ token });
   } catch (err) {
     console.error(err);
-=======
-
-  console.log("Attempting signup with:", { email, usertype, name }); // Log initial signup attempt
-
-  if (!email || !password || !usertype || !name || !phone_Number) {
-    console.log("Failed signup due to missing fields:", {
-      email,
-      usertype,
-      name,
-    });
-    return res.status(400).json({ msg: "Missing required fields" });
-  }
-
-  try {
-    if (await Users.findOne({ email })) {
-      console.log("Failed signup - user already exists:", email);
-      return res.status(400).json({ msg: "User already exists" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    let newUser = {
-      email,
-      name,
-      phone_Number,
-      password: hashedPassword,
-      application: "processing",
-    };
-    let Model;
-
-    switch (usertype) {
-      case "student_vendor":
-        Model = studentVendors;
-        newUser = { ...newUser, roll_Number, room_Number, hostel };
-        break;
-      case "vendor":
-        Model = Vendors;
-        break;
-      case "courier":
-        Model = Couriers;
-        newUser = { ...newUser, roll_Number };
-        break;
-      case "customer":
-        Model = Customers;
-        newUser = { ...newUser, roll_Number, room_Number, hostel };
-        break;
-      default:
-        console.log("Failed signup - invalid user type:", usertype);
-        return res.status(400).send("Invalid user type");
-    }
-
-    const user = new Model(newUser); // Model is now clearly defined before use
-    await user.save();
-    console.log("User created successfully in DB:", newUser);
-
-    const token = generateToken(user);
-    console.log("Token generated for user:", {
-      id: user.id,
-      email: user.email,
-    });
-
-    res.status(201).json({ token });
-  } catch (err) {
-    console.error("Server error during signup:", err);
->>>>>>> Stashed changes
     res.status(500).send("Server error");
   }
 });

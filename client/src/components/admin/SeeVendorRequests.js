@@ -48,7 +48,6 @@ const SeeVendorRequests = () => {
           <div className="request-card" key={index} style={{ flex: '0 0 calc(50% - 20px)', backgroundColor: '#fff', padding: '20px', borderRadius: '10px', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)', marginBottom: '20px' }}>
             <h3>{request.name}</h3>
             <p>Type: {request.type}</p>
-            <p>Roll Number: {request.roll_Number}</p>
             <p>Phone Number: {request.phone_Number}</p>
             <div style={{ marginTop: '10px' }}>
               <button className="approve-button" onClick={() => handleDecision(request.email, "approve")} style={{ padding: '10px 20px', marginRight: '10px', backgroundColor: '#0056b3', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>Approve</button>

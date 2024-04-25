@@ -153,7 +153,6 @@ const VendorUpdate = () => {
         </div>
       ) : (
         <div>
-          <h1 className="update-image">Update Image</h1>
           <div className="partition"></div>
           <form className="form" onSubmit={handleAddItem}>
   <div>
@@ -164,7 +163,8 @@ const VendorUpdate = () => {
       <option value="phone_Number">Phone Number</option>
     </select>
     <input
-      type="text"
+      className="item-inp"
+      type="textarea"
       placeholder="Enter new value"
       value={value}
       onChange={(e) => setValue(e.target.value)}
@@ -174,6 +174,7 @@ const VendorUpdate = () => {
 </button>
   </div>
   <div>
+    <h6>Updtae Profile Image</h6>
     <input
       className="item-inp"
       type="file"

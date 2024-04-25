@@ -32,11 +32,12 @@ const SeeVendorReviews = () => {
       <div className="fixed-tint"></div>
       <div className='input-container'>
       <input
-        type="text"
+        type="textarea"
         placeholder="Search by vendor email"
         value={vendorEmail}
         onChange={handleSearchChange}
         onKeyDown={handleSearchClick}
+        className="user-inp"
       />
       <button className="search-vendor-rating-button" onClick={handleSearchClick}>Search</button>
       </div>

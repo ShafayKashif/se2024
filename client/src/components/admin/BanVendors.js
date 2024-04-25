@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import '../../styles/banVendor.css';
 
 const BanVendors = () => {
   const [vendorEmail, setVendorEmail] = useState('');
@@ -60,21 +61,24 @@ const BanVendors = () => {
         {/* Vendor Email input */}
         <label htmlFor="vendorEmail" style={{ display: 'block', marginBottom: '5px', color: '#555' }}>Vendor Email:</label>
         <input
-          type="text"
+          type="textarea"
           id="vendorEmail"
           value={vendorEmail}
           onChange={handleVendorEmailChange}
-          style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+          // style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+          className="user-inp"
         />
       </div>
       <div style={{ marginBottom: '20px' }}>
         {/* Description input */}
         <label htmlFor="description" style={{ display: 'block', marginBottom: '5px', color: '#555' }}>Description:</label>
-        <textarea
+        <input
+        type="textarea"
           id="description"
           value={description}
           onChange={handleDescriptionChange}
-          style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+          // style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+          className="user-inp"
         />
       </div>
       {/* Ban button */}

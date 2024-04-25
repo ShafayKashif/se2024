@@ -200,7 +200,7 @@ const VendorProfile = () => {
         </div>
         <div className="vendor-details">
           <h2>{vendorDetails}</h2>
-          <p>Vendor Email: {vendorEmail}</p>
+          <h2>Vendor Email: {vendorEmail}</h2>
         </div>
       </div>
       <div className="card-container">

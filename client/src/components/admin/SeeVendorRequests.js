@@ -42,7 +42,7 @@ const SeeVendorRequests = () => {
   };
 
   return (
-    <div className='see-vendor-requests-container' style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', gap: '20px', padding: '20px 0 20px 20px', borderRadius: '10px', boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)', position: 'relative', overflow: 'auto', maxHeight: 'calc(100vh - 100px)' }}>
+    <div className='see-vendor-requests-container'>
       {allRequests.length > 0 ? (
         allRequests.map((request, index) => (
           <div className="request-card" key={index} style={{ flex: '0 0 calc(50% - 20px)', backgroundColor: '#fff', padding: '20px', borderRadius: '10px', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.2)', marginBottom: '20px' }}>

@@ -1,11 +1,27 @@
+.container4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px; /* Reduce padding to decrease vertical space */
+    width: 100vw; /* Set width to 100% of viewport width */
+    height: 100vh; /* Set height to 100% of viewport height */
+    background: rgba(255, 255, 255, 0.7);
+    
+  }
+
 .review-container {
-    height: 200px; /* Set desired height */
+    height: 300px; /* Set desired height */
+    width: 600px;
     overflow-y: scroll;
+    background-color: rgba(0, 93, 233, 0.5);
+
 }
 
-.container {
-    background-color: lightblue;
+.review-container::-webkit-scrollbar {
+    display: none;
 }
+
 
 .containerh1 ,
 .container p {
@@ -15,4 +31,8 @@
 .review-container ,
 .container p {
     color: black;
+}
+
+.no-reviews {
+    font-size: 18px;
 }

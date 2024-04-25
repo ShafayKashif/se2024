@@ -64,7 +64,7 @@ function Reviews() {
     };
 
     return (
-        <div className="container">
+        <div className="container4">
             {isBanned ? (
         <div>
           <h1>You have been banned!</h1>

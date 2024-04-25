@@ -1,4 +1,4 @@
-import '../../styles/SeeOrders.css'
+import '../../styles/vendorCss/VendorOrders.css'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -128,7 +128,7 @@ const VendorOrders = () => {
   };
 
   return (
-    <div className="form-container">
+    <div className="order1-container">
       <h2>Customer orders</h2>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
       {isBanned ? (

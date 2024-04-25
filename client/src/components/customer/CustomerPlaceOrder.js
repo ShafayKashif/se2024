@@ -1,5 +1,5 @@
 // Page author: Hassan Ali
-// import "../../styles/CustomerPlaceOrder.css";
+import "../../styles/CustomerPlaceOrder.css";
 // usestate to store the input values, learnt from: https://www.youtube.com/watch?v=5e9_hp0nh1Q
 import { useState, useEffect } from "react";
 // axios to make get requests to the server, learnt from: https://www.youtube.com/watch?v=RQM5UyDrNDc

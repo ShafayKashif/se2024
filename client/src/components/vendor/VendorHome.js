@@ -100,7 +100,7 @@ const VendorHome = () => {
         </div>
       ) : (
         <div>
-          <h1>Welcome,</h1>
+          <h1>Welcome</h1>
           <div className="items-container">
             {items.map(item => (
               <div key={item.itemId} className="item-card">

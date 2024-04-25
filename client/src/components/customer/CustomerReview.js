@@ -94,7 +94,7 @@ const CustomerReview = (props) => {
       <form className="form" onSubmit={handleReview}> 
         <div>
           <input
-            className="user-inp"
+            className="user-inpCR"
             type="textarea"
             placeholder="Vendor Email"
             value={vendor_email}
@@ -103,7 +103,7 @@ const CustomerReview = (props) => {
         </div>
         <div>
           <input
-            className="user-inp"
+            className="user-inpCR"
             type="textarea"
             placeholder="Description"
             value={comment}
@@ -112,7 +112,7 @@ const CustomerReview = (props) => {
         </div>
         <div>
           <input
-            className="user-inp"
+            className="user-inpCR"
             type="number"
             placeholder="Rating /5"
             value={rating}

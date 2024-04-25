@@ -21,10 +21,17 @@ form {
   font-size: 16px;
   min-width: 400px;
   max-width: 400px;
+  background-color: transparent;
+  border-color: #8e8d8d;
+  border-radius: 5px;
+}
+
+.user-inpCPO::placeholder {
+  color: #ffffff;
 }
 
 
-.sub-button {
+button {
   margin-top: 10px;
   padding: 10px 20px;
   font-size: 16px;
@@ -32,6 +39,16 @@ form {
   max-width: 200px;
   min-width: 150px;
   align-items: center;
+  background-color: transparent;
+  border-color: #8e8d8d;
+  border-radius: 500px;
+  color: #ffffff;
+}
+
+/*hover over button */
+button:hover {
+  background-color: #8e8d8d;
+  color: #000000;
 }
 
 .ButtonsCPO {
@@ -39,6 +56,8 @@ form {
   flex-direction: row;
   justify-content: center; /* Optional: Align items horizontally at the center */
   align-items: center; /* Optional: Align items vertically at the center */
+  
+
 }
 
 .sub-button:not(:last-child) {
@@ -81,3 +100,18 @@ form {
 .vendor-render{
   color: #000000;
 }
+
+h3 .titleCVC {
+  background-color: transparent;
+}
+
+.ButtonCVCR {
+  min-width: 15% !important;
+  max-width: 15% !important;
+}
+
+.ButtonCVC {
+  min-width: 5% !important;
+  max-width: 5% !important;
+}
+

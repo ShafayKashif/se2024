@@ -60,8 +60,8 @@ const CourierUpdateInfo = (props) => {
                 Update your personal info
             </h1>
             <form className="form" onSubmit={handleUpdateInfo}>
-                <select class="user-inp" onChange={(e) => setField(e.target.value)}>
-                    <option value="">Select Field</option>
+                <select class="user-inpCPO" onChange={(e) => setField(e.target.value)}>
+                    <option value="">What to change?</option>
                     <option value="phone_Number">Phone Number</option>
                 </select>
                 <input
@@ -69,6 +69,7 @@ const CourierUpdateInfo = (props) => {
                     placeholder="Enter new value"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
+                    className="user-inpCPO"
                 />
                 <button className="sub-button" type="submit">
                     Update Info

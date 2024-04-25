@@ -65,8 +65,8 @@ const CustomerUpdateInfo = (props) => {
                 Update your personal info
             </h1>
             <form className="form" onSubmit={handleUpdateInfo}>
-                <select class="user-inp" onChange={(e) => setField(e.target.value)}>
-                    <option value="">Select Field</option>
+                <select class="user-inpCPO" onChange={(e) => setField(e.target.value)}>
+                    <option value="">What to change?</option>
                     <option value="room_Number">Room Number</option>
                     <option value="hostel">Hostel</option>
                     <option value="phone_Number">Phone Number</option>
@@ -74,6 +74,7 @@ const CustomerUpdateInfo = (props) => {
                 <input
                     type="textarea"
                     placeholder="Enter new value"
+                    className="user-inpCPO"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                 />

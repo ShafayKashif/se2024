@@ -89,6 +89,7 @@ const CustomerHome = () => {
                 <input onChange={handleSearchInputChange}
                     type="text"
                     className='SearchBar1'
+                    placeholder='Search...'
                 />
                 <button type="submit" className='SearchButton' onClick={handleSearchSubmit}>Search</button>
             </form>

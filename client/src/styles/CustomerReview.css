@@ -1,33 +1,106 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
-
-* {
-  margin: 0;
-  padding: 0;
-  font-family: "Poppins", sans-serif;
+.review {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  position: absolute;
+  top: 100px;
+  left: 500px;
+  
 }
 
-body {
-  background: linear-gradient(90deg, #fb37ff, #18b2de);
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
 }
 
-.sub-button-Home {
-  margin-top: 10px;
-  width: 48%;
-  height: 50px;
-  background-color: #fff;
-  outline: none;
-  border: solid #fff;
-  border-radius: 40px;
+.user-inpCR {
+  margin-bottom: 10px;
+  padding: 8px;
   font-size: 16px;
-  color: #000;
+  min-width: 400px;
+  max-width: 400px;
+  background-color: transparent;
+  border-color: #8e8d8d;
+  border-radius: 5px;
+}
+
+.user-inpCR::placeholder {
+  color: #ffffff;
+}
+
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  max-width: 200px;
+  min-width: 150px;
+  align-items: center;
+  background-color: transparent;
+  border-color: #8e8d8d;
+  border-radius: 500px;
+  color: #ffffff;
+}
+
+/*hover over button */
+button:hover {
+  background-color: #8e8d8d;
+  color: #000000;
+}
+
+.Buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center; /* Optional: Align items horizontally at the center */
+  align-items: center; /* Optional: Align items vertically at the center */
+  
+
+}
+
+.sub-button:not(:last-child) {
+  margin-right: 10px;
+}
+
+.question {
+  margin-top: 20px;
+}
+
+
+
+/* Styles for search results box */
+.search-results1 {
+  max-height: 200px;
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #ffffff;
+  margin-top: 10px;
+}
+
+.search-results-item {
+  padding: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+  background-color: #ffffff;
+}
+
+.search-results-item:last-child {
+  border-bottom: none; /* Remove border for the last item */
+}
+
+.search-results-item p {
+  margin: 0;
+  color: rgb(0, 0, 0);
+}
+
+.vendor-render{
+  color: #000000;
 }
 
 h1 {
-  text-align: center;
-  margin-top: 1px;
-  font-weight: bold;
-}
-
-::placeholder {
-  color: #fff;
+  color: #285A84;
 }

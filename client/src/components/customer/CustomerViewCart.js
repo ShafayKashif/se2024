@@ -444,7 +444,7 @@ const CustomerViewCart = () => {
 
     return (
         <div className='maindiv'>
-            <h3 className='title'>
+            <h3 className='titleCVC'>
                 Your cart:
             </h3>
             <div className="items-container1">
@@ -457,9 +457,9 @@ const CustomerViewCart = () => {
                         <p>Price: {item.price}</p>
                         <p>Total: {item.total}</p>
                         <div>
-                            <button onClick={() => handleIncreaseQuantity(item.itemId)}>+</button>
-                            <button onClick={() => handleDecreaseQuantity(item.itemId)}>-</button>
-                            <button onClick={() => handleRemoveItem(item.itemId)}>Remove</button>
+                            <button className='ButtonCVC' onClick={() => handleIncreaseQuantity(item.itemId)}>+</button>
+                            <button className='ButtonCVC' onClick={() => handleDecreaseQuantity(item.itemId)}>-</button>
+                            <button className='ButtonCVC' onClick={() => handleRemoveItem(item.itemId)}>R</button>
                         </div>
                     </div>
                 ))}

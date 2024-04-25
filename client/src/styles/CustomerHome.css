@@ -30,15 +30,15 @@ nav {
   margin-bottom: 10px; /* Reduce margin to decrease vertical space */
 }
 
-form {
-  width: 70%; /* Set the form width to 70% of the parent container (.maindiv) */
-  display: flex; /* Use flexbox */
+/* form {
+  width: 70%; /* Set the form width to 70% of the parent container (.maindiv) 
+  display: flex; /* Use flexbox 
 }
 
 input[type="text"] {
-  flex: 1; /* Let the input take remaining space */
-  padding: 10px; /* Optional: Add padding for better appearance */
-}
+  flex: 1; /* Let the input take remaining space 
+  padding: 10px; /* Optional: Add padding for better appearance 
+} */
 
 .SearchButton {
   position: absolute;
@@ -47,9 +47,9 @@ input[type="text"] {
   transform: translate(-50%, -50%);
   min-width: 70px;
   min-height: 40px;
-  background-color: #fff;
+  background-color: #878787;
   outline: none;
-  border: solid #fff;
+  border: #fff;
   border-radius: 40px;
   font-size: 14px;
   color: #000;
@@ -60,16 +60,15 @@ input[type="text"] {
   top: 18%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-width: 70%;
-  border-radius: 40px;
-  background: #fff;
-
-
-
+  min-width: 60%;
+  border-radius: 20px;
+  background-color: transparent  !important; ;
+  color: rgb(84, 83, 83);
 }
 
-
-
+.SearchBar1::placeholder {
+  color: rgb(84, 83, 83);
+}
 
 
 h3.title {
@@ -204,4 +203,13 @@ p {
 .item-imageRO {
   width: 100px;
   height: auto;
+}
+
+h4 {
+  color: #285A84;
+}
+
+.order-again {
+  color: #285A84;
+  font-size: 20px;
 }

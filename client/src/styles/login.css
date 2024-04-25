@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Great+Vibes&display=swap');
 .login-container {
   display: flex;
   width: 100vw;
@@ -9,8 +11,9 @@
   width: 55%; 
   height: auto;
   background-image: url("./lums_background.jpg");
-  background-size: 995px 640px; /* Adjust the size of the background image */
-  background-repeat: no-repeat; /* Ensure the background image doesn't repeat */
+  background-size: cover; /* Fill the entire background area */
+  background-repeat: no-repeat;
+
 }
 
 .login-right {

@@ -95,7 +95,26 @@ const Login = () => {
       <div
         className="login-left"
         style={{ backgroundImage: `url(${lumsBackground})` }}
-      ></div>
+        
+        
+      >
+
+
+
+<h1 style={{ color: "black", fontFamily: "Roboto, sans-serif" }}>WELCOME TO <span style={{ color: "white", fontFamily: "Dancing Script, sans-serif" }}>CAMPUS CUISINE</span></h1>
+
+        {/* <h3 style={{ color: "#fff" }}>Feeling Hungry?</h3>
+        <h3 style={{ color: "#fff" }}>Feeling Tired?</h3>
+        <h3 style={{ color: "#fff" }}>Feeling down?</h3> */}
+        <h3 style={{ color: "#003249", fontFamily: "Roboto, Cursive" }}>Revolutionize your dining experience with our all-in-one food delivery and service app. Seamlessly connecting customers, vendors, and couriers, we bring delicious meals straight to your doorstep or if you are feeling adventurous, book your meals and go get them from the vendors yourself!!!</h3>
+
+
+
+
+
+
+
+      </div>
       <div className="login-right" style={{ paddingLeft: '120px' }}>
         <img src={logoImage} alt="Logo" className="login-logo" />
         <h2 className="login-title">Log in</h2>

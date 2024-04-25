@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import '../../styles/MainSignup.css'
 
 const MainSignup = () => {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ const MainSignup = () => {
   };
 
   const inputStyle = {
+    
     width: "100%",
     padding: "10px",
     margin: "5px 0",
@@ -71,22 +73,16 @@ const MainSignup = () => {
 
 
   return (
-    <div
-      style={{
-        padding: "20px",
-        maxWidth: "500px",
-        margin: "auto",
-        color: "#000",
-      }}
-    >
+    <div className="main-signup">
       <h1 style={{ textAlign: "center", color: "#000" }}>
         Signup as {role ? role.charAt(0).toUpperCase() + role.slice(1) : "..."}
       </h1>
       <form onSubmit={handleSignup}>
         <select
+          className="user-inp"
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          style={inputStyle}
+
         >
           <option value="">Select Role</option>
           <option value="customer">Customer</option>
@@ -98,88 +94,80 @@ const MainSignup = () => {
           <>
             {role !== "vendor" && (
               <input
-                type="text"
+                className="item-inp"
+                type="textarea"
                 placeholder="Roll Number*"
                 name="roll_Number"
                 value={formData.roll_Number}
                 onChange={handleChange}
-                style={inputStyle}
               />
             )}
             <input
-              type="text"
+                className="item-inp"
+                type="textarea"
               placeholder="Name*"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              style={inputStyle}
             />
             <input
-              type="email"
+                className="item-inp"
+                type="textarea"
               placeholder="Email*"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              style={inputStyle}
             />
             <input
-              type="text"
+                className="item-inp"
+                type="textarea"
               placeholder="Phone Number*"
               name="phone_Number"
               value={formData.phone_Number}
               onChange={handleChange}
-              style={inputStyle}
             />
             {role !== "vendor" && (
               <>
                 <input
-                  type="text"
+                className="item-inp"
+                type="textarea"
                   placeholder="Hostel*"
                   name="hostel"
                   value={formData.hostel}
                   onChange={handleChange}
-                  style={inputStyle}
                 />
                 <input
-                  type="text"
+                className="item-inp"
+                type="textarea"
                   placeholder="Room Number*"
                   name="room_Number"
                   value={formData.room_Number}
                   onChange={handleChange}
-                  style={inputStyle}
                 />
               </>
             )}
             <input
-              type="password"
+                className="item-inp"
+                type="textarea"
               placeholder="Password*"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              style={inputStyle}
             />
             <input
-              type="password"
+                className="item-inp"
+                type="textarea"
               placeholder="Confirm Password*"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              style={inputStyle}
             />
             {error && (
               <div style={{ color: "red", marginTop: "10px" }}>{error}</div>
             )}
             <button
               type="submit"
-              style={{
-                width: "100%",
-                padding: "10px",
-                backgroundColor: "#0056b3",
-                color: "white",
-                margin: "10px 0",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
+              className="sub-button"
             >
               Signup
             </button>

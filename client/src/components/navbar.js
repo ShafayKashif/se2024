@@ -11,6 +11,8 @@ const Navbar = () => {
   // const { authState } = useAuth();
   // const { role } = authState;
   const role = window.sessionStorage.getItem('role')
+  const status = window.sessionStorage.getItem('status')
+  const application = window.sessionStorage.getItem("application")
   // console.log("Role: ", role)
 
   const handleNavigate = (path) => {
@@ -71,7 +73,44 @@ const Navbar = () => {
           </button>
         </>
         )}
-        {role === "vendor" && (
+        {role === "vendor" &&status&& status==='banned' && (
+          <>
+          
+        </>
+        )}
+        
+        {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECASES */}
+        {(role === "vendor" || role === "courier") && ((application === "processing" || application === "decline")) && (
+          <>
+          
+          </>
+        )}
+        {role === "courier" && (!application&&(application!=="processing"&&application!=="decline"))&&(
+            <>
+             <button
+              className={location.pathname === "/SeeOrders" ? "active" : ""}
+              onClick={() => handleNavigate("/SeeOrders")}
+            >
+              See All Orders
+            </button>
+            <button
+              className={location.pathname === "/courierAnalytics" ? "active" : ""}
+              onClick={() => handleNavigate("/courierAnalytics")}
+            >
+              View analytics
+            </button>
+            <button
+              className={
+                  location.pathname === "/CourierUpdateInfo" ? "active settings-button" : "settings-button"
+              }
+              onClick={() => handleNavigate("/CourierUpdateInfo")}
+              >
+              <img src={settingImage} alt="Settings" />
+          </button> 
+          </>
+        )}
+
+        {role === "vendor" && ((!status||status!='banned') && (application && (application!=="processing"&&application!=="decline")))&&(
           <>
           <button
               className={location.pathname === "/VendorHome" ? "active" : ""}
@@ -113,31 +152,7 @@ const Navbar = () => {
           </button>
         </>
         )}
-        {/* TO DO ADD NAVIGATION FOR OTHER ACTORS AS WE RECEACH THERI USECSES */}
-        {role === "courier" && (
-          <>
-          <button
-              className={location.pathname === "/SeeOrders" ? "active" : ""}
-              onClick={() => handleNavigate("/SeeOrders")}
-            >
-              See All Orders
-            </button>
-            <button
-              className={location.pathname === "/courierAnalytics" ? "active" : ""}
-              onClick={() => handleNavigate("/courierAnalytics")}
-            >
-              View analytics
-            </button>
-            <button
-              className={
-                  location.pathname === "/CourierUpdateInfo" ? "active settings-button" : "settings-button"
-              }
-              onClick={() => handleNavigate("/CourierUpdateInfo")}
-              >
-              <img src={settingImage} alt="Settings" />
-          </button>
-          </>
-        )}
+
         {role === "admin" && (
           <>
           <button
@@ -163,6 +178,11 @@ const Navbar = () => {
               onClick={() => handleNavigate("/banUser")}
             >
               Ban User
+            </button>
+            <button
+              onClick={() => handleNavigate("/")}
+            >
+              Log out
             </button>
           </>
         )}

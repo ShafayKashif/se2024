@@ -30,6 +30,7 @@ const VendorHome = () => {
         const response = await axios.post('http://localhost:3001/is-vendor-banned', { email });
         if (response.data.isBanned) {
           setIsBanned(true);
+          window.sessionStorage.setItem('status', 'banned')
           setBanDescription(response.data.banDescription);
         }
       } catch (error) {
@@ -43,11 +44,14 @@ const VendorHome = () => {
         const status = response.data.decision;
         if (status === 'approve') {
           fetchItems();
+          window.sessionStorage.setItem('application', 'approve')
         } else if (status === 'decline') {
-          alert('Your application has been declined.');
+          // alert('Your application has been declined.');
+          window.sessionStorage.setItem('application', 'decline')
           setApplicationStatus('declined')
         } else {
           setApplicationStatus('processing');
+          window.sessionStorage.setItem('application', 'processing')
         }
       } catch (error) {
         console.error('Error checking application status:', error);
@@ -57,8 +61,9 @@ const VendorHome = () => {
     // Initial calls to fetch items, check banned status, and application status
     const interval = setInterval(() => {
       checkBannedStatus();
+      
       checkApplicationStatus();
-    }, 5000);
+    }, 3000);
 
     // Cleanup function to clear interval
     return () => clearInterval(interval);

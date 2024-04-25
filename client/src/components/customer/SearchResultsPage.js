@@ -162,13 +162,13 @@ const SearchResultsPage = () => {
         <div className="search-sort-container">
           <form onSubmit={handleSearchSubmit} className="search-form">
             <input
-              type="text"
+              type="textarea"
               placeholder="Search..."
               value={newSearchQuery}
               onChange={handleSearchInputChange}
               className="search-input"
             />
-            <button type="submit" className="search-button" style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', padding: '10px 20px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', transition: 'background-color 0.3s' }}>Search</button>
+            <button type="submit" className="search-button">Search</button>
           </form>
           <div className="sort-by-container">
           <label htmlFor="sort" className="sort-label" style={{ fontFamily: 'Arial, sans-serif', color: '#fff', fontSize: '16px', marginRight: '10px' }}>Sort by:</label>
@@ -189,7 +189,7 @@ const SearchResultsPage = () => {
                 <p className="vendor-email">Vendor Email: {result.vendorEmail}</p>
                 <p className="item-price">Price: {result.price}</p>
                 <p className="item-calories">Calories: {result.calories}</p>
-                <button onClick={() => handleAddToCart(result)} className="add-to-cart-button" style={{ backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '4px', padding: '12px 24px', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', transition: 'background-color 0.3s' }}>Add to Cart</button>
+                <button onClick={() => handleAddToCart(result)} className="add-to-cart-button">Add to Cart</button>
               </div>
             </li>
           ))}
@@ -200,7 +200,7 @@ const SearchResultsPage = () => {
             <ul className="cart-list">
                   {cartItems.map((item, index) => (
                     <li key={index} className="cart-item">
-                        <div className="cart-item-details" style={{ fontFamily: 'Arial, sans-serif', color: '#fff' }}>
+                        <div className="cart-item-details" >
                             <div>
                                 <h3 style={{ fontFamily: 'Arial, sans-serif', color: '#fff' }}>{item.itemName}</h3>
                                 <p style={{ fontFamily: 'Arial, sans-serif', color: '#fff' }}>Price: {item.price}</p>
@@ -208,9 +208,9 @@ const SearchResultsPage = () => {
                                 <p style={{ fontFamily: 'Arial, sans-serif', color: '#fff' }}>Total: {item.price * item.quantity}</p>
                             </div>
                             <div className="cart-item-actions">
-                            <button onClick={() => handleIncreaseQuantity(item.itemId)} className="cart-action-button" style={{ backgroundColor: '#28a745', color: '#fff', border: '2px solid #28a745', borderRadius: '4px', padding: '8px 16px', fontSize: '16px', fontWeight: 'bold', marginRight: '5px', cursor: 'pointer', transition: 'background-color 0.3s' }}>+</button>
-<button onClick={() => handleDecreaseQuantity(item.itemId)} className="cart-action-button" style={{ backgroundColor: '#dc3545', color: '#fff', border: '2px solid #dc3545', borderRadius: '4px', padding: '8px 16px', fontSize: '16px', fontWeight: 'bold', marginRight: '5px', cursor: 'pointer', transition: 'background-color 0.3s' }}>-</button>
-<button onClick={() => handleRemoveFromCart(item.itemId)} className="cart-action-button" style={{ backgroundColor: '#ffc107', color: '#212529', border: '2px solid #ffc107', borderRadius: '4px', padding: '8px 16px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', transition: 'background-color 0.3s' }}>Remove</button>
+                            <button onClick={() => handleIncreaseQuantity(item.itemId)} className="cart-action-button" >+</button>
+<button onClick={() => handleDecreaseQuantity(item.itemId)} className="cart-action-button" >-</button>
+<button onClick={() => handleRemoveFromCart(item.itemId)} className="cart-action-button" >Remove</button>
 
 
                             </div>
@@ -218,7 +218,7 @@ const SearchResultsPage = () => {
                     </li>
                 ))}
             </ul>
-            <button onClick={handleCheckout} className="checkout-button" style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', padding: '12px 24px', fontSize: '20px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', transition: 'background-color 0.3s' }}>Checkout</button>
+            <button onClick={handleCheckout} className="checkout-button" >Checkout</button>
           </div>
         )}
       </div>

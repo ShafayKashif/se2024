@@ -36,13 +36,16 @@ const VendorSignup = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/signup", {
-        name,
-        email,
-        phone_Number,
-        password,
-        usertype: "vendor",
-      });
+      const response = await axios.post(
+        "https://se2024-cwdv.onrender.com/signup",
+        {
+          name,
+          email,
+          phone_Number,
+          password,
+          usertype: "vendor",
+        }
+      );
 
       if (response.data.token) {
         console.log("Signup successful!");

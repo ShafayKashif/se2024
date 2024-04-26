@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import '../../styles/MainSignup.css'
+import "../../styles/MainSignup.css";
 
 const MainSignup = () => {
   const navigate = useNavigate();
@@ -41,10 +41,13 @@ const MainSignup = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/signup", {
-        ...formData,
-        usertype: role,
-      });
+      const response = await axios.post(
+        "https://se2024-cwdv.onrender.com/signup",
+        {
+          ...formData,
+          usertype: role,
+        }
+      );
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
         navigate("/");
@@ -57,7 +60,6 @@ const MainSignup = () => {
   };
 
   const inputStyle = {
-    
     width: "100%",
     padding: "10px",
     margin: "5px 0",
@@ -71,7 +73,6 @@ const MainSignup = () => {
     },
   };
 
-
   return (
     <div className="main-signup">
       <h1 style={{ textAlign: "center", color: "#000" }}>
@@ -82,7 +83,6 @@ const MainSignup = () => {
           className="user-inp"
           value={role}
           onChange={(e) => setRole(e.target.value)}
-
         >
           <option value="">Select Role</option>
           <option value="customer">Customer</option>
@@ -103,24 +103,24 @@ const MainSignup = () => {
               />
             )}
             <input
-                className="item-inp"
-                type="textarea"
+              className="item-inp"
+              type="textarea"
               placeholder="Name*"
               name="name"
               value={formData.name}
               onChange={handleChange}
             />
             <input
-                className="item-inp"
-                type="textarea"
+              className="item-inp"
+              type="textarea"
               placeholder="Email*"
               name="email"
               value={formData.email}
               onChange={handleChange}
             />
             <input
-                className="item-inp"
-                type="textarea"
+              className="item-inp"
+              type="textarea"
               placeholder="Phone Number*"
               name="phone_Number"
               value={formData.phone_Number}
@@ -129,16 +129,16 @@ const MainSignup = () => {
             {role !== "vendor" && (
               <>
                 <input
-                className="item-inp"
-                type="textarea"
+                  className="item-inp"
+                  type="textarea"
                   placeholder="Hostel*"
                   name="hostel"
                   value={formData.hostel}
                   onChange={handleChange}
                 />
                 <input
-                className="item-inp"
-                type="textarea"
+                  className="item-inp"
+                  type="textarea"
                   placeholder="Room Number*"
                   name="room_Number"
                   value={formData.room_Number}
@@ -147,16 +147,16 @@ const MainSignup = () => {
               </>
             )}
             <input
-                className="item-inp"
-                type="textarea"
+              className="item-inp"
+              type="textarea"
               placeholder="Password*"
               name="password"
               value={formData.password}
               onChange={handleChange}
             />
             <input
-                className="item-inp"
-                type="textarea"
+              className="item-inp"
+              type="textarea"
               placeholder="Confirm Password*"
               name="confirmPassword"
               value={formData.confirmPassword}
@@ -165,10 +165,7 @@ const MainSignup = () => {
             {error && (
               <div style={{ color: "red", marginTop: "10px" }}>{error}</div>
             )}
-            <button
-              type="submit"
-              className="sub-button"
-            >
+            <button type="submit" className="sub-button">
               Signup
             </button>
           </>

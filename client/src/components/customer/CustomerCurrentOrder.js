@@ -1,17 +1,20 @@
-import '../../styles/CustomerHome.css'
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import "../../styles/CustomerHome.css";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const CustomerCurrentOrder = () => {
   const [orders, setOrders] = useState([]);
-  const CustomerEmail = window.sessionStorage.getItem('email');
+  const CustomerEmail = window.sessionStorage.getItem("email");
   const fetchOrders = async () => {
     try {
       // Fetch orders from your backend API
-      const response = await axios.post('http://localhost:3001/Customergetneworders',{ CustomerEmail });
+      const response = await axios.post(
+        "https://se2024-j6qz.onrender.com/Customergetneworders",
+        { CustomerEmail }
+      );
       setOrders(response.data); // Assuming your API returns orders in JSON format
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error("Error fetching orders:", error);
     }
   };
   useEffect(() => {
@@ -25,10 +28,10 @@ const CustomerCurrentOrder = () => {
   }, []);
 
   return (
-    <div className='maindiv'>
+    <div className="maindiv">
       <h3>Your orders placed:</h3>
       <div className="items-container1">
-        {orders.map(order => (
+        {orders.map((order) => (
           <div key={order.itemId} className="item-card1">
             <h6>Item: {order.itemName}</h6>
             <p>Vendor name: {order.vendor} </p>
@@ -36,7 +39,7 @@ const CustomerCurrentOrder = () => {
             <p>Order Total: {order.price} </p>
             <p>Order Status: {order.status} </p>
             <p>being delivered by: {order.delivered_by}</p>
-            <img src={order.image}  className="item-image1" />
+            <img src={order.image} className="item-image1" />
           </div>
         ))}
       </div>

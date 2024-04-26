@@ -38,14 +38,17 @@ const CourierSignup = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/signup", {
-        name,
-        roll_Number,
-        email,
-        phone_Number,
-        password,
-        usertype: "courier",
-      });
+      const response = await axios.post(
+        "https://se2024-j6qz.onrender.com/signup",
+        {
+          name,
+          roll_Number,
+          email,
+          phone_Number,
+          password,
+          usertype: "courier",
+        }
+      );
 
       if (response.data.token) {
         console.log("Signup successful!");

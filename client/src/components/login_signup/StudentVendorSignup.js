@@ -54,16 +54,19 @@ const StudentVendorSignup = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/signup", {
-        name,
-        email,
-        phone_Number,
-        password,
-        roll_Number,
-        hostel,
-        room_Number,
-        usertype: "student_vendor",
-      });
+      const response = await axios.post(
+        "https://se2024-j6qz.onrender.com/signup",
+        {
+          name,
+          email,
+          phone_Number,
+          password,
+          roll_Number,
+          hostel,
+          room_Number,
+          usertype: "student_vendor",
+        }
+      );
 
       if (response.data.token) {
         console.log("Signup successful!");

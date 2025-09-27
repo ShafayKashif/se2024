@@ -13,7 +13,7 @@ const CustomerHome = () => {
     const [amountSpent, setAmountSpent] = useState(0);
 
     const handlePlaceRecentOrder = async (event) => {
-        const response = await axios.post('http://localhost:3001/CustomerReOrder', { clientEmail: sessionStorage.getItem('email') });
+        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}CustomerReOrder`, { clientEmail: sessionStorage.getItem('email') });
         if (response.status === 200) {
             alert('Order placed successfully!');
         } else {
@@ -33,7 +33,7 @@ const CustomerHome = () => {
         event.preventDefault();
         setSearchQuery()
         try {
-            const response = await axios.post("http://localhost:3001/query", {
+            const response = await axios.post(`${process.env.REACT_APP_BASE_URL}query`, {
                 type: "food-search",
                 query: searchQuery,
             });

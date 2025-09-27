@@ -1,0 +1,38 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo-local
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - se2024-subnet
+  
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: campus_cuisine_server
+    depends_on:
+      - mongo
+    ports:
+      - "3001:3001"
+    networks:
+      - se2024-subnet
+
+  client:
+    build:
+      context: ./client 
+      dockerfile: Dockerfile
+    container_name: campus_cuisine_client
+    environment:
+      - REACT_APP_BASE_URL=http://localhost:3001/
+    depends_on:
+      - server
+    ports:
+      - "3000:3000" 
+    networks:
+      - se2024-subnet
+
+networks:
+      se2024-subnet:

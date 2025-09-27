@@ -8,7 +8,7 @@ const SeeVendorRequests = () => {
 
   const seeRequests = async () => {
     try {
-      const myRequests = await axios.get("http://localhost:3001/view-join-requests");
+      const myRequests = await axios.get(`${process.env.REACT_APP_BASE_URL}view-join-requests`);
       const allUsers = myRequests.data.allUsers;
 
       const vendorReqs = allUsers.filter(user => user.userType === 'vendor' || user.userType === 'studentVendor');
@@ -31,7 +31,7 @@ const SeeVendorRequests = () => {
 
   const handleDecision = async (userEmail, decision) => {
     try {
-      await axios.post("http://localhost:3001/application-decision", {
+      await axios.post(`${process.env.REACT_APP_BASE_URL}application-decision`, {
         userEmail,
         decision
       });

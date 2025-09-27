@@ -27,7 +27,7 @@ const CustomerUpdateInfo = (props) => {
         console.log("customer_email", customer_email);
 
         try {
-            const response = await axios.post("http://localhost:3001/CustomerUpdateInfo", {
+            const response = await axios.post(`${process.env.REACT_APP_BASE_URL}CustomerUpdateInfo`, {
                 field,
                 value,
                 customer_email,

@@ -190,7 +190,7 @@ const CustomerPlaceOrder = (props) => {
     let total = price * quantity;
     try {
       const itemId = itemID
-      const response = await axios.post("http://localhost:3001/placeOrder", {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}placeOrder`, {
         vendor_email,
         customer_email,
         quantity,
@@ -214,7 +214,7 @@ const CustomerPlaceOrder = (props) => {
       console.error("error logging order::", error.message);
     }
     try {
-      const response = await axios.post("http://localhost:3001/UpdateQuantity", {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}UpdateQuantity`, {
         itemId: itemID,
         vendorEmail: vendor_email,
         quantity: itemQuantity - quantity,
@@ -341,7 +341,7 @@ const CustomerPlaceOrder = (props) => {
     let vendorAddr = vendorroom + ", " + vendorhostel;
     try {
       console.log("price is: ", price)
-      const response = await axios.post("http://localhost:3001/selfpickup", {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}selfpickup`, {
         vendor_email,
         vendorname,
         customer_email,
@@ -368,7 +368,7 @@ const CustomerPlaceOrder = (props) => {
       console.error("error logging order::", error.message);
     }
     try {
-      const response = await axios.post("http://localhost:3001/UpdateQuantity", {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}UpdateQuantity`, {
         itemId,
         vendorEmail: vendor_email,
         quantity: itemQuantity - quantity,
@@ -494,7 +494,7 @@ const CustomerPlaceOrder = (props) => {
     let vendorAddr = vendorroom + ", " + vendorhostel;
     try {
       console.log("price is: ", price)
-      const response = await axios.post("http://localhost:3001/customerDelivery", {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}customerDelivery`, {
         vendor_email,
         vendorname,
         customer_email,
@@ -521,7 +521,7 @@ const CustomerPlaceOrder = (props) => {
       console.error("error logging order::", error.message);
     }
     try {
-      const response = await axios.post("http://localhost:3001/UpdateQuantity", {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}UpdateQuantity`, {
         itemId,
         vendorEmail: vendor_email,
         quantity: itemQuantity - quantity,

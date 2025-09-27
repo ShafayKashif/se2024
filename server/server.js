@@ -48,6 +48,7 @@ mongoose
   .connect(process.env.MONG_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    authSource: "admin",
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));

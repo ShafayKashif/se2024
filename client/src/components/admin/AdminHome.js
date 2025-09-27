@@ -11,7 +11,7 @@ const AdminHome = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/getInfoForAdminHomePage");
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}getInfoForAdminHomePage`);
         const { vendorsInfo, myCustomerReviews } = response.data;
 
         let temp = vendorsInfo;

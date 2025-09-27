@@ -18,7 +18,7 @@ const BanVendors = () => {
 
   const banVendor = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/ban-vendor", {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}ban-vendor`, {
         type: 'ban-vendor',
         email_to_ban: vendorEmail,
         reason: description,

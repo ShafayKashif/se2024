@@ -51,7 +51,7 @@ const CustomerReview = (props) => {
 
     // log the review to the server
     try {
-      const response = await axios.post("http://localhost:3001/logreview", {     
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}logreview`, {     
         vendor_email,
         customer_email,
         rating,

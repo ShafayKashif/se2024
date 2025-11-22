@@ -11,12 +11,15 @@ services:
   server:
     build:
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: campus_cuisine_server
     depends_on:
       - mongo
     ports:
       - "3001:3001"
+    volumes:
+      - ./server:/server  
+      - /server/node_modules
     networks:
       - se2024-subnet
 

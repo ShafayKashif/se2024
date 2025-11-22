@@ -583,7 +583,7 @@ app.post("/logreview", async (request, response) => {
       const vendor = await Vendors.findOne({ email: vendor_email });
       if (!vendor) {
         // Handle case where vendor is not found
-        return response.status(404).json({ error: "Vendor not found" });
+        return response.status(405).json({ error: "Vendor not found" });
       }
 
       // Extract the vendor name from the found vendor document
